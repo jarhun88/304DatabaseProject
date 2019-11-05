@@ -7,19 +7,49 @@
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/main.css">
+  <link rel="stylesheet" href="main.css">
 
   <meta name="theme-color" content="#fafafa">
 </head>
 
 <body>
   <!-- Add your site or application content here -->
-  <p>Hello world! This is HTML5 Boilerplate.</p>
+  <div class="title">
+    <h1>Welcome to the Vehicle SuperRent System</h1>
+  </div>
+  <div class="page-box">
+    <div class="user-type-box">
 
-  
-  <script src="js/plugins.js"></script>
-  <script src="js/main.js"></script>
+      <div class="function-box">
+        <div class="function-title">
+            <h3>Customer Functions</h3>
+        </div>
+        <form class="radio-form">
+          <input type="radio" name="input" value="male" checked> View Vehicles
+          <input type="radio" name="input" value="female"> Make Reservation
+        </form>
+        <textarea rows="10" cols="50"></textarea>
+        <button class="button" type="button">Submit</button>
+        <output class="customer-output"name="result">Output will display here</output>
+      </div>
+
+      <div class="function-box">
+        <div class="function-title">
+          <h3>Clerk Functions</h3>
+        </div>
+        <form class="radio-form">
+          <input type="radio" name="input" value="male" checked> Renting Vehicle
+          <input type="radio" name="input" value="female"> Returning Vehicle
+          <input type="radio" name="input" value="male" checked> Generate a Report
+        </form>
+        <textarea rows="10" cols="50"></textarea>
+        <button class="button" type="button">Submit</button>
+        <output class="clerk-output" name="result">Output will display here</output>
+      </div>
+    </div>
+  </div>
+
+  <script src="main.js"></script>
 
   <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
 </body>

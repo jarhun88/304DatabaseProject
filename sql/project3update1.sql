@@ -1,16 +1,16 @@
-drop table Reservation
+drop table Reservation cascade constraints purge
 /
-drop table Rent
+drop table Rent cascade constraints purge
 /
-drop table Vehicle
+drop table Vehicle cascade constraints purge
 /
-drop table VehicleType
+drop table VehicleType cascade constraints purge
 /
-drop table Customer
+drop table Customer cascade constraints purge
 /
-drop table Return
+drop table Return cascade constraints purge
 /
-drop table Reservation
+drop table Reservation cascade constraints purge
 /
 create table Reservation(
 confNo char(8) primary key,

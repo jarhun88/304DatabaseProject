@@ -10,6 +10,8 @@ drop table Customer cascade constraints purge
 /
 drop table Return cascade constraints purge
 /
+drop table Branch cascade constraints purge
+/
 create table Reservation(
 confNo char(8) primary key,
 vtname varchar(8),

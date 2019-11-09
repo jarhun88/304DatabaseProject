@@ -14,7 +14,7 @@ drop table Branch cascade constraints purge
 /
 create table Reservation(
 confNo char(8) primary key,
-vtname varchar(8),
+vtname varchar(9),
 cellphone char(10),
 fromDateTime date,
 toDateTime date)
@@ -40,12 +40,12 @@ year varchar(4),
 color varchar(20),
 odometer varchar(9),
 status varchar(20),
-vtname varchar(8),
+vtname varchar(9),
 location varchar(20),
 city varchar(20))
 /
 create table VehicleType(
-vtname varchar(8) primary key,
+vtname varchar(9) primary key,
 features varchar(100),
 wrate float,
 drate float,

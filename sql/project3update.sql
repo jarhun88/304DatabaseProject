@@ -47,13 +47,13 @@ city varchar(20))
 create table VehicleType(
 vtname varchar(8) primary key,
 features varchar(100),
-wrate binary_float,
-drate binary_float,
-hrate binary_float,
-wirate binary_float,
-dirate binary_float,
-hirate binary_float,
-krate binary_float)
+wrate float,
+drate float,
+hrate float,
+wirate float,
+dirate float,
+hirate float,
+krate float)
 /
 create table Customer(
 cellphone char(10) primary key,

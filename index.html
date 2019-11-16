@@ -8,12 +8,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
   <link rel="stylesheet" href="main.css">
-
   <meta name="theme-color" content="#fafafa">
 </head>
 
 <body>
-  <!-- Add your site or application content here -->
   <div class="title">
     <h1>Welcome to the Vehicle SuperRent System</h1>
   </div>
@@ -25,33 +23,48 @@
             <h3>Customer Functions</h3>
         </div>
         <form class="radio-form">
-          <input type="radio" name="input" value="male" checked> View Vehicles
-          <input type="radio" name="input" value="female"> Make Reservation
+          <input id="view-vehicles" type="radio" name="input" value="male" checked> View Vehicles
+          <input id="make-reservation" type="radio" name="input" value="female"> Make Reservation
         </form>
         <textarea rows="10" cols="50"></textarea>
-        <button class="button" type="button">Submit</button>
+        <button class="button" type="button" onclick="customerButton()">Submit</button>
         <output class="customer-output"name="result">Output will display here</output>
       </div>
 
       <div class="function-box">
         <div class="function-title">
-          <h3>Clerk Functions</h3>
+          <h3>Clerk Rent/Reserve Functions</h3>
         </div>
         <form class="radio-form">
-          <input type="radio" name="input" value="male" checked> Renting Vehicle
-          <input type="radio" name="input" value="female"> Returning Vehicle
-          <input type="radio" name="input" value="male" checked> Generate a Report
+          <input id="rent"type="radio" name="input" value="male" checked> Renting Vehicle
+          <input id="return" type="radio" name="input" value="female"> Returning Vehicle
         </form>
         <textarea rows="10" cols="50"></textarea>
-        <button class="button" type="button">Submit</button>
+        <button class="button" type="button" onclick="clerkButton()">Submit</button>
+        <output class="clerk-output" name="result">Output will display here</output>
+      </div>
+
+      <div class="function-box">
+        <div class="function-title">
+          <h3>Clerk Generate Functions</h3>
+        </div>
+        <form class="radio-form">
+          <input id="daily-returns"type="radio" name="input" value="male" checked> Generate Daily Returns
+          <input id="daily-rentals"type="radio" name="input" value="female"> Generate Daily Rentals
+        </form>
+        <form class="checkbox-form">
+          <input id="branch" type="checkbox" name="input" value="male" checked> For Branch
+        </form>
+        <textarea rows="10" cols="50"></textarea>
+        <button class="button" type="button" onclick="generateButton()">Submit</button>
         <output class="clerk-output" name="result">Output will display here</output>
       </div>
     </div>
   </div>
-
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
   <script src="main.js"></script>
+  
 
-  <!-- Google Analytics: change UA-XXXXX-Y to be your site's ID. -->
 </body>
 
 </html>

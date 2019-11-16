@@ -1,5 +1,10 @@
+$( document ).ready(function()
+{
+    console.log( "ready!" );
+});
+
 function customerButton() {
-    let viewVehiclesSelected = document.getElementById("view-vehicles").checked;
+    let viewVehiclesSelected = $("#view-vehicles").is(':checked');
     let body = {};
     // add some stuff to body to send
     if (viewVehiclesSelected) {
@@ -20,7 +25,7 @@ function customerButton() {
 }
 
 function clerkButton() {
-    let rentingVehiclesSelected = document.getElementById("rent").checked;
+    let rentingVehiclesSelected = $("#rent").is(':checked');
     let body = {};
     // add some stuff to body to send
     if (rentingVehiclesSelected) {
@@ -43,7 +48,7 @@ function clerkButton() {
 function generateButton() {
     let body = {};
     // add some stuff to body to send
-    let dailyReturnsSelected = document.getElementById("daily-returns").checked;
+    let dailyReturnsSelected = $("#daily-returns").is(':checked');
     if (dailyReturnsSelected) {
         axios.post("/someUrl", body).then((response) => {
             console.log(response)

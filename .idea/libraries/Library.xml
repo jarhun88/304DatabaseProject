@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="Library">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/resources/jxbrowser-7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/jxbrowser-javafx-7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/jxbrowser-swing-7.3.jar!/" />
+      <root url="jar://$PROJECT_DIR$/resources/ojdbc8.jar!/" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES />
+  </library>
+</component>

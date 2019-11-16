@@ -1,5 +1,7 @@
-$(document).ready(function () {
-    console.log("ready!");
+// A $( document ).ready() block.
+$( document ).ready(function()
+{
+    console.log( "ready!" );
 });
 
 $.ajaxSetup({

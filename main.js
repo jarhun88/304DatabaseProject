@@ -26,6 +26,17 @@ $( document ).ready(function()
         $("#make-return-fields").show(); 
     })
 
+    $("#branch").click(function() {
+        let isBranchSelected = $("#branch").is(':checked');
+        if (isBranchSelected){
+            $("#branch-fields").show(); 
+        } 
+        else {
+            $("#branch-fields").hide(); 
+        }
+    
+    })
+
     $("#customer-button").click(function() {
         let body;
         let viewVehiclesSelected = $("#view-vehicles").is(':checked');

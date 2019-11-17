@@ -92,14 +92,25 @@
         <div class="function-title">
           <h3>Clerk Generate Functions</h3>
         </div>
+
         <form class="radio-form">
           <input id="daily-returns"type="radio" name="input" value="male" checked> Generate Daily Returns
           <input id="daily-rentals"type="radio" name="input" value="female"> Generate Daily Rentals
         </form>
+
         <form class="checkbox-form">
           <input id="branch" type="checkbox" name="input" value="male" checked> For Branch
         </form>
-        <textarea rows="10" cols="50"></textarea>
+
+        <div class="input-box" id="date-fields">
+            <input type="text" id="g-date" placeholder="date">
+        </div>
+
+        <div class="input-box" id="branch-fields">
+          <input type="text" id="g-address" placeholder="address">
+          <input type="text" id="g-city" placeholder="city">
+        </div>
+
         <button class="button" id="generate-button" type="button" onclick="generateButton()">Submit</button>
         <output class="clerk-output" name="result">Output will display here</output>
       </div>

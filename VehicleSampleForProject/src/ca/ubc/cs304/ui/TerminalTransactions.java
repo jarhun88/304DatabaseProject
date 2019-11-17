@@ -35,8 +35,9 @@ public class TerminalTransactions {
             System.out.println();
             System.out.println("1. Show All Vehicles");
             System.out.println("2. Show Available Vehicles");
-            System.out.println("3. Quit");
-            System.out.print("Please choose one of the above 3 options: ");
+            System.out.println("3. Show Available Vehicles based on the customer's input");
+            System.out.println("4. Quit");
+            System.out.print("Please choose one of the above 4 options: ");
 
             choice = readInteger(false);
 
@@ -52,6 +53,9 @@ public class TerminalTransactions {
                         delegate.showAvailableVehicle();
                         break;
                     case 3:
+                        handleViewDesiredVehicleOption();
+                        break;
+                    case 4:
                         handleQuitOption();
                         break;
                     default:
@@ -103,6 +107,86 @@ public class TerminalTransactions {
         } catch (IOException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
+        return result;
+    }
+
+    private void handleViewDesiredVehicleOption() {
+
+        System.out.print("Please enter the branch location in which you wish to see the availability: ");
+        String location = readLine().trim();
+        if (location.length() == 0) {
+            location = null;
+        }
+
+        System.out.print("Please enter the branch city in which you wish to see the availability: ");
+        String city = readLine().trim();
+        if (city.length() == 0) {
+            city = null;
+        }
+
+        System.out.print("Please enter the car type you wish to see the availability for: ");
+        String vtname = readLine().trim();
+        if (vtname.length() == 0) {
+            vtname = null;
+        }
+
+        System.out.print("Please enter the starting date and time you wish to see the availability for: ");
+        int[] dateTimeInfo = createDataTimeArray();
+        String fromDateTime = generateDateTime(dateTimeInfo);
+
+        System.out.print("Please enter the starting date and time you wish to see the availability for: ");
+        dateTimeInfo = createDataTimeArray();
+        String toDateTime = generateDateTime(dateTimeInfo);
+
+        delegate.showDesiredVehicleForUser(vtname,location,city,fromDateTime,toDateTime);
+
+    }
+
+    private int[] createDataTimeArray() {
+        int[] dateTimeInfo = new int[5];
+
+        int year = INVALID_INPUT;
+        while (year == INVALID_INPUT) {
+            System.out.print("Please enter year: ");
+            year = readInteger(true);
+            dateTimeInfo[0] = year;
+        }
+
+        int month = INVALID_INPUT;
+        while (month == INVALID_INPUT) {
+            System.out.print("Please enter month: ");
+            month = readInteger(true);
+            dateTimeInfo[1] = month;
+        }
+
+        int day = INVALID_INPUT;
+        while (day == INVALID_INPUT) {
+            System.out.print("Please enter day: ");
+            day = readInteger(true);
+            dateTimeInfo[2] = day;
+        }
+
+        int hour = INVALID_INPUT;
+        while (hour == INVALID_INPUT) {
+            System.out.print("Please enter hour: ");
+            hour = readInteger(true);
+            dateTimeInfo[3] = hour;
+        }
+
+        int minute = INVALID_INPUT;
+        while (minute == INVALID_INPUT) {
+            System.out.print("Please enter hour: ");
+            minute = readInteger(true);
+            dateTimeInfo[4] = minute;
+        }
+
+
+        return dateTimeInfo;
+
+    }
+
+    private String generateDateTime(int[] dateTimeInfo) {
+        String result = "" + dateTimeInfo[0] + "-" + dateTimeInfo[1] + "-" + dateTimeInfo[2] + ":" + dateTimeInfo[3] + ":" + dateTimeInfo[4];
         return result;
     }
 

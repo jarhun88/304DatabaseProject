@@ -19,5 +19,8 @@ public interface TerminalTransactionsDelegate {
     public void showAvailableVehicle();
 //	public void updateBranch(int branchId, String name);
 
+    // EFFECTS: shows all available vehicles based on the user input (vtname, location ,city, fromDateTime, toDateTime)
+    public void showDesiredVehicleForUser(String vtname, String location, String city, String fromDateTime, String toDateTime);
+
     public void terminalTransactionsFinished();
 }

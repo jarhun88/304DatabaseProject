@@ -151,6 +151,49 @@ public class DatabaseConnectionHandler {
         }
     }
 
+    public VehicleModel[] showDesiredVehicleForUser(String vtname, String location, String city, String fromDateTime, String toDateTime) {
+        ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Vehicle v, Reservation r WHERE v.vtname = r.vtname AND vtname = ? AND location = ?" +
+                    "city = ? AND fromDateTime = to_stamp( ? , 'YYYY-MM-DD:HH24:MI') AND toDateTime = to_stamp( ? , 'YYYY-MM-DD:HH24:MI')");
+            ps.setString(1, vtname);
+            ps.setString(2, location);
+            ps.setString(3, city);
+            ps.setString(4, fromDateTime);
+            ps.setString(5, toDateTime);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + "No Available Vehicles based on your choice!!");
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
+                        rs.getString("vlicense"),
+                        rs.getString("make"),
+                        rs.getString("model"),
+                        rs.getString("year"),
+                        rs.getString("color"),
+                        rs.getString("odometer"),
+                        rs.getString("status"),
+                        rs.getString("vtname"),
+                        rs.getString("location"),
+                        rs.getString("city"));
+                result.add(model);
+            }
+
+            rs.close();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+        return result.toArray(new VehicleModel[result.size()]);
+    }
+
 
 //	public void deleteBranch(int branchId) {
 //		try {

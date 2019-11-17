@@ -95,6 +95,14 @@ public class Vehicle implements LoginWindowDelegate, TerminalTransactionsDelegat
 
     }
 
+    @Override
+    public void showDesiredVehicleForUser(String vtname, String location, String city, String fromDateTime, String toDateTime) {
+        VehicleModel[] models = dbHandler.showDesiredVehicleForUser(vtname,location,city,fromDateTime,toDateTime);
+        String result = queryResultOfVehicle(models);
+        System.out.println(result);
+    }
+
+
     // EFFECTS: returns the string of formatted the query result
     public String queryResultOfVehicle(VehicleModel[] models) {
         String result = "";

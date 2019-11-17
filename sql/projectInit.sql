@@ -179,11 +179,11 @@ insert into vehicle values (
 'Full-size', 'Downtown', 'Vancouver')
 /
 insert into vehicle values (
-'32145683', '123461', 'GMC', 'Acadia', '2018', 'Grey', '000000000', 'rented',
+'32145683', '123461', 'GMC', 'Acadia', '2018', 'Grey', '000000000', 'available',
 'SUV', 'Downtown', 'Vancouver')
 /
 insert into vehicle values (
-'32145684', '123462', 'Ford', 'F-150', '2018', 'Black', '321221458', 'rented',
+'32145684', '123462', 'Ford', 'F-150', '2018', 'Black', '321221458', 'available',
 'Truck', 'East', 'Richmond')
 /
 insert into vehicle values (

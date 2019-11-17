@@ -154,6 +154,7 @@ public class DatabaseConnectionHandler {
     public VehicleModel[] showDesiredVehicleForUser(String vtname, String location, String city, String fromDateTime, String toDateTime) {
         ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
         try {
+            // still working on this part of SQL !!!! please forgive me for being so late!!!!!!!
             PreparedStatement ps = connection.prepareStatement("SELECT * FROM Vehicle v, Reservation r WHERE v.vtname = r.vtname AND vtname = ? AND location = ?" +
                     "city = ? AND fromDateTime = to_stamp( ? , 'YYYY-MM-DD:HH24:MI') AND toDateTime = to_stamp( ? , 'YYYY-MM-DD:HH24:MI')");
             ps.setString(1, vtname);

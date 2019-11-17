@@ -13,15 +13,16 @@ drop table Return cascade constraints purge
 drop table Branch cascade constraints purge
 /
 create table Reservation(
-confNo char(8) primary key,
+confNo integer generated always as identity,
 vtname varchar(9),
 cellphone char(10),
 fromDateTime date,
-toDateTime date)
+toDateTime date,
+primary key(confNo))
 /
 create table Rent(
-rid char(8) primary key,
-vid char(8),
+rid integer generated always as identity,
+vid integer,
 cellphone char(10),
 fromDateTime date,
 toDateTime date,
@@ -29,10 +30,11 @@ odometer varchar(9),
 cardName varchar(50),
 cardNo char(16),
 expDate date,
-confNo char(8))
+confNo integer,
+primary key (rid))
 /
 create table Vehicle(
-vid char(8) primary key,
+vid integer generated always as identity,
 vlicense char(6),
 make varchar(30),
 model varchar(30),
@@ -42,7 +44,8 @@ odometer varchar(9),
 status varchar(20),
 vtname varchar(9),
 location varchar(20),
-city varchar(20))
+city varchar(20),
+primary key(vid))
 /
 create table VehicleType(
 vtname varchar(9) primary key,
@@ -62,7 +65,7 @@ address varchar(50),
 dlicense char(9))
 /
 create table Return(
-rid char(8) primary key,
+rid integer primary key,
 returnDateTime timestamp,
 odometer varchar(9),
 fulltank char(1),
@@ -72,8 +75,7 @@ alter table Reservation
 add foreign key(vtname)
 references VehicleType(vtname)
 /
-alter table
-Rent
+alter table Rent
 add foreign key (vid)
 references Vehicle (vid)
 /
@@ -97,6 +99,10 @@ primary key (location, city))
 alter table Vehicle
 add foreign key (location, city)
 references Branch (location, city)
+/
+alter table Return
+add foreign key (rid)
+references Rent (rid)
 /
 insert into branch Values (
 'UBC', 'Vancouver')
@@ -158,43 +164,43 @@ insert into VehicleType values (
 insert into VehicleType values (
 'Truck', null, 130, 20, 1.5, 20, 10 , 5, 0.5)
 /
-insert into vehicle values (
-'32145678', '123456', 'Ford', 'Fusion', '2019', 'Red', '123456789', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123456', 'Ford', 'Fusion', '2019', 'Red', '123456789', 'available',
 'Economy', 'UBC', 'Vancouver')
 /
-insert into vehicle values (
-'32145679', '123457', 'Ford', 'EcoSport', '2019', 'Black', '200000008', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123457', 'Ford', 'EcoSport', '2019', 'Black', '200000008', 'available',
 'Compact', 'UBC', 'Vancouver')
 /
-insert into vehicle values (
-'32145680', '123458', 'Ford', 'Ranger', '2019', 'Green', '321221458', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123458', 'Ford', 'Ranger', '2019', 'Green', '321221458', 'available',
 'Mid-size', 'UBC', 'Vancouver')
 /
-insert into vehicle values (
-'32145681', '123459', 'Ford', 'Fusion', '2018', 'Red Black', '151031724', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123459', 'Ford', 'Fusion', '2018', 'Red Black', '151031724', 'available',
 'Standard', 'UBC', 'Vancouver')
 /
-insert into vehicle values (
-'32145682', '123460', 'GMC', 'Yukon', '2018', 'Grey', '000990128', 'maintenance',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123460', 'GMC', 'Yukon', '2018', 'Grey', '000990128', 'maintenance',
 'Full-size', 'Downtown', 'Vancouver')
 /
-insert into vehicle values (
-'32145683', '123461', 'GMC', 'Acadia', '2018', 'Grey', '000000000', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123461', 'GMC', 'Acadia', '2018', 'Grey', '000000000', 'available',
 'SUV', 'Downtown', 'Vancouver')
 /
-insert into vehicle values (
-'32145684', '123462', 'Ford', 'F-150', '2018', 'Black', '321221458', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123462', 'Ford', 'F-150', '2018', 'Black', '321221458', 'available',
 'Truck', 'East', 'Richmond')
 /
-insert into vehicle values (
-'32145685', '123463', 'Ford', 'F-150', '2012', 'Red', '321221458', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123463', 'Ford', 'F-150', '2012', 'Red', '321221458', 'available',
 'Truck', 'East', 'Richmond')
 /
-insert into vehicle values (
-'32145686', '123464', 'Honda', 'CR-V', '2012', 'Grey', '321221458', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123464', 'Honda', 'CR-V', '2012', 'Grey', '321221458', 'available',
 'SUV', 'East', 'Richmond')
 /
-insert into vehicle values (
-'32145687', '123465', 'Honda', 'Accord', '2012', 'Black', '321221458', 'available',
+insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
+'123465', 'Honda', 'Accord', '2012', 'Black', '321221458', 'available',
 'Economy', 'East', 'Richmond')
 /

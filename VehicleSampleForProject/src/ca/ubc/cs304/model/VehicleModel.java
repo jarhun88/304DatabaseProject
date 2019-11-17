@@ -6,7 +6,7 @@ import javax.print.DocFlavor;
  * The intent for this class is to update/store information about a single branch
  */
 public class VehicleModel {
-    private final String vid;
+    private final int vid;
     private final String vlicense;
     private final String make;
     private final String model;
@@ -18,7 +18,7 @@ public class VehicleModel {
     private final String location;
     private final String city;
 
-    public VehicleModel(String vid, String vlicense, String make, String model,
+    public VehicleModel(int vid, String vlicense, String make, String model,
                         String year, String color, String odometer, String status,
                         String vtname, String location, String city) {
         this.vid = vid;
@@ -34,7 +34,7 @@ public class VehicleModel {
         this.city = city;
     }
 
-    public String getVid() {
+    public int getVid() {
         return vid;
     }
 

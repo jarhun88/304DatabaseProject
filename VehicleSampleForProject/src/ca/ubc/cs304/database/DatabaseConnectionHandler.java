@@ -60,7 +60,7 @@ public class DatabaseConnectionHandler {
 //    		}
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getString("vid"),
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getString("vlicense"),
                         rs.getString("make"),
                         rs.getString("model"),
@@ -102,7 +102,7 @@ public class DatabaseConnectionHandler {
 //    		}
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getString("vid"),
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getString("vlicense"),
                         rs.getString("make"),
                         rs.getString("model"),

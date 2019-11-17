@@ -30,10 +30,6 @@ public class Controller  {
 
         //login("ora_aktoriam@stu", "a42603381");
         boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
-
-
-
-
     }
 
     private void OpenHTTPConn() throws IOException {

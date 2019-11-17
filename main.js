@@ -34,7 +34,6 @@ $( document ).ready(function()
         else {
             $("#branch-fields").hide(); 
         }
-    
     })
 
     $("#customer-button").click(function() {
@@ -63,15 +62,47 @@ $( document ).ready(function()
         else {
             body = returnBody();
         }      
+        console.log(body);
         axios.post("/someUrl", body).then((response) => {
             console.log(response)
         }).catch((error) => {
             console.log(error)
         })  
     });
-    
 
-});
+    $("#generate-button").click(function() {
+        let body = {};
+        let isBranchSelected = $("#branch").is(':checked');
+        let isReturnsSelected = $("#daily-returns").is(':checked');
+        body["date"] = $("#g-date").val();
+        if (isBranchSelected) {
+            body = branchBody(body);
+        }
+        console.log(body);
+        if (isReturnsSelected) {
+            axios.post("/someUrl", body).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })  
+        }
+        else {
+            axios.post("/someUrl", body).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })  
+        }
+    })
+})
+
+function branchBody(body) {
+    body["address"] = $("#g-address").val()
+    body["city"] = $("#g-city").val()
+    return body;
+}
+
+
 
 function returnBody() {
     let body = {};
@@ -89,13 +120,13 @@ function returnBody() {
 function rentBody() {
     let body = {};
     let phoneNum = $("#rent-phone-num").val();
-    let name = $("#rent-phone-num").val();
-    let address = $("#rent-phone-num").val();
-    let license = $("#rent-phone-num").val();
-    let vtname = $("#rent-phone-num").val();
-    let city = $("#rent-phone-num").val();
-    let from = $("#rent-phone-num").val();
-    let to = $("#rent-phone-num").val();
+    let name = $("#rent-name").val();
+    let address = $("#rent-address").val();
+    let license = $("#rent-driver-license").val();
+    let vtname = $("#rent-vtname").val();
+    let city = $("#rent-city").val();
+    let from = $("#rent-from").val();
+    let to = $("#rent-to").val();
     body["phoneNum"] = phoneNum;
     body["name"] = name;
     body["address"] = address;
@@ -142,63 +173,4 @@ function reservationBody() {
     body["from"] = from;
     body["to"] = to;
     return body;
-} 
-
-// function customerButton() {
-//     let viewVehiclesSelected = $("#view-vehicles").is(':checked');
-//     let body = {};
-//     // add some stuff to body to send
-//     if (viewVehiclesSelected) {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         }).catch((error) => {
-//             console.log(error)
-//         })
-//     }
-//     else {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         }).catch((error) => {
-//             console.log(error)
-//         })
-//     }
-//     console.log(viewVehiclesSelected)
-// }
-
-// function clerkButton() {
-//     let rentingVehiclesSelected = $("#rent").is(':checked');
-//     let body = {};
-//     // add some stuff to body to send
-//     if (rentingVehiclesSelected) {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         }).catch((error) => {
-//             console.log(error)
-//         })
-//     }
-//     else {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         }).catch((error) => {
-//             console.log(error)
-//         })
-//     }
-//     console.log(rentingVehiclesSelected);
-// }
-
-// function generateButton() {
-//     let body = {};
-//     // add some stuff to body to send
-//     let dailyReturnsSelected = $("#daily-returns").is(':checked');
-//     if (dailyReturnsSelected) {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         })
-//     }
-//     else {
-//         axios.post("/someUrl", body).then((response) => {
-//             console.log(response)
-//         })
-//     }
-//     console.log(dailyReturnsSelected)
-// }
+}

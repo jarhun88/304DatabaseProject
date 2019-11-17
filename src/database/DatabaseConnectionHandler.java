@@ -67,7 +67,61 @@ public class DatabaseConnectionHandler {
 
 		try {
 			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM vehicle");
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Vehicle where STATUS = 'available'");
+
+//    		// get info on ResultSet
+//    		ResultSetMetaData rsmd = rs.getMetaData();
+//
+//    		System.out.println(" ");
+//
+//    		// display column names;
+//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+//    			// get column name and print it
+//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
+//    		}
+
+			while(rs.next()) {
+				VehicleModel model = new VehicleModel(rs.getInt("vid"),
+						rs.getInt("vlicense"),
+						rs.getString("make"), rs.getString("model"), rs.getString("year"),
+						rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
+						rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new VehicleModel[result.size()]);
+	}
+
+	public VehicleModel[] getVehicleInfo(String carType, String location, String startTime, String endTime) {
+		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+
+		String cTypeFilter ="";
+		String locFilter = "";
+		String timeIntFilter = "";
+		if(carType.length()>0){
+   			cTypeFilter = "AND VTNAME = " + carType;
+		}
+		if(location.length()>0){
+			locFilter = "AND LOCATION = " + location;
+		}
+		// Checks to see if a reservation has already been made from that interval
+		if(startTime.length()>0 && endTime.length()>0){
+			//  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
+			timeIntFilter = "AND NOT EXISTS (Select * from Reservation WHERE " + startTime +
+					"Between(FROMDATETIME, TODATETIME) AND "+ endTime + "Between(FROMDATETIME, TODATETIME)" ;
+		}
+
+		try {
+			Statement stmt = connection.createStatement();
+			String query = "SELECT * FROM Vehicle where STATUS = 'available'";
+			query = query + cTypeFilter + locFilter + timeIntFilter;
+			ResultSet rs = stmt.executeQuery(query);
 
 //    		// get info on ResultSet
 //    		ResultSetMetaData rsmd = rs.getMetaData();

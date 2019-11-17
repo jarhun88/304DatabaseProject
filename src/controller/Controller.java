@@ -45,9 +45,14 @@ public class Controller  {
 
     }
 
-    //TODO
+    //Returns array of all vehicles
     public static VehicleModel[] viewVehicles()  {
         return dbHandler.getVehicleInfo();
+    }
+
+    //Return filtered array of vehicles based on specific car type,location,and time interval.
+    public static VehicleModel[] viewVehicles(String carType, String location, String startTime, String endTime){
+        return dbHandler.getVehicleInfo(carType, location, startTime, endTime);
     }
 
     //TODO

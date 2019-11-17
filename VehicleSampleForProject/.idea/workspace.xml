@@ -1,16 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="4a1c15cb-29fe-4c9d-a601-641752cb058f" name="Default Changelist" comment="Try to work on the first transaction, still thinking of sql statement for showAllVehiclesFor.">
-      <change afterPath="$PROJECT_DIR$/src/ca/ubc/cs304/model/ReservationModel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/ca/ubc/cs304/controller/Vehicle.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ca/ubc/cs304/controller/Vehicle.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/ca/ubc/cs304/database/DatabaseConnectionHandler.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ca/ubc/cs304/database/DatabaseConnectionHandler.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/ca/ubc/cs304/ui/TerminalTransactions.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ca/ubc/cs304/ui/TerminalTransactions.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cs304/controller/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cs304/controller/Vehicle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cs304/database/DatabaseConnectionHandler.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cs304/database/DatabaseConnectionHandler.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cs304/delegates/TerminalTransactionsDelegate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cs304/delegates/TerminalTransactionsDelegate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ca/ubc/cs304/ui/TerminalTransactions.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ca/ubc/cs304/ui/TerminalTransactions.java" afterDir="false" />
+    <list default="true" id="4a1c15cb-29fe-4c9d-a601-641752cb058f" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/bin/ca/ubc/cs304/delegates/TerminalTransactionsDelegate.class" beforeDir="false" afterPath="$PROJECT_DIR$/bin/ca/ubc/cs304/delegates/TerminalTransactionsDelegate.class" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -84,7 +76,14 @@
       <option name="project" value="LOCAL" />
       <updated>1573953116165</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Try to work on the first transaction, still thinking of sql statement for showAllVehiclesFor. this is not still complete.">
+      <created>1573961049207</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1573961049207</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -100,6 +99,7 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="The attribute type of vid for Vehicle is changed." />
-    <option name="LAST_COMMIT_MESSAGE" value="The attribute type of vid for Vehicle is changed." />
+    <MESSAGE value="Try to work on the first transaction, still thinking of sql statement for showAllVehiclesFor. this is not still complete." />
+    <option name="LAST_COMMIT_MESSAGE" value="Try to work on the first transaction, still thinking of sql statement for showAllVehiclesFor. this is not still complete." />
   </component>
 </project>

@@ -1,13 +1,8 @@
 package database;
 
-import model.BranchModel;
+import model.VehicleModel;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 
 
@@ -40,87 +35,8 @@ public class DatabaseConnectionHandler {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
 	}
-
-
 	
-	public void insertBranch(BranchModel model) {
-		try {
-			PreparedStatement ps = connection.prepareStatement("INSERT INTO branch VALUES (?,?,?,?,?)");
-			ps.setInt(1, model.getId());
-			ps.setString(2, model.getName());
-			ps.setString(3, model.getAddress());
-			ps.setString(4, model.getCity());
-			if (model.getPhoneNumber() == 0) {
-				ps.setNull(5, java.sql.Types.INTEGER);
-			} else {
-				ps.setInt(5, model.getPhoneNumber());
-			}
 
-			ps.executeUpdate();
-			connection.commit();
-
-			ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}
-	}
-	
-	public BranchModel[] getBranchInfo() {
-		ArrayList<BranchModel> result = new ArrayList<BranchModel>();
-		
-		try {
-			Statement stmt = connection.createStatement();
-			ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
-		
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
-			
-			while(rs.next()) {
-				BranchModel model = new BranchModel(rs.getString("branch_addr"),
-													rs.getString("branch_city"),
-													rs.getInt("branch_id"),
-													rs.getString("branch_name"),
-													rs.getInt("branch_phone"));
-				result.add(model);
-			}
-
-			rs.close();
-			stmt.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-		}	
-		
-		return result.toArray(new BranchModel[result.size()]);
-	}
-	
-	public void updateBranch(int id, String name) {
-		try {
-		  PreparedStatement ps = connection.prepareStatement("UPDATE branch SET branch_name = ? WHERE branch_id = ?");
-		  ps.setString(1, name);
-		  ps.setInt(2, id);
-		
-		  int rowCount = ps.executeUpdate();
-		  if (rowCount == 0) {
-		      System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
-		  }
-	
-		  connection.commit();
-		  
-		  ps.close();
-		} catch (SQLException e) {
-			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-			rollbackConnection();
-		}	
-	}
 	
 	public boolean login(String username, String password) {
 		try {
@@ -145,5 +61,94 @@ public class DatabaseConnectionHandler {
 		} catch (SQLException e) {
 			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
 		}
+	}
+	public VehicleModel[] getVehicleInfo() {
+		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+
+		try {
+			Statement stmt = connection.createStatement();
+			ResultSet rs = stmt.executeQuery("SELECT * FROM Vehicle where STATUS = 'available'");
+
+//    		// get info on ResultSet
+//    		ResultSetMetaData rsmd = rs.getMetaData();
+//
+//    		System.out.println(" ");
+//
+//    		// display column names;
+//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+//    			// get column name and print it
+//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
+//    		}
+
+			while(rs.next()) {
+				VehicleModel model = new VehicleModel(rs.getInt("vid"),
+						rs.getInt("vlicense"),
+						rs.getString("make"), rs.getString("model"), rs.getString("year"),
+						rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
+						rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new VehicleModel[result.size()]);
+	}
+
+	public VehicleModel[] getVehicleInfo(String carType, String location, String startTime, String endTime) {
+		ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+
+		String cTypeFilter ="";
+		String locFilter = "";
+		String timeIntFilter = "";
+		if(carType.length()>0){
+   			cTypeFilter = "AND VTNAME = " + carType;
+		}
+		if(location.length()>0){
+			locFilter = "AND LOCATION = " + location;
+		}
+		// Checks to see if a reservation has already been made from that interval
+		if(startTime.length()>0 && endTime.length()>0){
+			//  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
+			timeIntFilter = "AND NOT EXISTS (Select * from Reservation WHERE " + startTime +
+					"Between(FROMDATETIME, TODATETIME) AND "+ endTime + "Between(FROMDATETIME, TODATETIME)" ;
+		}
+
+		try {
+			Statement stmt = connection.createStatement();
+			String query = "SELECT * FROM Vehicle where STATUS = 'available'";
+			query = query + cTypeFilter + locFilter + timeIntFilter;
+			ResultSet rs = stmt.executeQuery(query);
+
+//    		// get info on ResultSet
+//    		ResultSetMetaData rsmd = rs.getMetaData();
+//
+//    		System.out.println(" ");
+//
+//    		// display column names;
+//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+//    			// get column name and print it
+//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
+//    		}
+
+			while(rs.next()) {
+				VehicleModel model = new VehicleModel(rs.getInt("vid"),
+						rs.getInt("vlicense"),
+						rs.getString("make"), rs.getString("model"), rs.getString("year"),
+						rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
+						rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
+				result.add(model);
+			}
+
+			rs.close();
+			stmt.close();
+		} catch (SQLException e) {
+			System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+		}
+
+		return result.toArray(new VehicleModel[result.size()]);
 	}
 }

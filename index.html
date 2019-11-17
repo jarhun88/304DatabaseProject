@@ -6,7 +6,9 @@
   <title></title>
   <meta name="description" content="">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script src = "http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src= "http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="main.js"></script>
   <link rel="stylesheet" href="main.css">
   <meta name="theme-color" content="#fafafa">
 </head>
@@ -26,8 +28,31 @@
           <input id="view-vehicles" type="radio" name="input" value="male" checked> View Vehicles
           <input id="make-reservation" type="radio" name="input" value="female"> Make Reservation
         </form>
-        <textarea rows="10" cols="50"></textarea>
-        <button class="button" type="button" onclick="customerButton()">Submit</button>
+
+        <div class="input-box" id="view-vehicles-fields">
+          <input type="text" id="vv-car-type" placeholder="car type">
+          <input type="text" id="vv-location" placeholder="location">
+          <input type="text" id="vv-city" placeholder="city">
+          <input type="text" id="vv-from" placeholder="from date">
+          <input type="text" id="vv-to" placeholder="from time">
+        </div>
+
+        <div class="input-box" id="make-reservation-fields">
+          <div class="customer-info-fields">
+            <input type="text" id="mr-phone-num" placeholder="phone number">
+            <input type="text" id="mr-name" placeholder="name">
+            <input type="text" id="mr-address" placeholder="address">
+            <input type="text" id="mr-city" placeholder="city">
+            <input type="text" id="mr-driver-license" placeholder="driver license">
+          </div>
+
+          <div class="reservation-info-fields">
+            <input type="text" id="mr-vtname" placeholder="vtname">
+            <input type="text" id="mr-from" placeholder="from date">
+            <input type="text" id="mr-to" placeholder="to time">
+          </div>
+        </div>  
+        <button class="button" id="customer-button" type="button">Submit</button>
         <output class="customer-output"name="result">Output will display here</output>
       </div>
 
@@ -39,8 +64,27 @@
           <input id="rent"type="radio" name="input" value="male" checked> Renting Vehicle
           <input id="return" type="radio" name="input" value="female"> Returning Vehicle
         </form>
-        <textarea rows="10" cols="50"></textarea>
-        <button class="button" type="button" onclick="clerkButton()">Submit</button>
+        <div class="input-box" id="make-rental-fields">
+          <div class="customer-info-fields">
+            <input type="text" id="rent-phone-num" placeholder="phone number">
+            <input type="text" id="rent-name" placeholder="name">
+            <input type="text" id="rent-address" placeholder="address">
+            <input type="text" id="rent-driver-license" placeholder="driver license">
+          </div>
+            <input type="text" id="rent-vtname" placeholder="vtname">
+            <input type="text" id="rent-city" placeholder="city">
+            <input type="text" id="rent-from" placeholder="from date">
+            <input type="text" id="rent-to" placeholder="to time">
+        </div>
+
+        <div class="input-box" id="make-return-fields">
+            <input type="text" id="return-rid" placeholder="rid">
+            <input type="text" id="return-vtname" placeholder="vtname">
+            <input type="text" id="return-city" placeholder="city">
+            <input type="text" id="return-time" placeholder="to time">
+        </div>
+
+        <button class="button" id="rent-reserve-button" type="button">Submit</button>
         <output class="clerk-output" name="result">Output will display here</output>
       </div>
 
@@ -48,23 +92,30 @@
         <div class="function-title">
           <h3>Clerk Generate Functions</h3>
         </div>
+
         <form class="radio-form">
           <input id="daily-returns"type="radio" name="input" value="male" checked> Generate Daily Returns
           <input id="daily-rentals"type="radio" name="input" value="female"> Generate Daily Rentals
         </form>
+
         <form class="checkbox-form">
           <input id="branch" type="checkbox" name="input" value="male" checked> For Branch
         </form>
-        <textarea rows="10" cols="50"></textarea>
-        <button class="button" type="button" onclick="generateButton()">Submit</button>
+
+        <div class="input-box" id="date-fields">
+            <input type="text" id="g-date" placeholder="date">
+        </div>
+
+        <div class="input-box" id="branch-fields">
+          <input type="text" id="g-address" placeholder="address">
+          <input type="text" id="g-city" placeholder="city">
+        </div>
+
+        <button class="button" id="generate-button" type="button" onclick="generateButton()">Submit</button>
         <output class="clerk-output" name="result">Output will display here</output>
       </div>
     </div>
   </div>
-  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="main.js"></script>
-  <script src = "http://code.jquery.com/jquery-1.9.1.min.js"></script>
-  
 
 </body>
 

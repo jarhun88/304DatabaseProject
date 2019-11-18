@@ -8,12 +8,11 @@ public class GreetingController {
 
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping(path = "/view-vehicles", consumes = "multipart/form-data", produces = "application/json")
-    public String viewVehicles(@RequestPart("carType") String carType,
-                           @RequestPart("location") String location,
-                           @RequestPart("city") String city,
-                           @RequestPart("from") String from,
-                           @RequestPart("to") String to) {
-
+    public String viewVehicles(@RequestPart(name="carType", required=false) String carType,
+                           @RequestPart(name="location", required=false) String location,
+                           @RequestPart(name="city", required=false) String city,
+                           @RequestPart(name="from", required=false) String from,
+                           @RequestPart(name="to", required=false) String to) {
         return "hello";
     }
 

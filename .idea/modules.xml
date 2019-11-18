@@ -3,6 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/304DatabaseProject.iml" filepath="$PROJECT_DIR$/.idea/304DatabaseProject.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/304DatabaseProject_main.iml" filepath="$PROJECT_DIR$/.idea/modules/304DatabaseProject_main.iml" group="304DatabaseProject" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/304DatabaseProject_test.iml" filepath="$PROJECT_DIR$/.idea/modules/304DatabaseProject_test.iml" group="304DatabaseProject" />
     </modules>
   </component>
 </project>

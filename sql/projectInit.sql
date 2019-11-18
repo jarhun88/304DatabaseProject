@@ -14,7 +14,7 @@ drop table Branch cascade constraints purge
 /
 create table Reservation(
 confNo integer generated always as identity,
-vtname varchar(9),
+vid integer,
 cellphone char(10),
 fromDateTime timestamp,
 toDateTime timestamp,
@@ -72,8 +72,8 @@ fulltank char(1),
 value integer)
 /
 alter table Reservation
-add foreign key(vtname)
-references VehicleType(vtname)
+add foreign key(vid)
+references Vehicle(vid)
 /
 alter table Reservation
 add foreign key(cellphone)
@@ -208,35 +208,35 @@ insert into vehicle (vlicense, make, model, year, color, odometer, status, vtnam
 '123465', 'Honda', 'Accord', '2012', 'Black', '321221458', 'available',
 'Economy', 'East', 'Richmond')
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Economy', '6041234567', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+1, '6041234567', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Compact', '6041237890', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+2, '6041237890', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Mid-size', '7804564567', to_timestamp('2019-06-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+3, '7804564567', to_timestamp('2019-06-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Standard', '7804561234', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+4, '7804561234', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Full-size', '6041231234', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+5, '6041231234', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'SUV', '1234567890', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+6, '1234567890', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Truck', '1234564560', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+7, '1234564560', to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Truck', '1237894567', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+8, '1237894567', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'SUV', '4561237890', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+9, '4561237890', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'))
 /
-insert into reservation (vtname, cellphone, fromDateTime, toDateTime) values (
-'Economy', '4564561234', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'))
+insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
+10, '4564561234', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'))
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
 1, '6041234567', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), '123456789', 'Visa', '4111111111111111', to_date('2020-01-01', 'YYYY-MM-DD'), 1)

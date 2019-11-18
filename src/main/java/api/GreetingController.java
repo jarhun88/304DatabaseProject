@@ -1,40 +1,60 @@
 package api;
 
-//import controller.Controller;
-//import model.VehicleModel;
-//import org.springframework.web.bind.annotation.RequestMapping;
-//import org.springframework.web.bind.annotation.RequestParam;
-//import org.springframework.web.bind.annotation.RestController;
-//
-//import java.util.concurrent.atomic.AtomicLong;
-//
-//@RestController
-//public class VehicleController {
-//
-//    private static final String template = "Hello, %s!";
-//    private final AtomicLong counter = new AtomicLong();
-//
-//    @RequestMapping("/vehicle")
-//    public VehicleModel[] vehicles(@RequestParam(value="name", defaultValue="World") String name) {
-//        return Controller.viewVehicles();
-//    }
-//}
+import org.json.JSONObject;
+import org.springframework.web.bind.annotation.*;
 
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-
-@Controller
+@RestController
 public class GreetingController {
 
-    @GetMapping("/greeting")
-    public String greeting(@RequestParam(name="name", required=false, defaultValue="World") String name, Model model) {
-        model.addAttribute("name", name);
-        return "greeting";
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/view-vehicles", consumes = "multipart/form-data", produces = "application/json")
+    public String customer(@RequestPart("carType") String carType,
+                           @RequestPart("location") String location,
+                           @RequestPart("city") String city,
+                           @RequestPart("from") String from,
+                           @RequestPart("to") String to) {
+
+        return "hello";
     }
 
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/reservation", consumes = "multipart/form-data", produces = "application/json")
+    public String reservation() {
+
+        return "hello";
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/rent", consumes = "multipart/form-data", produces = "application/json")
+    public String rent() {
+
+        return "hello";
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/return", consumes = "multipart/form-data", produces = "application/json")
+    public String returns() {
+
+        return "hello";
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/daily-returns", consumes = "multipart/form-data", produces = "application/json")
+    public String dailyReturns() {
+
+        return "hello";
+    }
+
+    @CrossOrigin(origins = "http://localhost:8081")
+    @PostMapping(path = "/daily-rentals", consumes = "multipart/form-data", produces = "application/json")
+    public String dailyRentals() {
+
+        return "hello";
+    }
+
+
 }
+
 
 
 

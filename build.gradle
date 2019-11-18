@@ -30,4 +30,6 @@ dependencies {
     compile("org.springframework.boot:spring-boot-devtools")
     testCompile("junit:junit")
     implementation files('jars/ojdbc6.jar')
+    compile 'org.json:json:20171018'
+
 }

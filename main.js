@@ -39,19 +39,28 @@ $( document ).ready(function()
     })
 
     $("#customer-button").click(function() {
-        let body;
         let viewVehiclesSelected = $("#view-vehicles").is(':checked');
+        let body;
+        let config = {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        };
         if (viewVehiclesSelected) {
-            body = viewVehiclesBody()
+            body = viewVehiclesBody(body)
+            axios.post(localURL + "/view-vehicles", body, config).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
         }
         else {
-            body = reservationBody()
+            body = reservationBody(body)
+            axios.post(localURL + "/reservation", body, config).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })
         }
-        axios.get(localURL + "/greeting").then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            console.log(error)
-        })
+
     });
 
     $("#rent-reserve-button").click(function() {
@@ -60,16 +69,21 @@ $( document ).ready(function()
         let rentVehicleSelected = $("#rent").is(':checked');
         if (rentVehicleSelected) {
             body = rentBody();
+            axios.post(localURL + "/rent", body).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })  
         }
         else {
             body = returnBody();
+            axios.post(localURL + "/return", body).then((response) => {
+                console.log(response)
+            }).catch((error) => {
+                console.log(error)
+            })  
         }      
         console.log(body);
-        axios.post(localURL + "/someUrl", body).then((response) => {
-            console.log(response)
-        }).catch((error) => {
-            console.log(error)
-        })  
     });
 
     $("#generate-button").click(function() {
@@ -82,14 +96,14 @@ $( document ).ready(function()
         }
         console.log(body);
         if (isReturnsSelected) {
-            axios.post(localURL + "/someUrl", body).then((response) => {
+            axios.post(localURL + "/daily-returns", body).then((response) => {
                 console.log(response)
             }).catch((error) => {
                 console.log(error)
             })  
         }
         else {
-            axios.post(localURL +  "/someUrl", body).then((response) => {
+            axios.post(localURL +  "/daily-rentals", body).then((response) => {
                 console.log(response)
             }).catch((error) => {
                 console.log(error)
@@ -141,17 +155,22 @@ function rentBody() {
 }
 
 function viewVehiclesBody() {
-    let body = {};
+    let body = new FormData();
     let carType = $("#vv-car-type").val();
     let location = $("#vv-location").val();
     let city = $("#vv-city").val();
     let from = $("#vv-from").val();
     let to = $("#vv-to").val();
-    body["carType"] = carType;
-    body["location"] = location;
-    body["city"] = city;
-    body["from"] = from;
-    body["to"] = to;
+    body.set("carType", carType);
+    body.set("location", location);
+    body.set("city", city);
+    body.set("from", from);
+    body.set("to", to);
+    // body["carType"] = carType;
+    // body["location"] = location;
+    // body["city"] = city;
+    // body["from"] = from;
+    // body["to"] = to;
     console.log(body);
     return body;
 }

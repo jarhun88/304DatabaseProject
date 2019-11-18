@@ -1,5 +1,7 @@
 $( document ).ready(function()
 {
+    const localURL = "http://localhost:8080";
+
     console.log( "ready!" );
     $("#make-reservation-fields").hide(); 
     $("#make-return-fields").hide();
@@ -45,7 +47,7 @@ $( document ).ready(function()
         else {
             body = reservationBody()
         }
-        axios.post("/someUrl", body).then((response) => {
+        axios.get(localURL + "/greeting").then((response) => {
             console.log(response)
         }).catch((error) => {
             console.log(error)
@@ -63,7 +65,7 @@ $( document ).ready(function()
             body = returnBody();
         }      
         console.log(body);
-        axios.post("/someUrl", body).then((response) => {
+        axios.post(localURL + "/someUrl", body).then((response) => {
             console.log(response)
         }).catch((error) => {
             console.log(error)
@@ -80,14 +82,14 @@ $( document ).ready(function()
         }
         console.log(body);
         if (isReturnsSelected) {
-            axios.post("/someUrl", body).then((response) => {
+            axios.post(localURL + "/someUrl", body).then((response) => {
                 console.log(response)
             }).catch((error) => {
                 console.log(error)
             })  
         }
         else {
-            axios.post("/someUrl", body).then((response) => {
+            axios.post(localURL +  "/someUrl", body).then((response) => {
                 console.log(response)
             }).catch((error) => {
                 console.log(error)

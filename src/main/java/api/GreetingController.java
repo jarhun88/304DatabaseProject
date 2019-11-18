@@ -8,7 +8,7 @@ public class GreetingController {
 
     @CrossOrigin(origins = "http://localhost:8081")
     @PostMapping(path = "/view-vehicles", consumes = "multipart/form-data", produces = "application/json")
-    public String customer(@RequestPart("carType") String carType,
+    public String viewVehicles(@RequestPart("carType") String carType,
                            @RequestPart("location") String location,
                            @RequestPart("city") String city,
                            @RequestPart("from") String from,

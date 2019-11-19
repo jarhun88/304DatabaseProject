@@ -3,14 +3,12 @@ package controller;
 import database.DatabaseConnectionHandler;
 import model.VehicleModel;
 
-import java.io.IOException;
-
 //This is the main controller class that will orchestrate everything.
 public class Controller  {
     private static DatabaseConnectionHandler dbHandler = null;
 
     //opens browser instance, navigates to web page, and logs in
-    private void start() {
+    public static void start() {
        /* File htmlFile = new File(url);
         try {
             Desktop.getDesktop().browse(htmlFile.toURI());
@@ -19,12 +17,15 @@ public class Controller  {
         }*/
 
 
-        //login("ora_aktoriam@stu", "a42603381");
+       // Init jdbc handler
+       dbHandler = new DatabaseConnectionHandler();
+
+        // Log in with given credentials
         boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
-    }
+        //boolean didConnect = dbHandler.login("ora_aktoriam@stu", "a42603381");
 
-    private void OpenHTTPConn() throws IOException {
-
+        VehicleModel[] temp = viewVehicles();
+        System.out.printf("here");
     }
 
     //TODO

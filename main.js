@@ -41,100 +41,137 @@ $( document ).ready(function()
     $("#customer-button").click(function() {
         let viewVehiclesSelected = $("#view-vehicles").is(':checked');
         let body;
+        let responseText;
         let config = {
             headers: {'Access-Control-Allow-Origin': '*'}
         };
         if (viewVehiclesSelected) {
             body = viewVehiclesBody(body)
             axios.post(localURL + "/view-vehicles", body, config).then((response) => {
-                console.log(response)
+                responseText = response.data;
+                console.log(responseText)
+                document.getElementById("customer-output").innerHTML = responseText;
             }).catch((error) => {
-                console.log(error)
+                responseText = error.data;
+                console.log(responseText)
+                document.getElementById("customer-output").innerHTML = responseText;
             })
         }
         else {
             body = reservationBody(body)
             axios.post(localURL + "/reservation", body, config).then((response) => {
-                console.log(response)
+                responseText = response.data;
+                console.log(responseText)
+                document.getElementById("customer-output").innerHTML = responseText;
             }).catch((error) => {
-                console.log(error)
+                responseText = error.data;
+                document.getElementById("customer-output").innerHTML = responseText;
+
             })
         }
-
     });
 
     $("#rent-reserve-button").click(function() {
-        console.log("rent-reserve");
         let body;
+        let config = {
+            headers: {'Access-Control-Allow-Origin': '*'}
+        };
         let rentVehicleSelected = $("#rent").is(':checked');
         if (rentVehicleSelected) {
             body = rentBody();
-            axios.post(localURL + "/rent", body).then((response) => {
-                console.log(response)
+            axios.post(localURL + "/rent", body, config).then((response) => {
+                responseText = response.data;
+                console.log(responseText)
+                document.getElementById("clerk-output").innerHTML = responseText;
             }).catch((error) => {
-                console.log(error)
+                responseText = error.data;
+                console.log(responseText)
+                document.getElementById("clerk-output").innerHTML = responseText;
             })  
         }
         else {
             body = returnBody();
-            axios.post(localURL + "/return", body).then((response) => {
-                console.log(response)
+            axios.post(localURL + "/return", body, config).then((response) => {
+                responseText = response.data;
+                console.log(responseText)
+                document.getElementById("clerk-output").innerHTML = responseText;
             }).catch((error) => {
-                console.log(error)
+                responseText = error.data;
+                console.log(responseText)
+                document.getElementById("clerk-output").innerHTML = responseText;
             })  
         }      
         console.log(body);
     });
 
     $("#generate-button").click(function() {
-        let body = {};
+        let body = new FormData();
         let isBranchSelected = $("#branch").is(':checked');
         let isReturnsSelected = $("#daily-returns").is(':checked');
-        body["date"] = $("#g-date").val();
-        if (isBranchSelected) {
-            body = branchBody(body);
-        }
+        date = $("#g-date").val();
+        body.set("date", date);
+        
         console.log(body);
         if (isReturnsSelected) {
-            axios.post(localURL + "/daily-returns", body).then((response) => {
-                console.log(response)
-            }).catch((error) => {
-                console.log(error)
-            })  
+            if (isBranchSelected) {
+                body = branchBody(body);
+                axios.post(localURL + "/daily-returns-branch", body).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                })  
+            }
+            else {
+                axios.post(localURL + "/daily-returns", body).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                })  
+            }   
         }
         else {
-            axios.post(localURL +  "/daily-rentals", body).then((response) => {
-                console.log(response)
-            }).catch((error) => {
-                console.log(error)
-            })  
+            if (isBranchSelected) {
+                body = branchBody(body);
+                axios.post(localURL + "/daily-rentals-branch", body).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                })  
+            }
+            else {
+                axios.post(localURL +  "/daily-rentals", body).then((response) => {
+                    console.log(response)
+                }).catch((error) => {
+                    console.log(error)
+                })  
+            }
         }
     })
 })
 
 function branchBody(body) {
-    body["address"] = $("#g-address").val()
-    body["city"] = $("#g-city").val()
+    address = $("#g-address").val()
+    city = $("#g-city").val()
+    body.set("address", address);
+    body.set("city", city);
     return body;
 }
 
-
-
 function returnBody() {
-    let body = {};
+    let body = new FormData()
     let rid = $("#return-rid").val();
     let vtname = $("#return-vtname").val();
     let city = $("#return-city").val();
     let time = $("#return-time").val();
-    body["rid"] = rid;
-    body["vtname"] = vtname;
-    body["city"] = city;
-    body["time"] = time;
+    body.set("rid", rid);
+    body.set("vtname", vtname);
+    body.set("city", city);
+    body.set("time", time);
     return body;
 }
 
 function rentBody() {
-    let body = {};
+    let body = new FormData();
     let phoneNum = $("#rent-phone-num").val();
     let name = $("#rent-name").val();
     let address = $("#rent-address").val();
@@ -143,14 +180,14 @@ function rentBody() {
     let city = $("#rent-city").val();
     let from = $("#rent-from").val();
     let to = $("#rent-to").val();
-    body["phoneNum"] = phoneNum;
-    body["name"] = name;
-    body["address"] = address;
-    body["city"] = city;
-    body["license"] = license;
-    body["vtname"] = vtname;
-    body["from"] = from;
-    body["to"] = to;
+    body.set("phoneNum", phoneNum);
+    body.set("name", name);
+    body.set("address", address);
+    body.set("city", city);
+    body.set("license", license);
+    body.set("vtname", vtname);
+    body.set("from", from);
+    body.set("to", to);
     return body;
 }
 
@@ -166,17 +203,12 @@ function viewVehiclesBody() {
     body.set("city", city);
     body.set("from", from);
     body.set("to", to);
-    // body["carType"] = carType;
-    // body["location"] = location;
-    // body["city"] = city;
-    // body["from"] = from;
-    // body["to"] = to;
     console.log(body);
     return body;
 }
 
 function reservationBody() {
-    let body = {};
+    let body = new FormData();
     let phoneNum = $("#mr-phone-num").val();
     let name = $("#mr-name").val();
     let address = $("#mr-address").val();
@@ -185,13 +217,13 @@ function reservationBody() {
     let vtname = $("#mr-vtname").val();
     let from = $("#mr-from").val();
     let to = $("#mr-to").val();
-    body["phoneNum"] = phoneNum;
-    body["name"] = name;
-    body["address"] = address;
-    body["city"] = city;
-    body["license"] = license;
-    body["vtname"] = vtname;
-    body["from"] = from;
-    body["to"] = to;
+    body.set("phoneNum", phoneNum);
+    body.set("name", name);
+    body.set("address", address);
+    body.set("city", city);
+    body.set("license", license);
+    body.set("vtname", vtname);
+    body.set("from", from);
+    body.set("to", to);
     return body;
 }

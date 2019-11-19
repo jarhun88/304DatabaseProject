@@ -1,7 +1,13 @@
 package api;
 
-import org.json.JSONObject;
-import org.springframework.web.bind.annotation.*;
+import controller.Controller;
+import org.json.JSONArray;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.Arrays;
 
 @RestController
 public class GreetingController {
@@ -13,7 +19,9 @@ public class GreetingController {
                            @RequestPart(name="city", required=false) String city,
                            @RequestPart(name="from", required=false) String from,
                            @RequestPart(name="to", required=false) String to) {
-        return "hello";
+
+        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewVehicles(carType, location, city, from, to)));
+        return mJSONArray.toString();
     }
 
     @CrossOrigin(origins = "http://localhost:8081")
@@ -50,8 +58,6 @@ public class GreetingController {
 
         return "hello";
     }
-
-
 }
 
 

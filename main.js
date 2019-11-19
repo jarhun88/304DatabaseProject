@@ -73,6 +73,7 @@ $( document ).ready(function()
 
     $("#rent-reserve-button").click(function() {
         let body;
+        let responseText;
         let config = {
             headers: {'Access-Control-Allow-Origin': '*'}
         };
@@ -106,6 +107,7 @@ $( document ).ready(function()
 
     $("#generate-button").click(function() {
         let body = new FormData();
+        let responseText;
         let isBranchSelected = $("#branch").is(':checked');
         let isReturnsSelected = $("#daily-returns").is(':checked');
         date = $("#g-date").val();
@@ -116,16 +118,24 @@ $( document ).ready(function()
             if (isBranchSelected) {
                 body = branchBody(body);
                 axios.post(localURL + "/daily-returns-branch", body).then((response) => {
-                    console.log(response)
+                    responseText = response.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    console.log(error)
+                    responseText = error.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }
             else {
                 axios.post(localURL + "/daily-returns", body).then((response) => {
-                    console.log(response)
+                    responseText = response.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    console.log(error)
+                    responseText = error.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }   
         }
@@ -133,16 +143,24 @@ $( document ).ready(function()
             if (isBranchSelected) {
                 body = branchBody(body);
                 axios.post(localURL + "/daily-rentals-branch", body).then((response) => {
-                    console.log(response)
+                    responseText = response.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    console.log(error)
+                    responseText = error.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }
             else {
                 axios.post(localURL +  "/daily-rentals", body).then((response) => {
-                    console.log(response)
+                    responseText = response.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    console.log(error)
+                    responseText = error.data;
+                    console.log(responseText)
+                    document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }
         }

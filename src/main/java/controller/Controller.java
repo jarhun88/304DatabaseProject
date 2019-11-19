@@ -24,7 +24,8 @@ public class Controller {
         boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
         //boolean didConnect = dbHandler.login("ora_aktoriam@stu", "a42603381");
 
-
+        VehicleModel[] temp = dbHandler.getVehicleInfo("", "", "", "","");
+        System.out.printf("here");
     }
 
     // Adds a new customer

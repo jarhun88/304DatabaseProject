@@ -103,29 +103,31 @@ public class DatabaseConnectionHandler {
     public VehicleModel[] getVehicleInfo(String carType, String location, String city, String startTime, String endTime) {
         ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
+        // Build up filter list based on input
         String cTypeFilter = "";
         String locFilter = "";
         String cityFilter = "";
         String timeIntFilter = "";
-        if (carType.length() > 0) {
-            cTypeFilter = "AND VTNAME = " + carType;
+        if (carType != null && carType.length() > 0) {
+            cTypeFilter = "AND VTNAME = '" + carType+ "'";
         }
-        if (location.length() > 0) {
-            locFilter = "AND LOCATION = " + location;
+        if (location != null && location.length() > 0) {
+            locFilter = "AND LOCATION = '" + location+ "'";
         }
-        if (city.length() > 0) {
-            cityFilter = "AND CITY = " + city;
+        if (city != null && city.length() > 0) {
+            cityFilter = "AND CITY = '" + city + "'";
         }
         // Checks to see if a reservation has already been made from that interval
-        if (startTime.length() > 0 && endTime.length() > 0) {
+        if (startTime != null && endTime != null && startTime.length() > 0 && endTime.length() > 0) {
             //  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
-            timeIntFilter = "AND NOT EXISTS (Select * from Reservation WHERE " + startTime +
-                    "Between(FROMDATETIME, TODATETIME) AND " + endTime + "Between(FROMDATETIME, TODATETIME)";
+            timeIntFilter = "AND NOT EXISTS (Select * from Reservation r WHERE v.vid=r.vid AND to_timestamp('" + startTime +
+                    "', ‘YYYY-MM-DD’) >= TODATETIME AND to_timestamp('" + endTime + "', ‘YYYY-MM-DD’) <= FROMDATETIME)";
         }
 
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT * FROM Vehicle where STATUS = 'available'";
+            String query = "SELECT * FROM Vehicle v where STATUS = 'available'";
+            // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
             ResultSet rs = stmt.executeQuery(query);
 
@@ -140,6 +142,7 @@ public class DatabaseConnectionHandler {
 //    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
 //    		}
 
+			// Reads sql result into vehicle array
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getInt("vlicense"),

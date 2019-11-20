@@ -86,7 +86,7 @@ public class DatabaseConnectionHandler {
 
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
-                        rs.getInt("vlicense"),
+                        rs.getString("vlicense"),
                         rs.getString("make"), rs.getString("model"), rs.getString("year"),
                         rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
                         rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
@@ -157,7 +157,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             // Reads sql result into vehicle array
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
-                        rs.getInt("vlicense"),
+                        rs.getString("vlicense"),
                         rs.getString("make"), rs.getString("model"), rs.getString("year"),
                         rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
                         rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
@@ -335,7 +335,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             ps.setString(2,cellphone);
             ps.setString(3, fromDateTime);
             ps.setString(4, toDateTime);
-            ps.setString(5, odometer);
+            ps.setInt(5, Integer.parseInt(odometer));
             ps.setString(6, cardName);
             ps.setString(7, cardNo);
             ps.setString(8, expDate);

@@ -8,7 +8,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <script src= "http://code.jquery.com/jquery-1.9.1.min.js"></script>
   <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-  <script src="main.js"></script>
+  <script src="main.js" type="module"></script>
+  <script src="inputToggle.js"></script>
   <link rel="stylesheet" href="main.css">
   <meta name="theme-color" content="#fafafa">
 </head>
@@ -140,14 +141,13 @@
         <input id="all" type="radio" name="input"> All
     </form>
 
-
     <div class="user-type-box">
         <div class="function-box">
           <div class="function-title">
               <h3>Customer Functions</h3>
           </div>
           
-          <div class="primary-key">
+          <div class="primary-key" id="primary-key">
             <div id="pk-title">Primary Key</div>
             <input class="key-input" type="text" id="pk-input">
           </div>

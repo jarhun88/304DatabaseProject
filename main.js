@@ -1,32 +1,7 @@
 $( document ).ready(function()
 {
     const localURL = "http://localhost:8080";
-
     console.log( "ready!" );
-    $("#make-reservation-fields").hide(); 
-    $("#make-return-fields").hide();
-
-    // hides "reservation" inputs when you click "view-vehicles"
-    $("#view-vehicles").click(function() {
-        $("#make-reservation-fields").hide(); 
-        $("#view-vehicles-fields").show(); 
-    })
-
-    // hides "view-vehicle" inputs when you click "reservation"
-    $("#make-reservation").click(function() {
-        $("#view-vehicles-fields").hide(); 
-        $("#make-reservation-fields").show(); 
-    })
-
-    $("#rent").click(function() {
-        $("make-return-fields").hide(); 
-        $("#make-rental-fields").show(); 
-    })
-
-    $("#return").click(function() {
-        $("#make-rental-fields").hide(); 
-        $("#make-return-fields").show(); 
-    })
 
     $("#branch").click(function() {
         let isBranchSelected = $("#branch").is(':checked');

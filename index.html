@@ -134,10 +134,10 @@
     <form class="radio-form">
         <input id="reservation" type="radio" name="input" checked> Reservation
         <input id="rentals" type="radio" name="input"> Rentals
+        <input id="returns" type="radio" name="input"> Returns
         <input id="vehicles" type="radio" name="input"> Vehicles
         <input id="vehicleTypes" type="radio" name="input"> Vehicle Types
         <input id="customer" type="radio" name="input" value="male" > Customers     
-        <input id="returns" type="radio" name="input"> Returns
         <input id="all" type="radio" name="input"> All
     </form>
 
@@ -147,11 +147,42 @@
               <h3>Customer Functions</h3>
           </div>
           
-          <div class="primary-key" id="primary-key">
-            <div id="pk-title">Primary Key</div>
-            <input class="key-input" type="text" id="pk-input">
+          <div class="primary-key" id="primary-key"> 
+            <div class="key-input" id="pk-title">Primary Key</div>
+            <input type="text" id="pk-input">
           </div>
-  
+
+          <div class="input-box" id="vehicles">
+            <input type="text" id="pk-input" placeholder="vlicense">
+            <input type="text" id="pk-input" placeholder="make">
+            <input type="text" id="pk-input" placeholder="model">
+            <input type="text" id="pk-input" placeholder="year">
+            <input type="text" id="pk-input" placeholder="color">
+            <input type="text" id="pk-input" placeholder="odometer">
+            <input type="text" id="pk-input" placeholder="status">
+            <input type="text" id="pk-input" placeholder="vtname">
+            <input type="text" id="pk-input" placeholder="location">
+            <input type="text" id="pk-input" placeholder="city">
+          </div>
+
+          <div class="input-box" id="vehicle-type">
+            <input type="text" id="pk-input" placeholder="features">
+            <input type="text" id="pk-input" placeholder="wrate">
+            <input type="text" id="pk-input" placeholder="drate">
+            <input type="text" id="pk-input" placeholder="hrate">
+            <input type="text" id="pk-input" placeholder="wirate">
+            <input type="text" id="pk-input" placeholder="dirate">
+            <input type="text" id="pk-input" placeholder="hirate">
+            <input type="text" id="pk-input" placeholder="krate">
+          </div>
+
+          <div class="input-box" id="customers">
+            <input type="text" id="mr-name" placeholder="name">
+            <input type="text" id="mr-address" placeholder="address">
+            <input type="text" id="mr-city" placeholder="city">
+            <input type="text" id="mr-driver-license" placeholder="driver license">
+          </div>
+
           <button class="button" id="customer-button" type="button">Submit</button>
           <p id="customer-output"name="result">Output will display here</p>
         </div>

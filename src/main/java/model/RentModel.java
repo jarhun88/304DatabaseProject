@@ -1,13 +1,15 @@
 package model;
 
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class RentModel {
     private final int rid;
     private final int vid;
     private final String cellphone;
-    private final Date fromDateTime;
-    private final Date toDateTime;
+    private final Timestamp fromDateTime;
+    private final Timestamp toDateTime;
     private final int odometer;
     private final String cardName;
     private final String cardNo;
@@ -15,7 +17,7 @@ public class RentModel {
     private final int confNo;
 
     public RentModel(int rid, int vid, String cellphone,
-                     Date fromDateTime, Date toDateTime, int odometer, String cardName, String cardNo, Date expDate, int confNo) {
+                     Timestamp fromDateTime, Timestamp toDateTime, int odometer, String cardName, String cardNo, Date expDate, int confNo) {
         this.rid = rid;
         this.vid = vid;
         this.cellphone = cellphone;
@@ -48,11 +50,11 @@ public class RentModel {
         return odometer;
     }
 
-    public Date getToDateTime() {
+    public Timestamp getToDateTime() {
         return toDateTime;
     }
 
-    public Date getFromDateTime() {
+    public Timestamp getFromDateTime() {
         return fromDateTime;
     }
 

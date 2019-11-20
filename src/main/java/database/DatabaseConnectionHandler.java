@@ -4,6 +4,7 @@ import model.ReservationModel;
 import model.VehicleModel;
 import oracle.jdbc.proxy.annotation.Pre;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -242,10 +243,16 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
     // REQUIRES: all the inputs to be non-empty
     // EFFECTS: Makes a reservation and returns confirmation number
+    //          if a reservation cannot be made for some reason, it returns -1
     public int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vid,
-                               String fromDate, String toDate) {
+                               String fromDateTime, String toDateTime) {
+        int confNo = -1;
         if (isCustomerMember(phoneNumber)) {
             boolean status = addNewCustomer(phoneNumber, name, address,dlicense);
+        }
+
+        if (isOverBooked(vid,fromDateTime,toDateTime)) {
+            return confNo;
         }
 
         PreparedStatement ps = null;
@@ -255,8 +262,8 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                     "to_timestamp(?, 'YYYY-MM-DD:HH24:MI'))");
             ps.setInt(1, Integer.parseInt(vid));
             ps.setString(2, phoneNumber);
-            ps.setString(3, fromDate);
-            ps.setString(4, toDate);
+            ps.setString(3, fromDateTime);
+            ps.setString(4, toDateTime);
 
             ps.executeUpdate();
             connection.commit();
@@ -268,7 +275,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             rollbackConnection();
         }
 
-        int confNo = -1;
+
 
         // get confirmation number
         try {
@@ -289,7 +296,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
     // EFFECTS: returns the Reservation detail based on the confirmation number
-    public ReservationModel getConfirmation(int confNo) {
+    public ReservationModel getReservation(int confNo) {
         ReservationModel model = null;
         try {
             Statement stmt = connection.createStatement();
@@ -310,11 +317,84 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return model;
     }
 
-    // Rents a vehicle and returns confirmation number
-    public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String name, String address,
-                           String dLicense, String confNo, String cardName, String cardNo, String expDate) {
-        return 0;
+
+
+    // REQUIRES: all the inputs are in the valid format
+    // EFFECTS: Rents a vehicle and returns confirmation number (rid)
+    public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+                           String confNo, String cardName, String cardNo, String expDate) {
+
+        boolean isSuccessful = false;
+        int rid = -1;
+        try {
+            PreparedStatement ps = connection.prepareStatement("insert into rent (vid, cellphone, fromDateTime, " +
+                    "toDateTime, odometer, cardName, cardNo, expDate, confNo) values (" +
+                    "?, ?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), to_timestamp(?,'YYYY-MM-DD:HH24:MI'), " +
+                    "?, ?, ?, to_date(?, 'YYYY-MM-DD'), ?)");
+            ps.setInt(1,Integer.parseInt(vid));
+            ps.setString(2,cellphone);
+            ps.setString(3, fromDateTime);
+            ps.setString(4, toDateTime);
+            ps.setString(5, odometer);
+            ps.setString(6, cardName);
+            ps.setString(7, cardNo);
+            ps.setString(8, expDate);
+            ps.setInt(9, Integer.parseInt(confNo));
+
+            ps.executeUpdate();
+            connection.commit();
+            isSuccessful = true;
+
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        }
+
+        if (isSuccessful) {
+            try {
+                PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
+                ps.setInt(1,Integer.parseInt(vid));
+                ps.executeUpdate();
+                connection.commit();
+
+                ps.close();
+
+            } catch (SQLException e) {
+                e.printStackTrace();
+                rollbackConnection();
+            }
+
+            rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
+
+        }
+        return rid;
+
     }
+
+    // EFFECTS: returns the rid (confirmation of the rent) based on the confNo of reservation and vid
+    public int getRidForRent(int confNo, int vid) {
+        int rid = -1;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT rid from Rent where confNo = "+ confNo+" AND vid = " + vid;
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            rid = rs.getInt("rid");
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return rid;
+
+    }
+
+
 
     // Returns a vehicle and returns a confirmation number
     public int returnVehicle(String rid, String returnDateTime, String odometer, Boolean fulltank) {

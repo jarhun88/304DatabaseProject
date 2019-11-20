@@ -1,29 +1,34 @@
 package model;
 
+import com.sun.tools.corba.se.idl.constExpr.Times;
+import oracle.sql.TIMESTAMP;
+
+import java.sql.Time;
+import java.sql.Timestamp;
 import java.util.Date;
 
 public class ReservationModel {
 
     private final int confNo;
-    private final String vtname;
+    private final int vid;
     private final String cellphone;
-    private final Date  fromDateTime;
-    private final Date toDateTime;
+    private final Timestamp  fromDateTime;
+    private final Timestamp toDateTime;
 
 
-    public ReservationModel(int confNo, String vtname, String cellphone, Date fromDateTime, Date toDateTime) {
+    public ReservationModel(int confNo, int vid, String cellphone, Timestamp fromDateTime, Timestamp toDateTime) {
         this.confNo = confNo;
-        this.vtname = vtname;
+        this.vid = vid;
         this.cellphone = cellphone;
         this.fromDateTime = fromDateTime;
         this.toDateTime = toDateTime;
     }
 
-    public Date getToDateTime() {
+    public Timestamp getToDateTime() {
         return toDateTime;
     }
 
-    public Date getFromDateTime() {
+    public Timestamp getFromDateTime() {
         return fromDateTime;
     }
 
@@ -31,8 +36,8 @@ public class ReservationModel {
         return cellphone;
     }
 
-    public String getVtname() {
-        return vtname;
+    public int getVid() {
+        return vid;
     }
 
     public int getConfNo() {

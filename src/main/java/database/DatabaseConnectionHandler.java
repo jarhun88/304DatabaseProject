@@ -1,5 +1,6 @@
 package database;
 
+import model.ReservationModel;
 import model.VehicleModel;
 import oracle.jdbc.proxy.annotation.Pre;
 
@@ -238,10 +239,75 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return resultNum;
     }
 
-    // Makes a reservation and returns confirmation number
-    public int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vtname,
+
+    // REQUIRES: all the inputs to be non-empty
+    // EFFECTS: Makes a reservation and returns confirmation number
+    public int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vid,
                                String fromDate, String toDate) {
-        return 0;
+        if (isCustomerMember(phoneNumber)) {
+            boolean status = addNewCustomer(phoneNumber, name, address,dlicense);
+        }
+
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("insert into reservation (vid, cellphone, fromDateTime, toDateTime) values ( " +
+                    "?, ?, to_timestamp(?, 'YYYY-MM-DD:HH24:MI'), " +
+                    "to_timestamp(?, 'YYYY-MM-DD:HH24:MI'))");
+            ps.setInt(1, Integer.parseInt(vid));
+            ps.setString(2, phoneNumber);
+            ps.setString(3, fromDate);
+            ps.setString(4, toDate);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        }
+
+        int confNo = -1;
+
+        // get confirmation number
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select confNo from reservation where confNo = " +
+                    "(select max(confNo) from reservation)";
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            confNo = rs.getInt("confNo");
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return confNo;
+    }
+
+    // EFFECTS: returns the Reservation detail based on the confirmation number
+    public ReservationModel getConfirmation(int confNo) {
+        ReservationModel model = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select * from reservation where confNo = " + confNo;
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            model = new ReservationModel(rs.getInt("confNo"), rs.getInt("vid"),
+                    rs.getString("cellphone"), rs.getTimestamp("fromDateTime"), rs.getTimestamp("toDateTime"));
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return model;
     }
 
     // Rents a vehicle and returns confirmation number

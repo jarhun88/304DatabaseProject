@@ -69,7 +69,7 @@ rid integer primary key,
 returnDateTime timestamp,
 odometer number,
 fulltank char(1),
-value integer)
+value number)
 /
 alter table Reservation
 add foreign key(vid)

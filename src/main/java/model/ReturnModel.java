@@ -8,9 +8,9 @@ public class ReturnModel {
     private final Timestamp returnDateTime;
     private final int odometer;
     private final String fulltank;
-    private final int value;
+    private final double value;
 
-    public ReturnModel(int rid, Timestamp returnDateTime, int odometer, String fulltank, int value) {
+    public ReturnModel(int rid, Timestamp returnDateTime, int odometer, String fulltank, double value) {
         this.rid = rid;
         this.returnDateTime = returnDateTime;
         this.odometer = odometer;
@@ -18,7 +18,7 @@ public class ReturnModel {
         this.value = value;
     }
 
-    public int getValue() {
+    public double getValue() {
         return value;
     }
 

@@ -397,8 +397,8 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
 
 
-    // Returns a vehicle and returns a confirmation number
-    public int returnVehicle(String rid, String returnDateTime, String odometer, Boolean fulltank) {
+    // EFFECTS: returns the confirmation message upon the successful return of vehicle
+    public int returnVehicle(String rid, String returnDateTime, String odometer, String fulltank, String confNo) {
 
         return 0;
     }

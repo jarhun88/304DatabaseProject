@@ -36,4 +36,12 @@ html {
   text-align: center;
 }
 
+.primary-key {
+  display: flex;
+}
+
+.key-input {
+  height: 10px;
+}
+
 

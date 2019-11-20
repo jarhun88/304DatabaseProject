@@ -17,13 +17,16 @@
   <div class="title">
     <h1>Welcome to the Vehicle SuperRent System</h1>
   </div>
-  <div class="page-box">
-    <div class="user-type-box">
+  <div class="subtitle">
+      <h2>Query Functionality</h2>
+  </div>
 
+    <div class="user-type-box">
       <div class="function-box">
         <div class="function-title">
             <h3>Customer Functions</h3>
         </div>
+
         <form class="radio-form">
           <input id="view-vehicles" type="radio" name="input" value="male" checked> View Vehicles
           <input id="make-reservation" type="radio" name="input" value="female"> Make Reservation
@@ -115,8 +118,43 @@
         <p id="generate-output" name="result">Output will display here</p>
       </div>
     </div>
-  </div>
 
+    <!--End of Functions Segment -->
+
+    <div class="subtitle">
+        <h2>Table Manipulation</h2>
+    </div>
+    <form class="radio-form">
+        <input id="add" type="radio" name="input" value="male" checked> Add Table Data
+        <input id="delete" type="radio" name="input"> Delete Table Data
+        <input id="update" type="radio" name="input"> Update Table Data
+        <input id="view" type="radio" name="input"> View Table Data
+    </form>
+    <form class="radio-form">
+        <input id="reservation" type="radio" name="input" checked> Reservation
+        <input id="rentals" type="radio" name="input"> Rentals
+        <input id="vehicles" type="radio" name="input"> Vehicles
+        <input id="vehicleTypes" type="radio" name="input"> Vehicle Types
+        <input id="customer" type="radio" name="input" value="male" > Customers     
+        <input id="returns" type="radio" name="input"> Returns
+        <input id="all" type="radio" name="input"> All
+    </form>
+
+
+    <div class="user-type-box">
+        <div class="function-box">
+          <div class="function-title">
+              <h3>Customer Functions</h3>
+          </div>
+          
+          <div class="primary-key">
+            <div id="pk-title">Primary Key</div>
+            <input class="key-input" type="text" id="pk-input">
+          </div>
+  
+          <button class="button" id="customer-button" type="button">Submit</button>
+          <p id="customer-output"name="result">Output will display here</p>
+        </div>
 </body>
 
 </html>

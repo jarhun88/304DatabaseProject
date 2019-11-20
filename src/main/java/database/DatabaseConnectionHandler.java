@@ -109,24 +109,32 @@ public class DatabaseConnectionHandler {
         String cityFilter = "";
         String timeIntFilter = "";
         if (carType != null && carType.length() > 0) {
-            cTypeFilter = "AND VTNAME = '" + carType+ "'";
+            cTypeFilter = "AND v.vtname = '" + carType + "'";
         }
         if (location != null && location.length() > 0) {
-            locFilter = "AND LOCATION = '" + location+ "'";
+            locFilter = "AND v.location = '" + location + "'";
         }
         if (city != null && city.length() > 0) {
-            cityFilter = "AND CITY = '" + city + "'";
+            cityFilter = "AND v.city = '" + city + "'";
         }
         // Checks to see if a reservation has already been made from that interval
         if (startTime != null && endTime != null && startTime.length() > 0 && endTime.length() > 0) {
             //  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
-            timeIntFilter = "AND NOT EXISTS (Select * from Reservation r WHERE v.vid=r.vid AND to_timestamp('" + startTime +
-                    "', ‘YYYY-MM-DD’) >= TODATETIME AND to_timestamp('" + endTime + "', ‘YYYY-MM-DD’) <= FROMDATETIME)";
+            timeIntFilter = "and v.vid not in (select r.vid " +
+                    "from reservation r, vehicle v1 " +
+                    "where v1.vid = r.vid and r.fromDateTime <= to_timestamp('" + startTime + "','YYYY-MM-DD:HH24:MI')" +
+                    "and r.toDateTime >= to_timestamp('" + endTime + "','YYYY-MM-DD:HH24:MI'))";
         }
+
+        /*
+        select distinct * from vehicle v where v.vtname = 'Compact' and v.location = 'UBC' and v.city = 'Vancouver'
+and v.vid not in (select r.vid from reservation r, vehicle v1 where v1.vid = r.vid and r.fromDateTime <= to_timestamp('2019-01-02:00:00','YYYY-MM-DD:HH24:MI')
+and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
+         */
 
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT * FROM Vehicle v where STATUS = 'available'";
+            String query = "SELECT distinct * FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
             // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
             ResultSet rs = stmt.executeQuery(query);
@@ -142,7 +150,7 @@ public class DatabaseConnectionHandler {
 //    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
 //    		}
 
-			// Reads sql result into vehicle array
+            // Reads sql result into vehicle array
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getInt("vlicense"),
@@ -159,6 +167,71 @@ public class DatabaseConnectionHandler {
         }
 
         return result.toArray(new VehicleModel[result.size()]);
+    }
+
+    // EFFECTS: returns the number of available vehicles based on params
+    public int getAvailableNumOfVehicle(String carType, String location, String city, String startTime, String endTime) {
+        ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+
+        // Build up filter list based on input
+        String cTypeFilter = "";
+        String locFilter = "";
+        String cityFilter = "";
+        String timeIntFilter = "";
+        if (carType != null && carType.length() > 0) {
+            cTypeFilter = "AND v.vtname = '" + carType + "'";
+        }
+        if (location != null && location.length() > 0) {
+            locFilter = "AND v.location = '" + location + "'";
+        }
+        if (city != null && city.length() > 0) {
+            cityFilter = "AND v.city = '" + city + "'";
+        }
+        // Checks to see if a reservation has already been made from that interval
+        if (startTime != null && endTime != null && startTime.length() > 0 && endTime.length() > 0) {
+            //  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
+            timeIntFilter = "and v.vid not in (select r.vid " +
+                    "from reservation r, vehicle v1 " +
+                    "where v1.vid = r.vid and r.fromDateTime <= to_timestamp('" + startTime + "','YYYY-MM-DD:HH24:MI')" +
+                    "and r.toDateTime >= to_timestamp('" + endTime + "','YYYY-MM-DD:HH24:MI'))";
+        }
+
+        /*
+        select distinct * from vehicle v where v.vtname = 'Compact' and v.location = 'UBC' and v.city = 'Vancouver'
+and v.vid not in (select r.vid from reservation r, vehicle v1 where v1.vid = r.vid and r.fromDateTime <= to_timestamp('2019-01-02:00:00','YYYY-MM-DD:HH24:MI')
+and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
+         */
+
+        int numOfAvailCar = 0;
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT count(*) FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
+            // Add filter list to query
+            query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
+            ResultSet rs = stmt.executeQuery(query);
+
+//    		// get info on ResultSet
+//    		ResultSetMetaData rsmd = rs.getMetaData();
+//
+//    		System.out.println(" ");
+//
+//    		// display column names;
+//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
+//    			// get column name and print it
+//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
+//    		}
+
+            // Reads sql result into vehicle array
+            numOfAvailCar = rs.getInt("COUNT(*)");
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return numOfAvailCar;
     }
 
     // Makes a reservation and returns confirmation number
@@ -199,7 +272,7 @@ public class DatabaseConnectionHandler {
         return null;
     }
 
-	public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
-    	return false;
-	}
+    public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
+        return false;
+    }
 }

@@ -21,10 +21,12 @@ public class Controller {
         dbHandler = new DatabaseConnectionHandler();
 
         // Log in with given credentials
-        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
-        //boolean didConnect = dbHandler.login("ora_aktoriam@stu", "a42603381");
+//        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
+        boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
 
-        //VehicleModel[] temp = dbHandler.getVehicleInfo("", "", "", "","");
+        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
+        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
+        int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
         System.out.printf("here");
     }
 

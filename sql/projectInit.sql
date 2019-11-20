@@ -26,7 +26,7 @@ vid integer,
 cellphone char(10),
 fromDateTime timestamp,
 toDateTime timestamp,
-odometer varchar(9),
+odometer number,
 cardName varchar(50),
 cardNo char(16),
 expDate date,
@@ -40,7 +40,7 @@ make varchar(30),
 model varchar(30),
 year varchar(4),
 color varchar(20),
-odometer varchar(9),
+odometer number,
 status varchar(20),
 vtname varchar(9),
 location varchar(20),
@@ -67,19 +67,19 @@ dlicense char(9))
 create table Return(
 rid integer primary key,
 returnDateTime timestamp,
-odometer varchar(9),
+odometer number,
 fulltank char(1),
 value integer)
 /
 alter table Reservation
 add foreign key(vid)
 references Vehicle(vid)
-on delete cascade on update cascade
+on delete cascade
 /
 alter table Reservation
 add foreign key(cellphone)
 references Customer(cellphone)
-on delete cascade on update cascade
+on delete cascade
 /
 alter table Rent
 add foreign key (vid)
@@ -105,7 +105,7 @@ primary key (location, city))
 alter table Vehicle
 add foreign key (location, city)
 references Branch (location, city)
-on delete cascade on update cascade
+on delete cascade
 /
 alter table Return
 add foreign key (rid)
@@ -172,43 +172,43 @@ insert into VehicleType values (
 'Truck', null, 130, 20, 1.5, 20, 10 , 5, 0.5)
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123456', 'Ford', 'Fusion', '2019', 'Red', '123456789', 'available',
+'123456', 'Ford', 'Fusion', '2019', 'Red', 123456789, 'available',
 'Economy', 'UBC', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123457', 'Ford', 'EcoSport', '2019', 'Black', '200000008', 'available',
+'123457', 'Ford', 'EcoSport', '2019', 'Black', 200000008, 'available',
 'Compact', 'UBC', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123458', 'Ford', 'Ranger', '2019', 'Green', '321221458', 'available',
+'123458', 'Ford', 'Ranger', '2019', 'Green', 321221458, 'available',
 'Mid-size', 'UBC', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123459', 'Ford', 'Fusion', '2018', 'Red Black', '151031724', 'available',
+'123459', 'Ford', 'Fusion', '2018', 'Red Black', 151031724, 'available',
 'Standard', 'UBC', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123460', 'GMC', 'Yukon', '2018', 'Grey', '000990128', 'maintenance',
+'123460', 'GMC', 'Yukon', '2018', 'Grey', 990128, 'maintenance',
 'Full-size', 'Downtown', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123461', 'GMC', 'Acadia', '2018', 'Grey', '000000000', 'available',
+'123461', 'GMC', 'Acadia', '2018', 'Grey', 10, 'available',
 'SUV', 'Downtown', 'Vancouver')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123462', 'Ford', 'F-150', '2018', 'Black', '321221458', 'available',
+'123462', 'Ford', 'F-150', '2018', 'Black', 321221458, 'available',
 'Truck', 'East', 'Richmond')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123463', 'Ford', 'F-150', '2012', 'Red', '321221458', 'available',
+'123463', 'Ford', 'F-150', '2012', 'Red', 321221458, 'available',
 'Truck', 'East', 'Richmond')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123464', 'Honda', 'CR-V', '2012', 'Grey', '321221458', 'available',
+'123464', 'Honda', 'CR-V', '2012', 'Grey', 321221458, 'available',
 'SUV', 'East', 'Richmond')
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
-'123465', 'Honda', 'Accord', '2012', 'Black', '321221458', 'available',
+'123465', 'Honda', 'Accord', '2012', 'Black', 321221458, 'available',
 'Economy', 'East', 'Richmond')
 /
 insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
@@ -242,62 +242,62 @@ insert into reservation (vid, cellphone, fromDateTime, toDateTime) values (
 10, '4564561234', to_timestamp('2019-01-01:00:00','YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'))
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-1, '6041234567', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), '123456789', 'Visa', '4111111111111111', to_date('2020-01-01', 'YYYY-MM-DD'), 1)
+1, '6041234567', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), 123456789, 'Visa', '4111111111111111', to_date('2020-01-01', 'YYYY-MM-DD'), 1)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-2, '6041237890', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), '200000008', 'Visa', '4012888888881881', to_date('2022-01-01', 'YYYY-MM-DD'), 2)
+2, '6041237890', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), 200000008, 'Visa', '4012888888881881', to_date('2022-01-01', 'YYYY-MM-DD'), 2)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-8, '1237894567', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), '321221458', 'Mastercard', '5105105105105300', to_date('2023-07-01', 'YYYY-MM-DD'), 8)
+8, '1237894567', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-01-07:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Mastercard', '5105105105105300', to_date('2023-07-01', 'YYYY-MM-DD'), 8)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-9, '4561237890', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), '321221458', 'Visa', '4012888888881891', to_date('2022-01-01', 'YYYY-MM-DD'), 9)
+9, '4561237890', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Visa', '4012888888881891', to_date('2022-01-01', 'YYYY-MM-DD'), 9)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-10, '4564561234', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), '321221458', 'Mastercard', '5105105105105122', to_date('2023-07-01', 'YYYY-MM-DD'), 10)
+10, '4564561234', to_timestamp('2019-01-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Mastercard', '5105105105105122', to_date('2023-07-01', 'YYYY-MM-DD'), 10)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-4, '7804561234', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00', 'YYYY-MM-DD:HH24:MI'), '151031724', 'Visa', '4111111111111133', to_date('2022-01-01', 'YYYY-MM-DD'), 4)
+4, '7804561234', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00', 'YYYY-MM-DD:HH24:MI'), 151031724, 'Visa', '4111111111111133', to_date('2022-01-01', 'YYYY-MM-DD'), 4)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-5, '6041231234', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00', 'YYYY-MM-DD:HH24:MI'), '000990128', 'Mastercard', '5555555555554444', to_date('2023-07-01', 'YYYY-MM-DD'), 5)
+5, '6041231234', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-02-02:00:00', 'YYYY-MM-DD:HH24:MI'), 990128, 'Mastercard', '5555555555554444', to_date('2023-07-01', 'YYYY-MM-DD'), 5)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-6, '1234567890', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00', 'YYYY-MM-DD:HH24:MI'), '000000000', 'Mastercard', '5105105105105100', to_date('2022-01-01', 'YYYY-MM-DD'), 6)
+6, '1234567890', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00', 'YYYY-MM-DD:HH24:MI'), 10, 'Mastercard', '5105105105105100', to_date('2022-01-01', 'YYYY-MM-DD'), 6)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-7, '1234564560', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00', 'YYYY-MM-DD:HH24:MI'), '321221458', 'Mastercard', '5105105105105200', to_date('2023-07-01', 'YYYY-MM-DD'), 7)
+7, '1234564560', to_timestamp('2019-02-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-03-01:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Mastercard', '5105105105105200', to_date('2023-07-01', 'YYYY-MM-DD'), 7)
 /
 insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo) values (
-3, '7804564567', to_timestamp('2019-06-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-06-30:00:00', 'YYYY-MM-DD:HH24:MI'), '321221458', 'Visa', '4111111111111122', to_date('2023-07-01', 'YYYY-MM-DD'), 3)
+3, '7804564567', to_timestamp('2019-06-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-06-30:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Visa', '4111111111111122', to_date('2023-07-01', 'YYYY-MM-DD'), 3)
 /
 insert into Return values (
-1, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), '123456800', 'T', null)
+1, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 123456801, 'T', null)
 /
 insert into Return values (
-2, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), '200000150', 'T', null)
+2, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 200000153, 'T', null)
 /
 insert into Return values (
-3, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), '321221460', 'T', null)
+3, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 321221464, 'T', null)
 /
 insert into Return values (
-4, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), '321221700', 'F', null)
+4, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221711, 'F', null)
 /
 insert into Return values (
-5, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), '321221526', 'F', null)
+5, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221590, 'F', null)
 /
 insert into Return values (
-6, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), '151031788', 'T', null)
+6, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 151031744, 'T', null)
 /
 insert into Return values (
-7, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), '000990178', 'F', null)
+7, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 990179, 'F', null)
 /
 insert into Return values (
-8, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), '000000147', 'F', null)
+8, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 170, 'F', null)
 /
 insert into Return values (
-9, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), '321221520', 'T', null)
+9, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 321221550, 'T', null)
 /
 insert into Return values (
-10, to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'), '321221570', 'T', null)
+10, to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'), 321221600, 'T', null)
 /

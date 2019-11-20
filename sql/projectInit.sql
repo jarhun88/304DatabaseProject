@@ -74,10 +74,12 @@ value integer)
 alter table Reservation
 add foreign key(vid)
 references Vehicle(vid)
+on delete cascade on update cascade
 /
 alter table Reservation
 add foreign key(cellphone)
 references Customer(cellphone)
+on delete cascade on update cascade
 /
 alter table Rent
 add foreign key (vid)
@@ -103,6 +105,7 @@ primary key (location, city))
 alter table Vehicle
 add foreign key (location, city)
 references Branch (location, city)
+on delete cascade on update cascade
 /
 alter table Return
 add foreign key (rid)

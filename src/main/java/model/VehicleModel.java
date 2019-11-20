@@ -2,7 +2,7 @@ package model;
 
 public class VehicleModel {
     private final int vid ;
-    private final int vlicense;
+    private final String vlicense;
     private final String make;
     private final String model;
     private final String year;
@@ -13,7 +13,7 @@ public class VehicleModel {
     private final String location;
     private final String city;
 
-    public VehicleModel(int vid, int vlicense, String make, String model, String year, String color,
+    public VehicleModel(int vid, String vlicense, String make, String model, String year, String color,
                         int odometer, String status, String vtname, String location, String city) {
         this.vid = vid;
         this.vlicense = vlicense;
@@ -64,7 +64,7 @@ public class VehicleModel {
         return make;
     }
 
-    public int getVlicense() {
+    public String getVlicense() {
         return vlicense;
     }
 

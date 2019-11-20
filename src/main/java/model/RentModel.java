@@ -1,8 +1,7 @@
 package model;
 
-import java.sql.Time;
+import java.sql.Date;
 import java.sql.Timestamp;
-import java.util.Date;
 
 public class RentModel {
     private final int rid;

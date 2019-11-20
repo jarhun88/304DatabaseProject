@@ -7,10 +7,10 @@ public class ReturnModel {
     private final int rid;
     private final Timestamp returnDateTime;
     private final int odometer;
-    private final boolean fulltank;
+    private final String fulltank;
     private final int value;
 
-    public ReturnModel(int rid, Timestamp returnDateTime, int odometer, boolean fulltank, int value) {
+    public ReturnModel(int rid, Timestamp returnDateTime, int odometer, String fulltank, int value) {
         this.rid = rid;
         this.returnDateTime = returnDateTime;
         this.odometer = odometer;
@@ -22,7 +22,7 @@ public class ReturnModel {
         return value;
     }
 
-    public boolean isFulltank() {
+    public String getFulltank() {
         return fulltank;
     }
 

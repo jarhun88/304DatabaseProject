@@ -1,6 +1,7 @@
 package database;
 
 import model.VehicleModel;
+import oracle.jdbc.proxy.annotation.Pre;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -99,7 +100,8 @@ public class DatabaseConnectionHandler {
         return result.toArray(new VehicleModel[result.size()]);
     }
 
-    // Gets vehicles that are available based on params
+    // EFFECTS: returns the array of result sets for the query of getting available vehicles based on the params
+    // note: you can use the size of the array to show the number of vehicles first!!
     public VehicleModel[] getVehicleInfo(String carType, String location, String city, String startTime, String endTime) {
         ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
@@ -170,6 +172,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
     // EFFECTS: returns the number of available vehicles based on params
+    // this is redundant, but leaves here anyway...
     public int getAvailableNumOfVehicle(String carType, String location, String city, String startTime, String endTime) {
         ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
@@ -201,12 +204,11 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 and v.vid not in (select r.vid from reservation r, vehicle v1 where v1.vid = r.vid and r.fromDateTime <= to_timestamp('2019-01-02:00:00','YYYY-MM-DD:HH24:MI')
 and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
          */
-
-        int numOfAvailCar = 0;
+        int resultNum = 0;
 
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT count(*) FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
+            String query = "SELECT distinct * FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
             // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
             ResultSet rs = stmt.executeQuery(query);
@@ -223,7 +225,9 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 //    		}
 
             // Reads sql result into vehicle array
-            numOfAvailCar = rs.getInt("COUNT(*)");
+            while (rs.next()) {
+                resultNum++;
+            }
 
             rs.close();
             stmt.close();
@@ -231,7 +235,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
 
-        return numOfAvailCar;
+        return resultNum;
     }
 
     // Makes a reservation and returns confirmation number
@@ -272,7 +276,82 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return null;
     }
 
+
+    //EFFECTS: returns true if a customer is successfully added
+    //          returns false other wise
     public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
-        return false;
+        boolean isSuccessful = false;
+        try {
+            PreparedStatement ps = connection.prepareStatement("insert into customer values (?,?,?,?)");
+            ps.setString(1, cellphone);
+            ps.setString(2, name);
+            ps.setString(3, address);
+            ps.setString(4, dlicense);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+            isSuccessful = true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        }
+        return isSuccessful;
+
+
     }
+
+    // REQUIRES: cellphone has to be in a valid format, and cannot be empty
+    // EFFECTS: returns true if the customer is already a member
+    //          returns false otherwise
+    public boolean isCustomerMember(String cellphone) {
+        int resultCount = 0;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select count(*) as total from customer where cellphone = '" + cellphone + "'";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                resultCount = rs.getInt("total");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultCount > 0;
+
+    }
+
+    // REQUIRES: all inputs cannot be null and all inputs are in valid format
+    // EFFECTS: returns true if there is overbooking based on the params
+    //          returns false otherwise
+    public boolean isOverBooked(String vid, String fromDateTime, String toDateTime) {
+        int resultCount = 0;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select count(*) as total " +
+                    "from reservation " +
+                    "where vid = " + Integer.parseInt(vid) + " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
+                    "and toDateTime >= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI')";
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                resultCount = rs.getInt("total");
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return resultCount > 0;
+
+    }
+
+
 }

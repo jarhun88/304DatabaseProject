@@ -1,5 +1,6 @@
 package database;
 
+import model.RentConfirmationMessageModel;
 import model.ReservationModel;
 import model.VehicleModel;
 import oracle.jdbc.proxy.annotation.Pre;
@@ -496,6 +497,36 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         }
 
         return resultCount > 0;
+
+    }
+
+    // EFFECTS: returns the confirmation message model for renting based on the rid
+    public RentConfirmationMessageModel getRentConfMessage(int rid) {
+        RentConfirmationMessageModel result = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select r.rid, r.cellphone, r.fromDateTime, r.toDateTime, r.cardName, r.cardNo, r.expDate, " +
+                    "r.odometer, r.confNo, v.vid, v.vlicense, v.vtname, v.location, v.city " +
+                    "from Rent r, Vehicle v where r.vid = v.vid and r.rid =" + rid;
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            result = new RentConfirmationMessageModel(rs.getInt("r.rid"), rs.getString("r.cellphone"),
+                    rs.getTimestamp("r.fromDateTime"), rs.getTimestamp("r.toDateTime"),
+                    rs.getString("r.cardName"), rs.getString("r.cardNo"), rs.getDate("r.expDate"),
+                    rs.getInt("r.odometer"), rs.getInt("r.confNo"), rs.getInt("v.vid"),
+                    rs.getString("v.vlicense"), rs.getString("v.vtname"), rs.getString("v.location"),
+                    rs.getString("v.city"));
+
+            rs.close();
+            stmt.close();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return result;
+
 
     }
 

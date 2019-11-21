@@ -396,7 +396,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
         ReturnConfirmationMessageModel confMessage = null;
 
-       // double afterOdometer = Double.parseDouble(odometer);
+        // double afterOdometer = Double.parseDouble(odometer);
 
         // calculate the amount
         VehicleTypeModel rateInfo = getRateInfo(Integer.parseInt(rid));
@@ -404,7 +404,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
         Timestamp fromDateTime = timeIntOdometer.getFromDateTime();
         Timestamp toDateTime = timeIntOdometer.getToDateTime();
-       // double originalOdometer = timeIntOdometer.getOdometer();
+        // double originalOdometer = timeIntOdometer.getOdometer();
         long startTime = fromDateTime.getTime();
         long endTime = toDateTime.getTime();
         long timeIntervalInHour = (endTime - startTime) / 3600000;
@@ -419,12 +419,12 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         double value = regularCost + insuranceCost;
 
         String regularCalDetail = "Payment Rate for this Vehicle:" + rateInfo.toString() + "￿￿\n"
-                + "Regular Cost -> " +weeks+" week(s) * " + rateInfo.getWrate() + " + "
-                +days+" day(s) * " + rateInfo.getDrate() + " + "
-                +hours+" hour(s) * " + rateInfo.getHrate() + " = " + regularCost + "￿￿\n";
-        String insCalDetail = "Insurance Cost -> " +weeks+" week(s) * " + rateInfo.getWirate() + " + "
-                +days+" day(s) * " + rateInfo.getDirate() + " + "
-                +hours+" hour(s) * " + rateInfo.getHirate() + " = " + insuranceCost + "￿￿\n"
+                + "Regular Cost -> " + weeks + " week(s) * " + rateInfo.getWrate() + " + "
+                + days + " day(s) * " + rateInfo.getDrate() + " + "
+                + hours + " hour(s) * " + rateInfo.getHrate() + " = " + regularCost + "￿￿\n";
+        String insCalDetail = "Insurance Cost -> " + weeks + " week(s) * " + rateInfo.getWirate() + " + "
+                + days + " day(s) * " + rateInfo.getDirate() + " + "
+                + hours + " hour(s) * " + rateInfo.getHirate() + " = " + insuranceCost + "￿￿\n"
                 + "Total: " + value;
 
         String calculationDetail = regularCalDetail + insCalDetail;
@@ -433,11 +433,11 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         try {
             PreparedStatement ps = connection.prepareStatement("insert into return values " +
                     "(?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
-            ps.setInt(1,Integer.parseInt(rid));
-            ps.setString(2,returnDateTime);
-            ps.setDouble(3,Double.parseDouble(odometer));
-            ps.setString(4,fulltank);
-            ps.setDouble(5,value);
+            ps.setInt(1, Integer.parseInt(rid));
+            ps.setString(2, returnDateTime);
+            ps.setDouble(3, Double.parseDouble(odometer));
+            ps.setString(4, fulltank);
+            ps.setDouble(5, value);
 
             ps.executeUpdate();
             connection.commit();
@@ -461,7 +461,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         try {
             PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'available'" +
                     " where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = ?)");
-            ps.setInt(1,Integer.parseInt(rid));
+            ps.setInt(1, Integer.parseInt(rid));
 
             ps.executeUpdate();
             connection.commit();
@@ -477,20 +477,216 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
         if (success && success2) {
             confMessage = new ReturnConfirmationMessageModel(Integer.parseInt(rid), returnDateTime, value, calculationDetail);
-            return  confMessage;
+            return confMessage;
 
         } else {
             return null;
         }
     }
 
-    // Generate report for all returns
-    public VehicleModel[] generateReportDailyReturns(String date, String city, String location) {
-        return null;
+
+    // EFFECTS: returns the vehicles rented our on that day
+    public VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
+        ArrayList<VehicleModel> result = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, " +
+                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city" +
+                    "FROM Rent r, Vehicle v " +
+                    "WHERE fromDateTime <= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
+                    "AND toDateTime >=  to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI') " +
+                    "AND r.vid = v.vid " +
+                    "ORDER BY v.city, v.location, v.vtname";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
+                        rs.getString("v.vlicense"),
+                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
+                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
+                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                result.add(model);
+
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result.toArray(new VehicleModel[result.size()]);
+
+        /*
+         VID					   NOT NULL NUMBER(38)
+ VLICENSE					    CHAR(6)
+ MAKE						    VARCHAR2(30)
+ MODEL						    VARCHAR2(30)
+ YEAR						    VARCHAR2(4)
+ COLOR						    VARCHAR2(20)
+ ODOMETER					    NUMBER
+ STATUS 					    VARCHAR2(20)
+ VTNAME 					    VARCHAR2(9)
+ LOCATION					    VARCHAR2(20)
+ CITY						    VARCHAR2(20)
+         */
     }
 
-    // Generate report for all rentals
-    public VehicleModel[] generateReportDailyRentals(String date) {
+    // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle
+    public RentReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicle(String date) {
+        ArrayList<RentReportGroupedByVehilceModel> result = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT COUNT(*) as total, v.vtname " +
+                    "FROM Vehicle v, Rent r " +
+                    "WHERE fromDateTime <= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND toDateTime >= to_timestamp('" + date + ":23:59','YYYY-MM-DD:HH24:MI') AND r.vid = " +
+                    "v.vid " +
+                    "GROUP BY v.vtname";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                RentReportGroupedByVehilceModel model = new RentReportGroupedByVehilceModel(rs.getInt("total"),
+                        rs.getString("v.vtname"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result.toArray(new RentReportGroupedByVehilceModel[result.size()]);
+
+    }
+
+    // EFFECTS: returns the number of vehicles rented out on that day grouped by branch
+    public RentReportGroupByBranchModel[] getNumOfVehicleDailyRentalGBBranch(String date) {
+        ArrayList<RentReportGroupByBranchModel> result = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT COUNT(*) as total, v.location, v.city " +
+                    "FROM Vehicle v, Rent r " +
+                    "WHERE fromDateTime <=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND toDateTime >=  to_timestamp('" + date + ":23:59','YYYY-MM-DD:HH24:MI') AND r.vid = v.vid " +
+                    "GROUP BY v.location, v.city";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                RentReportGroupByBranchModel model = new RentReportGroupByBranchModel(rs.getInt("total"),
+                        rs.getString("v.location"), rs.getString("v.city"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result.toArray(new RentReportGroupByBranchModel[result.size()]);
+
+    }
+
+    // EFFECTS: returns the number of new rental on that day in the entire company
+    public int getNumOfVehicleNewlyDailyRental(String date) {
+        int total = -1;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT COUNT(*) as total" +
+                    "FROM Rent " +
+                    "WHERE fromDateTime >=  to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND fromDateTime <=  to_timestamp('2019-01-07:23:59','YYYY-MM-DD:HH24:MI')";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            total = rs.getInt("total");
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return total;
+
+    }
+
+    // EFFECTS: returns the vehicles rented our on that day on the specified branch
+    public VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
+        ArrayList<VehicleModel> result = new ArrayList<>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year," +
+                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city" +
+                    "FROM Rent r, Vehicle v" +
+                    "WHERE fromDateTime <=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND toDateTime >=  to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI')  " +
+                    "AND r.vid = v.vid AND v.location = '" + location + "' AND v.city = '" + city + "' " +
+                    "ORDER BY v.vtname";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
+                        rs.getString("v.vlicense"),
+                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
+                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
+                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                result.add(model);
+
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result.toArray(new VehicleModel[result.size()]);
+    }
+
+
+    // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle on the branch
+    public RentReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city) {
+        ArrayList<RentReportGroupedByVehilceModel> result = new ArrayList<>();
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "SELECT COUNT(*) as total, v.vtname " +
+                    "FROM Vehicle v, Rent r " +
+                    "WHERE fromDateTime <= to_timestamp('"+date+":00:00', 'YYYY-MM-DD:HH24:MI')  " +
+                    "AND  toDateTime >= to_timestamp('"+date+":23:59', 'YYYY-MM-DD:HH24:MI') AND r.vid = " +
+                    "v.vid " +
+                    "AND v.location = '"+location+"' AND v.city = '"+city+"' " +
+                    "GROUP BY v.vtname";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            while (rs.next()) {
+                RentReportGroupedByVehilceModel model = new RentReportGroupedByVehilceModel(rs.getInt("total"),
+                        rs.getString("v.vtname"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result.toArray(new RentReportGroupedByVehilceModel[result.size()]);
+
+    }
+
+
+    // Generate report for all returns
+    public VehicleModel[] generateReportDailyReturns(String date, String city, String location) {
         return null;
     }
 

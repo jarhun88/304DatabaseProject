@@ -310,8 +310,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return model;
     }
 
-    //todo test
-
+//tested
     // REQUIRES: all the inputs are in the valid format
     // EFFECTS: Rents a vehicle and returns confirmation number (rid)
     public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
@@ -366,6 +365,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
     }
 
+    //tested
     // EFFECTS: returns the rid (confirmation of the rent) based on the confNo of reservation and vid
     public int getRidForRent(int confNo, int vid) {
         int rid = -1;
@@ -387,6 +387,8 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
     }
 
+
+//tested
     // REQUIRES: all inputs must be in the valid format
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
@@ -480,7 +482,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         }
     }
 
-
+//todo test
     // EFFECTS: returns the vehicles rented our on that day
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -530,6 +532,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
          */
     }
 
+    //todo test
+
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -559,6 +563,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
     }
+//todo test
 
     // EFFECTS: returns the number of vehicles rented out on that day grouped by branch
     public ReportGroupByBranchModel[] getNumOfVehicleDailyRentalGBBranch(String date) {
@@ -589,12 +594,14 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //todo test
+
     // EFFECTS: returns the number of new rental on that day in the entire company
     public int getNumOfVehicleNewlyDailyRental(String date) {
         int total = -1;
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT COUNT(*) as total" +
+            String query = "SELECT COUNT(*) as total " +
                     "FROM Rent " +
                     "WHERE fromDateTime >=  to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI') " +
                     "AND fromDateTime <=  to_timestamp('2019-01-07:23:59','YYYY-MM-DD:HH24:MI')";
@@ -712,7 +719,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         int total = -1;
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT COUNT(*) as total" +
+            String query = "SELECT COUNT(*) as total " +
                     "FROM Rent r, Vehicle v " +
                     "WHERE fromDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
                     "AND fromDateTime <= to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI') " +
@@ -739,7 +746,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         try {
             Statement stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, " +
-                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city" +
+                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
                     "AND r.returnDateTime <= to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI') " +
@@ -1015,6 +1022,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
     // REQUIRES: cellphone has to be in a valid format, and cannot be empty
     // EFFECTS: returns true if the customer is already a member
     //          returns false otherwise
@@ -1039,6 +1047,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
     // REQUIRES: all inputs cannot be null and all inputs are in valid format
     // EFFECTS: returns true if there is overbooking based on the params
     //          returns false otherwise
@@ -1096,6 +1105,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
     public VehicleTypeModel getRateInfo(int rid) {
         VehicleTypeModel result = null;
         try {

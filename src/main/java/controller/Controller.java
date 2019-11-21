@@ -1,9 +1,7 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
-import model.ReservationModel;
-import model.ReturnConfirmationMessageModel;
-import model.VehicleModel;
+import model.*;
 
 //This is the main controller class that will orchestrate everything.
 public class Controller {
@@ -29,11 +27,18 @@ public class Controller {
         VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
         VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
         int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
-//        int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
-//                "2200-01-01:00:00", "2200-02-01:00:00");
-        ReservationModel reservationModel =  dbHandler.getReservation(1);
-//        int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01", "2200-02-01", "1234",
-//                "", "Visa","4444777788889999", "2200-10-10");
+        int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
+                "2200-01-01:00:00", "2200-02-01:00:00");
+//        ReservationModel reservationModel =  dbHandler.getReservation(1);
+//       int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
+//             "" + confNo, "Visa","4444777788889999", "2200-10-10");
+
+//        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle(""+rid, "2200-02-01:00:00", "1244", "T");
+        ReportGroupedByVehilceModel[] rp =  dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
+        ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
+        ReportGroupByBranchModel[] rp3 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
+        int numVDayRent =  dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-02");
+
         System.out.printf("here");
     }
 

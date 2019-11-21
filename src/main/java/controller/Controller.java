@@ -50,7 +50,7 @@ public class Controller {
 //        RevenueReportGroupedByVehilceModel[] rrgbvm =  dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
 //        ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
 
-        
+
         System.out.printf("here");
     }
 

@@ -9,14 +9,14 @@ public class RentModel {
     private final String cellphone;
     private final Timestamp fromDateTime;
     private final Timestamp toDateTime;
-    private final int odometer;
+    private final double odometer;
     private final String cardName;
     private final String cardNo;
     private final Date expDate;
     private final int confNo;
 
     public RentModel(int rid, int vid, String cellphone,
-                     Timestamp fromDateTime, Timestamp toDateTime, int odometer, String cardName, String cardNo, Date expDate, int confNo) {
+                     Timestamp fromDateTime, Timestamp toDateTime, double odometer, String cardName, String cardNo, Date expDate, int confNo) {
         this.rid = rid;
         this.vid = vid;
         this.cellphone = cellphone;
@@ -45,7 +45,7 @@ public class RentModel {
         return cardName;
     }
 
-    public int getOdometer() {
+    public double getOdometer() {
         return odometer;
     }
 

@@ -11,7 +11,7 @@ public class RentConfirmationMessageModel {
     private final String cardName;
     private final String cardNo;
     private final Date expDate;
-    private final int odometer;
+    private final double odometer;
     private final int confNo;
     private final int vid;
     private final String vlicense;
@@ -20,7 +20,7 @@ public class RentConfirmationMessageModel {
     private final String city;
 
     public RentConfirmationMessageModel(int rid, String cellphone, Timestamp fromDateTime, Timestamp toDateTime,
-                                        String cardName, String cardNo, Date expDate, int odometer, int confNo, int vid,
+                                        String cardName, String cardNo, Date expDate, double odometer, int confNo, int vid,
                                         String vlicense, String vtname, String location, String city) {
         this.rid = rid;
         this.cellphone = cellphone;
@@ -66,7 +66,7 @@ public class RentConfirmationMessageModel {
         return expDate;
     }
 
-    public int getOdometer() {
+    public double getOdometer() {
         return odometer;
     }
 

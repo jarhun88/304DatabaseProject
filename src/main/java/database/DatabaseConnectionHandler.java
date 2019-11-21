@@ -1,8 +1,6 @@
 package database;
 
-import model.RentConfirmationMessageModel;
-import model.ReservationModel;
-import model.VehicleModel;
+import model.*;
 import oracle.jdbc.proxy.annotation.Pre;
 
 import javax.swing.plaf.nimbus.State;
@@ -89,7 +87,7 @@ public class DatabaseConnectionHandler {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getString("vlicense"),
                         rs.getString("make"), rs.getString("model"), rs.getString("year"),
-                        rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
                         rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
             }
@@ -160,7 +158,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getString("vlicense"),
                         rs.getString("make"), rs.getString("model"), rs.getString("year"),
-                        rs.getString("color"), rs.getInt("odometer"), rs.getString("status"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
                         rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
             }
@@ -249,10 +247,10 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                                String fromDateTime, String toDateTime) {
         int confNo = -1;
         if (isCustomerMember(phoneNumber)) {
-            boolean status = addNewCustomer(phoneNumber, name, address,dlicense);
+            boolean status = addNewCustomer(phoneNumber, name, address, dlicense);
         }
 
-        if (isOverBooked(vid,fromDateTime,toDateTime)) {
+        if (isOverBooked(vid, fromDateTime, toDateTime)) {
             return confNo;
         }
 
@@ -275,7 +273,6 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             e.printStackTrace();
             rollbackConnection();
         }
-
 
 
         // get confirmation number
@@ -319,7 +316,6 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
 
-
     // REQUIRES: all the inputs are in the valid format
     // EFFECTS: Rents a vehicle and returns confirmation number (rid)
     public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
@@ -332,11 +328,11 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                     "toDateTime, odometer, cardName, cardNo, expDate, confNo) values (" +
                     "?, ?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), to_timestamp(?,'YYYY-MM-DD:HH24:MI'), " +
                     "?, ?, ?, to_date(?, 'YYYY-MM-DD'), ?)");
-            ps.setInt(1,Integer.parseInt(vid));
-            ps.setString(2,cellphone);
+            ps.setInt(1, Integer.parseInt(vid));
+            ps.setString(2, cellphone);
             ps.setString(3, fromDateTime);
             ps.setString(4, toDateTime);
-            ps.setInt(5, Integer.parseInt(odometer));
+            ps.setDouble(5, Double.parseDouble(odometer));
             ps.setString(6, cardName);
             ps.setString(7, cardNo);
             ps.setString(8, expDate);
@@ -356,7 +352,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         if (isSuccessful) {
             try {
                 PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
-                ps.setInt(1,Integer.parseInt(vid));
+                ps.setInt(1, Integer.parseInt(vid));
                 ps.executeUpdate();
                 connection.commit();
 
@@ -379,7 +375,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         int rid = -1;
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT rid from Rent where confNo = "+ confNo+" AND vid = " + vid;
+            String query = "SELECT rid from Rent where confNo = " + confNo + " AND vid = " + vid;
             ResultSet rs = stmt.executeQuery(query);
 
             rs.first();
@@ -396,11 +392,22 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
 
-
+    // REQUIRES: all inputs must be in the valid format
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
-    public int returnVehicle(String rid, String returnDateTime, String odometer, String fulltank, String confNo) {
+    public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank, String confNo) {
+        ReturnConfirmationMessageModel confMessage = null;
 
-        return 0;
+        double afterOdometer = Double.parseDouble(odometer);
+
+        VehicleTypeModel rateInfo = getRateInfo(Integer.parseInt(rid));
+        TimeIntervalOdometerModel timeIntOdometer = getTimeIntervalAndOdometer(Integer.parseInt(rid));
+
+        Timestamp fromDateTime = timeIntOdometer.getFromDateTime();
+        Timestamp toDateTime = timeIntOdometer.getToDateTime();
+        double originalOdometer = timeIntOdometer.getOdometer();
+
+
+        return null;
     }
 
     // Generate report for all returns
@@ -515,7 +522,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             result = new RentConfirmationMessageModel(rs.getInt("r.rid"), rs.getString("r.cellphone"),
                     rs.getTimestamp("r.fromDateTime"), rs.getTimestamp("r.toDateTime"),
                     rs.getString("r.cardName"), rs.getString("r.cardNo"), rs.getDate("r.expDate"),
-                    rs.getInt("r.odometer"), rs.getInt("r.confNo"), rs.getInt("v.vid"),
+                    rs.getDouble("r.odometer"), rs.getInt("r.confNo"), rs.getInt("v.vid"),
                     rs.getString("v.vlicense"), rs.getString("v.vtname"), rs.getString("v.location"),
                     rs.getString("v.city"));
 
@@ -528,6 +535,61 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return result;
 
 
+    }
+
+    public VehicleTypeModel getRateInfo(int rid) {
+        VehicleTypeModel result = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select * from VehicleType vt " +
+                    "where vt.vtname = ANY( select v.vtname From rent r, " +
+                    "vehicle v where r.vid = v.vid and r.rid = " + rid + ")";
+
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            result = new VehicleTypeModel(rs.getString("vtname"), rs.getString("features"),
+                    rs.getFloat("wrate"), rs.getFloat("drate"), rs.getFloat("hrate"),
+                    rs.getFloat("wirate"), rs.getFloat("dirate"), rs.getFloat("hirate"),
+                    rs.getFloat("krate"));
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+    }
+
+    // EFFECTS: returns the model for time interval and odometer to calculate cost
+    public TimeIntervalOdometerModel getTimeIntervalAndOdometer(int rid) {
+        TimeIntervalOdometerModel result = null;
+        try {
+            Statement stmt = connection.createStatement();
+            String query = "select fromDateTime, toDateTime, odometer " +
+                    "from rent " +
+                    "where rid = " + rid;
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.first();
+            result = new TimeIntervalOdometerModel(rs.getTimestamp("fromDateTime"), rs.getTimestamp("toDateTime"),
+                    rs.getDouble("odometer"));
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+        return result;
+
+        /*
+        select fromDateTime, toDateTime, odometer
+from rent
+where rid = 4
+         */
     }
 
 

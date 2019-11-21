@@ -6,11 +6,11 @@ public class ReturnModel {
 
     private final int rid;
     private final Timestamp returnDateTime;
-    private final int odometer;
+    private final double odometer;
     private final String fulltank;
     private final double value;
 
-    public ReturnModel(int rid, Timestamp returnDateTime, int odometer, String fulltank, double value) {
+    public ReturnModel(int rid, Timestamp returnDateTime, double odometer, String fulltank, double value) {
         this.rid = rid;
         this.returnDateTime = returnDateTime;
         this.odometer = odometer;
@@ -26,7 +26,7 @@ public class ReturnModel {
         return fulltank;
     }
 
-    public int getOdometer() {
+    public double getOdometer() {
         return odometer;
     }
 

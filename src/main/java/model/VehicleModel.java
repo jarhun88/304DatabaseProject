@@ -7,14 +7,14 @@ public class VehicleModel {
     private final String model;
     private final String year;
     private final String color;
-    private final int odometer;
+    private final double odometer;
     private final String status ;
     private final String vtname;
     private final String location;
     private final String city;
 
     public VehicleModel(int vid, String vlicense, String make, String model, String year, String color,
-                        int odometer, String status, String vtname, String location, String city) {
+                        double odometer, String status, String vtname, String location, String city) {
         this.vid = vid;
         this.vlicense = vlicense;
         this.make = make;
@@ -44,7 +44,7 @@ public class VehicleModel {
         return status;
     }
 
-    public int getOdometer() {
+    public double getOdometer() {
         return odometer;
     }
 

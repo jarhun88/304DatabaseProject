@@ -7,12 +7,14 @@ public class ReturnConfirmationMessageModel {
     private final int confNo;
     private final Timestamp returnDateTime;
     private final double value;
+    private final String calculationDetail;
 
-    public ReturnConfirmationMessageModel(int rid, int confNo, Timestamp returnDateTime, double value) {
+    public ReturnConfirmationMessageModel(int rid, int confNo, Timestamp returnDateTime, double value, String calculationDetail) {
         this.rid = rid;
         this.confNo = confNo;
         this.returnDateTime = returnDateTime;
         this.value = value;
+        this.calculationDetail = calculationDetail;
     }
 
     public int getRid() {
@@ -29,5 +31,9 @@ public class ReturnConfirmationMessageModel {
 
     public double getValue() {
         return value;
+    }
+
+    public String getCalculationDetail() {
+        return calculationDetail;
     }
 }

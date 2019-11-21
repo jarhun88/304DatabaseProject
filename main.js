@@ -21,7 +21,7 @@ $( document ).ready(function()
             headers: {'Access-Control-Allow-Origin': '*'}
         };
         if (viewVehiclesSelected) {
-            body = viewVehiclesBody(body)
+            body = qViewVehiclesBody(body)
             axios.post(localURL + "/view-vehicles", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
@@ -33,7 +33,7 @@ $( document ).ready(function()
             })
         }
         else {
-            body = reservationBody(body)
+            body = qReservationBody(body)
             axios.post(localURL + "/reservation", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
@@ -41,7 +41,6 @@ $( document ).ready(function()
             }).catch((error) => {
                 responseText = error.data;
                 document.getElementById("customer-output").innerHTML = responseText;
-
             })
         }
     });
@@ -54,7 +53,7 @@ $( document ).ready(function()
         };
         let rentVehicleSelected = $("#rent").is(':checked');
         if (rentVehicleSelected) {
-            body = rentBody();
+            body = qRentBody();
             axios.post(localURL + "/rent", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
@@ -66,7 +65,7 @@ $( document ).ready(function()
             })  
         }
         else {
-            body = returnBody();
+            body = qReturnBody();
             axios.post(localURL + "/return", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
@@ -91,7 +90,7 @@ $( document ).ready(function()
         console.log(body);
         if (isReturnsSelected) {
             if (isBranchSelected) {
-                body = branchBody(body);
+                body = qBranchBody(body);
                 axios.post(localURL + "/daily-returns-branch", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
@@ -116,7 +115,7 @@ $( document ).ready(function()
         }
         else {
             if (isBranchSelected) {
-                body = branchBody(body);
+                body = qBranchBody(body);
                 axios.post(localURL + "/daily-rentals-branch", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
@@ -142,7 +141,7 @@ $( document ).ready(function()
     })
 })
 
-function branchBody(body) {
+function qBranchBody(body) {
     let address = $("#g-address").val()
     let city = $("#g-city").val()
     body.set("address", address);
@@ -150,7 +149,7 @@ function branchBody(body) {
     return body;
 }
 
-function returnBody() {
+function qReturnBody() {
     let body = new FormData()
     let rid = $("#return-rid").val();
     let vtname = $("#return-vtname").val();
@@ -163,7 +162,7 @@ function returnBody() {
     return body;
 }
 
-function rentBody() {
+function qRentBody() {
     let body = new FormData();
     let phoneNum = $("#rent-phone-num").val();
     let name = $("#rent-name").val();
@@ -184,7 +183,7 @@ function rentBody() {
     return body;
 }
 
-function viewVehiclesBody() {
+function qViewVehiclesBody() {
     let body = new FormData();
     let carType = $("#vv-car-type").val();
     let location = $("#vv-location").val();
@@ -200,7 +199,7 @@ function viewVehiclesBody() {
     return body;
 }
 
-function reservationBody() {
+function qReservationBody() {
     let body = new FormData();
     let phoneNum = $("#mr-phone-num").val();
     let name = $("#mr-name").val();

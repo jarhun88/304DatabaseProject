@@ -3,11 +3,13 @@ package api;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.bind.annotation.RestController;
 
+@RestController
 public class TableManipulationController {
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
-    @PostMapping(path = "/reservation-manipulation", consumes = "multipart/form-data", produces = "application/json")
+    @PostMapping(path = "/res", consumes = "multipart/form-data", produces = "application/json")
     public String reservationManipulation(@RequestPart(name="mType") String mType,
                                           @RequestPart(name="confNo") String confNo,
                                           @RequestPart(name="vtname", required=false) String vtname,
@@ -36,10 +38,11 @@ public class TableManipulationController {
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/return-manipulation", consumes = "multipart/form-data", produces = "application/json")
     public String returnManipulation(@RequestPart(name="mType", required=true) String mType,
-                                     @RequestPart(name="rid") String date,
-                                     @RequestPart(name="vtname", required=false) String vtname,
-                                     @RequestPart(name="city", required=false) String city,
-                                     @RequestPart(name="to", required=false) String to) {
+                                     @RequestPart(name="rid") String rid,
+                                     @RequestPart(name="date", required=false) String date,
+                                     @RequestPart(name="odometer", required=false) String odometer,
+                                     @RequestPart(name="fulltank", required=false) String fulltank,
+                                     @RequestPart(name="value", required=false) String value) {
         return "returnManipulation";
     }
 

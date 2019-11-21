@@ -1,6 +1,7 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
+import model.ReservationModel;
 import model.ReturnConfirmationMessageModel;
 import model.VehicleModel;
 
@@ -28,6 +29,11 @@ public class Controller {
         VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
         VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
         int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
+//        int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
+//                "2200-01-01:00:00", "2200-02-01:00:00");
+        ReservationModel reservationModel =  dbHandler.getReservation(1);
+//        int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01", "2200-02-01", "1234",
+//                "", "Visa","4444777788889999", "2200-10-10");
         System.out.printf("here");
     }
 
@@ -52,9 +58,9 @@ public class Controller {
     }
 
     // Makes a reservation and returns the confirmation number
-    public static int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vtname,
+    public static int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vid,
                                       String fromDate, String toDate) {
-        return dbHandler.makeReservation(phoneNumber, name, address, city, dlicense, vtname, fromDate, toDate);
+        return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
     }
 
     // Rents a specific vehicle
@@ -70,25 +76,8 @@ public class Controller {
         // String rid, String returnDateTime, String odometer, String fulltank, String confNo
     }
 
-    // Generate daily report for all returns
-    public static VehicleModel[] generateReportDailyReturns(String date) {
-        return dbHandler.generateReportDailyReturns(date);
-    }
 
-    // Generate daily report for all returns at supplied branch
-    public static VehicleModel[] generateReportDailyReturns(String date, String city, String location) {
-        return dbHandler.generateReportDailyReturns(date, city, location);
-    }
 
-    // Generate daily report for all active rentals
-    public static VehicleModel[] generateReportDailyRentals(String date) {
-        return dbHandler.generateReportDailyRentals(date);
-    }
-
-    // Generate daily report for all rentals at supplied branch
-    public static VehicleModel[] generateReportDailyRentals(String date, String city, String location) {
-        return dbHandler.generateReportDailyRentals(date, city, location);
-    }
 }
 
 

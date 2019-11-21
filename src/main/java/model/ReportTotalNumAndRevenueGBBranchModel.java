@@ -2,19 +2,19 @@ package model;
 
 public class ReportTotalNumAndRevenueGBBranchModel {
 
-    private final int totalRevenue;
+    private final double totalRevenue;
     private final int totalNumOfVehicle;
     private final String location;
     private final String city;
 
-    public ReportTotalNumAndRevenueGBBranchModel(int totalRevenue, int totalNumOfVehicle, String location, String city) {
+    public ReportTotalNumAndRevenueGBBranchModel(double totalRevenue, int totalNumOfVehicle, String location, String city) {
         this.totalRevenue = totalRevenue;
         this.totalNumOfVehicle = totalNumOfVehicle;
         this.location = location;
         this.city = city;
     }
 
-    public int getTotalRevenue() {
+    public double getTotalRevenue() {
         return totalRevenue;
     }
 

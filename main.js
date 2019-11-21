@@ -85,7 +85,7 @@ $( document ).ready(function()
         let responseText;
         let isBranchSelected = $("#branch").is(':checked');
         let isReturnsSelected = $("#daily-returns").is(':checked');
-        date = $("#g-date").val();
+        let date = $("#g-date").val();
         body.set("date", date);
         
         console.log(body);
@@ -143,8 +143,8 @@ $( document ).ready(function()
 })
 
 function branchBody(body) {
-    address = $("#g-address").val()
-    city = $("#g-city").val()
+    let address = $("#g-address").val()
+    let city = $("#g-city").val()
     body.set("address", address);
     body.set("city", city);
     return body;

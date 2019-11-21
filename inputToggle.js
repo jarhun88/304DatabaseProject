@@ -2,6 +2,11 @@ $( document ).ready(function()
 {
     $("#make-reservation-fields").hide(); 
     $("#make-return-fields").hide();
+    $("#vehicle").hide(); 
+    $("#vehicle-type").hide(); 
+    $("#customers").hide(); 
+    $("#primary-key").hide();
+    $("#update-header").hide();
 
     // hides "reservation" inputs when you click "view-vehicles"
     $("#view-vehicles").click(function() {
@@ -128,26 +133,115 @@ function disableInputAll() {
 
 function switchCustomerInputs(tableFn, tableType) {
     switch(tableFn) {
+        // add
         case 0:
             console.log(tableType);
+            $("#update-header").hide();
             if (tableType == 3) {
                 console.log("hii")
+                $("#pk-title").text("vid");
+                $("#rs").hide();
+                $("#r-rent").hide();
+                $("#r-return").hide();
                 $("#vehicle").show(); 
                 $("#vehicle-type").hide(); 
                 $("#customers").hide(); 
             }
             else if (tableType == 4) {
+                $("#pk-title").text("vtname");
+                $("#rs").hide();
+                $("#r-rent").hide();
+                $("#r-return").hide();
                 $("#vehicle").hide(); 
                 $("#vehicle-type").show(); 
                 $("#customers").hide(); 
             }
             else if (tableType == 5) {
+                $("#pk-title").text("phone number");
+                $("#rs").hide();
+                $("#r-rent").hide();
+                $("#r-return").hide();
                 $("#vehicle").hide(); 
                 $("#vehicle-type").hide(); 
                 $("#customers").show(); 
             }
             break;
+        // delete
         case 1:
+            $("#rs").hide();
+            $("#r-rent").hide();
+            $("#r-return").hide();
+            $("#vehicle").hide(); 
+            $("#vehicle-type").hide(); 
+            $("#customers").hide(); 
+            $("#update-header").hide();
+            switch (tableType) {
+                case 0:
+                    $("#pk-title").text("confNo");
+                    break;
+                case 1:
+                    $("#pk-title").text("rid");
+                    break;
+                case 2:
+                    $("#pk-title").text("rid");
+                    break;
+                case 3:
+                    $("#pk-title").text("vid");
+                    break;
+                case 4:
+                    $("#pk-title").text("vtname");
+                    break;
+                case 5:
+                    $("#pk-title").text("phone number");
+                    break;
+            }
+            console.log(tableType);
+            break;
+        // update
+        case 2:
+            $("#update-header").show();
+            $("#rs").hide();
+            $("#r-rent").hide();
+            $("#r-return").hide();
+            $("#vehicle").hide(); 
+            $("#vehicle-type").hide(); 
+            $("#customers").hide(); 
+            console.log("update");
+            switch (tableType) {
+                case 0:
+                    $("#pk-title").text("confNo");
+                    $("#rs").show();
+                    break;
+                case 1:
+                    $("#pk-title").text("rid");
+                    $("#r-rent").show();
+                    break;
+                case 2:
+                    $("#pk-title").text("rid");
+                    $("#r-return").show();
+                    break;
+                case 3:
+                    $("#pk-title").text("vid");
+                    $("#vehicle").show(); 
+                    break;
+                case 4:
+                    $("#pk-title").text("vtname");
+                    $("#vehicle-type").show(); 
+                    break;
+                case 5:
+                    $("#pk-title").text("phone number");
+                    $("#customers").show(); 
+                    break;
+                default:
+                    $("#update-header").show();
+            }
+            break;
+        // view
+        case 3:
+            $("#update-header").hide();
+            $("#rs").hide();
+            $("#r-rent").hide();
+            $("#r-return").hide();
             $("#vehicle").hide(); 
             $("#vehicle-type").hide(); 
             $("#customers").hide(); 
@@ -173,20 +267,5 @@ function switchCustomerInputs(tableFn, tableType) {
             }
             console.log(tableType);
             break;
-        case 2:
-            console.log(tableType);
-            break;
-        case 3:
-            console.log(tableType);
-            break;
-        case 4:
-            console.log(tableType);
-            break;
-        case 5:
-            console.log(tableType);
-            break;
-        case 6:
-            console.log(tableType);
-        break;
     }
 }

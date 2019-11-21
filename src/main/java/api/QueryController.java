@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Arrays;
 
 @RestController
-public class GreetingController {
+public class QueryController {
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/view-vehicles", consumes = "multipart/form-data", produces = "application/json")

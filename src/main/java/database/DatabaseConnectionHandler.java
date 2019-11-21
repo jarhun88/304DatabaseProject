@@ -391,23 +391,96 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
     }
 
-
     // REQUIRES: all inputs must be in the valid format
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank, String confNo) {
         ReturnConfirmationMessageModel confMessage = null;
 
-        double afterOdometer = Double.parseDouble(odometer);
+       // double afterOdometer = Double.parseDouble(odometer);
 
+        // calculate the amount
         VehicleTypeModel rateInfo = getRateInfo(Integer.parseInt(rid));
         TimeIntervalOdometerModel timeIntOdometer = getTimeIntervalAndOdometer(Integer.parseInt(rid));
 
         Timestamp fromDateTime = timeIntOdometer.getFromDateTime();
         Timestamp toDateTime = timeIntOdometer.getToDateTime();
-        double originalOdometer = timeIntOdometer.getOdometer();
+       // double originalOdometer = timeIntOdometer.getOdometer();
+        long startTime = fromDateTime.getTime();
+        long endTime = toDateTime.getTime();
+        long timeIntervalInHour = (endTime - startTime) / 3600000;
+
+        long weeks = timeIntervalInHour / 168;
+        timeIntervalInHour = timeIntervalInHour % 168;
+        long days = timeIntervalInHour / 24;
+        long hours = timeIntervalInHour % 24;
+
+        double regularCost = weeks * rateInfo.getWrate() + days * rateInfo.getDrate() + hours * rateInfo.getHrate();
+        double insuranceCost = weeks * rateInfo.getWirate() + days * rateInfo.getDirate() + hours * rateInfo.getHirate();
+        double value = regularCost + insuranceCost;
+
+        String regularCalDetail = "Payment Rate for this Vehicle:" + rateInfo.toString() + "￿￿\n"
+                + "Regular Cost -> " +weeks+" week(s) * " + rateInfo.getWrate() + " + "
+                +days+" day(s) * " + rateInfo.getDrate() + " + "
+                +hours+" hour(s) * " + rateInfo.getHrate() + " = " + regularCost + "￿￿\n";
+        String insCalDetail = "Insurance Cost -> " +weeks+" week(s) * " + rateInfo.getWirate() + " + "
+                +days+" day(s) * " + rateInfo.getDirate() + " + "
+                +hours+" hour(s) * " + rateInfo.getHirate() + " = " + insuranceCost + "￿￿\n"
+                + "Total: " + value;
+
+        String calculationDetail = regularCalDetail + insCalDetail;
+
+        boolean success = false;
+        try {
+            PreparedStatement ps = connection.prepareStatement("insert into return values " +
+                    "(?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
+            ps.setInt(1,Integer.parseInt(rid));
+            ps.setString(2,returnDateTime);
+            ps.setDouble(3,Double.parseDouble(odometer));
+            ps.setDouble(4,value);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            /*
+            insert into return values (13, to_date('2200-03-19','YYYY-MM-DD'), 999999999, 'T', 1000)
+/
+update vehicle set status = 'available' where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = 13)
+/
+             */
+            ps.close();
+            success = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        }
+
+        boolean success2 = false;
+
+        try {
+            PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'available'" +
+                    " where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = ?)");
+            ps.setInt(1,Integer.parseInt(rid));
+
+            ps.executeUpdate();
+            connection.commit();
 
 
-        return null;
+            ps.close();
+            success2 = true;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        }
+
+        if (success && success2) {
+            confMessage = new ReturnConfirmationMessageModel(Integer.parseInt(rid), returnDateTime, value, calculationDetail);
+            return  confMessage;
+
+        } else {
+            return null;
+        }
     }
 
     // Generate report for all returns

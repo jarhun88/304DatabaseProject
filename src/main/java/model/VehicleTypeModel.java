@@ -59,4 +59,17 @@ public class VehicleTypeModel {
     public String getVtname() {
         return vtname;
     }
+
+    @Override
+    public String toString() {
+        return "VehicleTypeModel{" +
+                "vtname='" + vtname + '\'' +
+                ", wrate=" + wrate +
+                ", drate=" + drate +
+                ", hrate=" + hrate +
+                ", wirate=" + wirate +
+                ", dirate=" + dirate +
+                ", hirate=" + hirate +
+                '}';
+    }
 }

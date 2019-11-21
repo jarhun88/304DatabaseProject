@@ -1,11 +1,11 @@
 package model;
 
-public class RentReportGroupByBranchModel {
+public class ReportGroupByBranchModel {
     private final int total;
     private final String location;
     private final String city;
 
-    public RentReportGroupByBranchModel(int total, String location, String city) {
+    public ReportGroupByBranchModel(int total, String location, String city) {
         this.total = total;
         this.location = location;
         this.city = city;

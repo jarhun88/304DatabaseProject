@@ -1,10 +1,10 @@
 package model;
 
-public class RentReportGroupedByVehilceModel {
+public class ReportGroupedByVehilceModel {
     private final int total;
     private final String vtname;
 
-    public RentReportGroupedByVehilceModel(int total, String vtname) {
+    public ReportGroupedByVehilceModel(int total, String vtname) {
         this.total = total;
         this.vtname = vtname;
     }

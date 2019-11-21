@@ -393,7 +393,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
     // REQUIRES: all inputs must be in the valid format
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
-    public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank, String confNo) {
+    public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
         ReturnConfirmationMessageModel confMessage = null;
 
        // double afterOdometer = Double.parseDouble(odometer);
@@ -436,7 +436,8 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             ps.setInt(1,Integer.parseInt(rid));
             ps.setString(2,returnDateTime);
             ps.setDouble(3,Double.parseDouble(odometer));
-            ps.setDouble(4,value);
+            ps.setString(4,fulltank);
+            ps.setDouble(5,value);
 
             ps.executeUpdate();
             connection.commit();

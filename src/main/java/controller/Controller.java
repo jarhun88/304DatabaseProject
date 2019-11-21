@@ -1,6 +1,7 @@
 package controller;
 
 import database.DatabaseConnectionHandler;
+import model.ReturnConfirmationMessageModel;
 import model.VehicleModel;
 
 //This is the main controller class that will orchestrate everything.
@@ -57,15 +58,16 @@ public class Controller {
     }
 
     // Rents a specific vehicle
-    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String name, String address,
+    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer, String address,
                                   String dLicense, String confNo, String cardName, String cardNo, String expDate) {
 
-        return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, name, address, dLicense, confNo, cardName, cardNo, expDate);
+        return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
     }
 
     // Returns a vehicle
-    public static int returnVehicle(String rid, String returnDateTime, String odometer, Boolean fulltank) {
-        return dbHandler.returnVehicle(rid, returnDateTime, odometer, fulltank);
+    public static ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
+        return dbHandler.returnVehicle(rid, returnDateTime,odometer, fulltank);
+        // String rid, String returnDateTime, String odometer, String fulltank, String confNo
     }
 
     // Generate daily report for all returns

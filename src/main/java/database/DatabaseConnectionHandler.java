@@ -482,7 +482,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         }
     }
 
-//todo test
+//tested
     // EFFECTS: returns the vehicles rented our on that day
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -490,7 +490,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         try {
             Statement stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, " +
-                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city" +
+                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Rent r, Vehicle v " +
                     "WHERE fromDateTime <= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
                     "AND toDateTime >=  to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI') " +
@@ -500,11 +500,11 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
-                        rs.getString("v.vlicense"),
-                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
-                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
-                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
+                        rs.getString("vlicense"),
+                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
+                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
 
             }
@@ -532,8 +532,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
          */
     }
 
-    //todo test
 
+    //tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -550,7 +550,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
             while (rs.next()) {
                 ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt("total"),
-                        rs.getString("v.vtname"));
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -563,8 +563,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
     }
-//todo test
 
+
+//tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by branch
     public ReportGroupByBranchModel[] getNumOfVehicleDailyRentalGBBranch(String date) {
         ArrayList<ReportGroupByBranchModel> result = new ArrayList<>();
@@ -580,7 +581,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
             while (rs.next()) {
                 ReportGroupByBranchModel model = new ReportGroupByBranchModel(rs.getInt("total"),
-                        rs.getString("v.location"), rs.getString("v.city"));
+                        rs.getString("location"), rs.getString("city"));
                 result.add(model);
             }
 
@@ -594,8 +595,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-    //todo test
 
+    //tested
     // EFFECTS: returns the number of new rental on that day in the entire company
     public int getNumOfVehicleNewlyDailyRental(String date) {
         int total = -1;
@@ -603,8 +604,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             Statement stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total " +
                     "FROM Rent " +
-                    "WHERE fromDateTime >=  to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI') " +
-                    "AND fromDateTime <=  to_timestamp('2019-01-07:23:59','YYYY-MM-DD:HH24:MI')";
+                    "WHERE fromDateTime >=  to_timestamp('"+date+":00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND fromDateTime <=  to_timestamp('"+date+":23:59','YYYY-MM-DD:HH24:MI')";
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -620,6 +621,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+
+//tested
     // EFFECTS: returns the vehicles rented our on that day on the specified branch
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -627,8 +630,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         try {
             Statement stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year," +
-                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city" +
-                    "FROM Rent r, Vehicle v" +
+                    "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
+                    "FROM Rent r, Vehicle v " +
                     "WHERE fromDateTime <=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
                     "AND toDateTime >=  to_timestamp('" + date + ":23:59', 'YYYY-MM-DD:HH24:MI')  " +
                     "AND r.vid = v.vid AND v.location = '" + location + "' AND v.city = '" + city + "' " +
@@ -637,11 +640,11 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
-                        rs.getString("v.vlicense"),
-                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
-                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
-                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
+                        rs.getString("vlicense"),
+                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
+                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
 
             }
@@ -655,7 +658,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new VehicleModel[result.size()]);
     }
 
-
+// tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle on the branch
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -672,8 +675,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt("total"),
-                        rs.getString("v.vtname"));
+                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt(1),
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -687,7 +690,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-
+// tested
     // EFFECTS: returns the number of vehicle rented out on that day in the branch
     public int getNumOfVehicleDailyRentalOnBranch(String date, String location, String city) {
         int total = -1;
@@ -702,7 +705,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             rs.next();
-            total = rs.getInt("total");
+            total = rs.getInt(1);
 
             rs.close();
             stmt.close();
@@ -713,6 +716,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+
+    //tested
 
     // EFFECTS: returns the number of new rental on that day in the branch
     public int getNumOfVehicleNewlyDailyRentalOnBranch(String date, String location, String city) {
@@ -728,7 +733,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             rs.next();
-            total = rs.getInt("total");
+            total = rs.getInt(1);
 
             rs.close();
             stmt.close();
@@ -739,6 +744,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+
+    //todo test
 
     // EFFECTS: returns all the vehicle returned on that day in the entire ccompany
     public VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
@@ -757,11 +764,11 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
-                        rs.getString("v.vlicense"),
-                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
-                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
-                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
+                        rs.getString("vlicense"),
+                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
+                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
 
             }
@@ -776,7 +783,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-
+//todo test
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname in the entire company
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -792,8 +799,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt("total"),
-                        rs.getString("v.vtname"));
+                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt(1),
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -808,6 +815,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //todo test
 
     // EFFECTS: returns the total revenue per vtname in the entire company
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicle(String date) {
@@ -824,8 +832,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                RevenueReportGroupedByVehilceModel model = new RevenueReportGroupedByVehilceModel(rs.getDouble("total"),
-                        rs.getString("v.vtname"));
+                RevenueReportGroupedByVehilceModel model = new RevenueReportGroupedByVehilceModel(rs.getDouble(1),
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -838,6 +846,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new RevenueReportGroupedByVehilceModel[result.size()]);
 
     }
+
+    //todo test
 
     public ReportTotalNumAndRevenueGBBranchModel[] getTotalNumAndRevenueGBBranch(String date) {
         ArrayList<ReportTotalNumAndRevenueGBBranchModel> result = new ArrayList<>();
@@ -853,8 +863,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                ReportTotalNumAndRevenueGBBranchModel model = new ReportTotalNumAndRevenueGBBranchModel(rs.getInt("totalRev"),
-                        rs.getInt("totalNum"), rs.getString("v.location"), rs.getString("v.city"));
+                ReportTotalNumAndRevenueGBBranchModel model = new ReportTotalNumAndRevenueGBBranchModel(rs.getInt(1),
+                        rs.getInt(2), rs.getString("location"), rs.getString("city"));
                 result.add(model);
             }
 
@@ -887,10 +897,10 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
-                        rs.getString("v.vlicense"),
-                        rs.getString("v.make"), rs.getString("v.model"), rs.getString("v.year"),
-                        rs.getString("v.color"), rs.getDouble("v.odometer"), rs.getString("v.status"),
-                        rs.getString("v.vtname"), rs.getString("v.location"), rs.getString("v.city"));
+                        rs.getString("vlicense"),
+                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
+                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
                 result.add(model);
 
             }
@@ -921,8 +931,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt("total"),
-                        rs.getString("v.vtname"));
+                ReportGroupedByVehilceModel model = new ReportGroupedByVehilceModel(rs.getInt(1),
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -954,8 +964,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                RevenueReportGroupedByVehilceModel model = new RevenueReportGroupedByVehilceModel(rs.getDouble("total"),
-                        rs.getString("v.vtname"));
+                RevenueReportGroupedByVehilceModel model = new RevenueReportGroupedByVehilceModel(rs.getDouble(1),
+                        rs.getString("vtname"));
                 result.add(model);
             }
 
@@ -983,7 +993,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             rs.next();
-            result = new ReportTotalNumAndRevenueOnBranchModel(rs.getDouble("totalRev"), rs.getInt("totalNum"));
+            result = new ReportTotalNumAndRevenueOnBranchModel(rs.getDouble(1), rs.getInt(2));
 
 
             rs.close();

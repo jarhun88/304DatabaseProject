@@ -34,11 +34,23 @@ public class Controller {
 //             "" + confNo, "Visa","4444777788889999", "2200-10-10");
 
 //        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle(""+rid, "2200-02-01:00:00", "1244", "T");
-        ReportGroupedByVehilceModel[] rp =  dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
-        ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
-        ReportGroupByBranchModel[] rp3 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
-        int numVDayRent =  dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-02");
 
+//        VehicleModel[] rp0 =  dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
+//        ReportGroupedByVehilceModel[] rp =  dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
+//        ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
+//        int numVDayRent =  dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
+
+//        VehicleModel[] vm = dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch("2019-01-01", "UBC", "Vancouver");
+//        ReportGroupedByVehilceModel[] rgv = dbHandler.getNumOfVehicleDailyRentalGBVehicleOnBranch("2019-01-01", "UBC", "Vancouver");
+//        int numRentB =  dbHandler.getNumOfVehicleDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
+//        int numnewB = dbHandler.getNumOfVehicleNewlyDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
+
+//        VehicleModel[] vmreturn =  dbHandler.generateReportDailyReturnsAllVehicleInfo("2019-01-07");
+//        ReportGroupedByVehilceModel[] rgbvreturn =  dbHandler.getNumOdVehicleDailyReturnGBVehicle("2019-01-07");
+//        RevenueReportGroupedByVehilceModel[] rrgbvm =  dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
+//        ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
+
+        
         System.out.printf("here");
     }
 

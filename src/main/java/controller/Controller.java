@@ -23,12 +23,12 @@ public class Controller {
         // Log in with given credentials
 //        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
         boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
-
-        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
-        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
-        int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
-        int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
-                "2200-01-01:00:00", "2200-02-01:00:00");
+//
+//        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
+//        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
+//        int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
+//        int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
+//                "2200-01-01:00:00", "2200-02-01:00:00");
 //        ReservationModel reservationModel =  dbHandler.getReservation(1);
 //       int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
 //             "" + confNo, "Visa","4444777788889999", "2200-10-10");
@@ -50,6 +50,16 @@ public class Controller {
 //        RevenueReportGroupedByVehilceModel[] rrgbvm =  dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
 //        ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
 
+//        VehicleModel[] vmreturntes = dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch("2019-01-07", "UBC", "Vancouver");
+//        ReportGroupedByVehilceModel[] rgbvreturnB = dbHandler.getNumOdVehicleDailyReturnGBVehicleOnBranch(
+//                "2019-01-07", "UBC", "Vancouver");
+//        RevenueReportGroupedByVehilceModel[] rgmvmreturnB =  dbHandler.getRevenueDailyReturnGBVehicleOnBranch(
+//                "2019-01-07", "UBC", "Vancouver");
+//        ReportTotalNumAndRevenueOnBranchModel resulttt =  dbHandler.getTotalRevAndNumRentalsOnBranch(
+//                "2019-01-07", "UBC", "Vancouver");
+//
+//        boolean eee = dbHandler.addNewCustomer("9999999990", "John Doe", "123 w ave, van, vc", "112344888");
+//        RentConfirmationMessageModel rmdd =  dbHandler.getRentConfMessage(2);
 
         System.out.printf("here");
     }

@@ -745,8 +745,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     }
 
 
-    //todo test
-
+    //tested
     // EFFECTS: returns all the vehicle returned on that day in the entire ccompany
     public VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -783,7 +782,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-//todo test
+//tested
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname in the entire company
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -815,8 +814,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-    //todo test
-
+    //tested
     // EFFECTS: returns the total revenue per vtname in the entire company
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicle(String date) {
         ArrayList<RevenueReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -847,8 +845,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-    //todo test
+    //tested
 
+    //returns the total revenue and the number of cars returned grouped by branch
     public ReportTotalNumAndRevenueGBBranchModel[] getTotalNumAndRevenueGBBranch(String date) {
         ArrayList<ReportTotalNumAndRevenueGBBranchModel> result = new ArrayList<>();
 
@@ -879,8 +878,10 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     }
 
 
+    //tested
+
     // EFFECTS: returns the information of vehicle returned on that day on the specified branch
-    public VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String city, String location) {
+    public VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date,String location,  String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
@@ -896,7 +897,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getInt("v.vid"),
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
                         rs.getString("vlicense"),
                         rs.getString("make"), rs.getString("model"), rs.getString("year"),
                         rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
@@ -914,6 +915,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new VehicleModel[result.size()]);
     }
 
+
+    //tested
 
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname on the branch
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicleOnBranch(String date, String location, String city) {
@@ -947,7 +950,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-
+//tested
     // EFFECTS: returns the total revenue per vtname on the branch
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<RevenueReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -979,6 +982,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
+
     // EFFECTS: returns the total revenue and total num of cars returned on that day on the branch
     public ReportTotalNumAndRevenueOnBranchModel getTotalRevAndNumRentalsOnBranch(String date, String location, String city) {
         ReportTotalNumAndRevenueOnBranchModel result = null;
@@ -1006,7 +1011,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-
+//tested
     //EFFECTS: returns true if a customer is successfully added
     //          returns false other wise
     public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
@@ -1085,6 +1090,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
     // EFFECTS: returns the confirmation message model for renting based on the rid
     public RentConfirmationMessageModel getRentConfMessage(int rid) {
         RentConfirmationMessageModel result = null;
@@ -1097,12 +1103,12 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             ResultSet rs = stmt.executeQuery(query);
 
             rs.next();
-            result = new RentConfirmationMessageModel(rs.getInt("r.rid"), rs.getString("r.cellphone"),
-                    rs.getTimestamp("r.fromDateTime"), rs.getTimestamp("r.toDateTime"),
-                    rs.getString("r.cardName"), rs.getString("r.cardNo"), rs.getDate("r.expDate"),
-                    rs.getDouble("r.odometer"), rs.getInt("r.confNo"), rs.getInt("v.vid"),
-                    rs.getString("v.vlicense"), rs.getString("v.vtname"), rs.getString("v.location"),
-                    rs.getString("v.city"));
+            result = new RentConfirmationMessageModel(rs.getInt("rid"), rs.getString("cellphone"),
+                    rs.getTimestamp("fromDateTime"), rs.getTimestamp("toDateTime"),
+                    rs.getString("cardName"), rs.getString("cardNo"), rs.getDate("expDate"),
+                    rs.getDouble("odometer"), rs.getInt("confNo"), rs.getInt("vid"),
+                    rs.getString("vlicense"), rs.getString("vtname"), rs.getString("location"),
+                    rs.getString("city"));
 
             rs.close();
             stmt.close();
@@ -1142,6 +1148,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
+    //tested
     // EFFECTS: returns the model for time interval and odometer to calculate cost
     public TimeIntervalOdometerModel getTimeIntervalAndOdometer(int rid) {
         TimeIntervalOdometerModel result = null;

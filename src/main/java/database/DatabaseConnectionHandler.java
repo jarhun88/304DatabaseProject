@@ -130,7 +130,7 @@ public class DatabaseConnectionHandler {
 
         try {
             Statement stmt = connection.createStatement();
-            String query = "SELECT distinct * FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
+            String query = "SELECT distinct * FROM Vehicle v where status == 'available'"; // rented is okay because the current state does not matter
             // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
             ResultSet rs = stmt.executeQuery(query);

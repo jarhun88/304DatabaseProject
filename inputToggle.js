@@ -114,31 +114,97 @@ $( document ).ready(function()
         let config = {
             headers: {'Access-Control-Allow-Origin': '*'}
         };
+        let body;
         switch(tableType) {
             case 0:
-                let body = reservationHelper(tableFn);
+                body = reservationHelper(tableFn);
                 console.log("reso body: " + body);
                 axios.post(localURL + "/res", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    document.getElementById("generate-output").innerHTML = responseText;
+                    // document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    document.getElementById("generate-output").innerHTML = responseText;
+                    // document.getElementById("generate-output").innerHTML = responseText;
                 })  
                 break;
             case 1: 
+                body = rentalHelper(tableFn);
+                console.log("rent body: " + body);
+                axios.post(localURL + "/ren", body, config).then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
             case 2: 
+                body = returnHelper(tableFn);
+                console.log("return body: " + body);
+                axios.post(localURL + "/ret", body, config).then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
             case 3: 
+                body = vehiclesHelper(tableFn);
+                console.log("vehicle body: " + body);
+                axios.post(localURL + "/vehicle", body, config).then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
             case 4:
+                body = vehicleTypeHelper(tableFn);
+                console.log("vehicleType body: " + body);
+                axios.post(localURL + "/vehicle-type", body, config).then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
             case 5: 
+                body = customerHelper(tableFn);
+                console.log("customer body: " + body);
+                axios.post(localURL + "/customer", body, config).then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
             case 6:
+                console.log("viewall");
+                axios.get(localURL + "/view-all").then((response) => {
+                    responseText = response.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                }).catch((error) => {
+                    responseText = error.data;
+                    console.log(responseText)
+                    // document.getElementById("generate-output").innerHTML = responseText;
+                })  
                 break;
         }
     })
@@ -157,7 +223,102 @@ function reservationHelper(tableFn) {
             body = mReservationBody("update");
             break; 
         case 3:
-            body = mReservationBody("delete");
+            body = mReservationBody("view");
+            break;
+    }
+    return body;
+}
+
+function rentalHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mRentBody("add");
+            break;
+        case 1:
+            body = mRentBody("remove");
+            break;   
+        case 2:
+            body = mRentBody("update");
+            break; 
+        case 3:
+            body = mRentBody("view");
+            break;
+    }
+    return body;
+}
+
+function returnHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mReturnBody("add");
+            break;
+        case 1:
+            body = mReturnBody("remove");
+            break;   
+        case 2:
+            body = mReturnBody("update");
+            break; 
+        case 3:
+            body = mReturnBody("view");
+            break;
+    }
+    return body;
+}
+
+function vehiclesHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mVehicleBody("add");
+            break;
+        case 1:
+            body = mVehicleBody("remove");
+            break;   
+        case 2:
+            body = mVehicleBody("update");
+            break; 
+        case 3:
+            body = mVehicleBody("view");
+            break;
+    }
+    return body;
+}
+
+function vehicleTypeHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mVehicleTypeBody("add");
+            break;
+        case 1:
+            body = mVehicleTypeBody("remove");
+            break;   
+        case 2:
+            body = mVehicleTypeBody("update");
+            break; 
+        case 3:
+            body = mVehicleTypeBody("view");
+            break;
+    }
+    return body;
+}
+
+function customerHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mCustomerBody("add");
+            break;
+        case 1:
+            body = mCustomerBody("remove");
+            break;   
+        case 2:
+            body = mCustomerBody("update");
+            break; 
+        case 3:
+            body = mCustomerBody("view");
             break;
     }
     return body;

@@ -23,6 +23,8 @@ public class Controller {
         // Log in with given credentials
 //        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
         boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
+
+        // those are testing codes, please do not delete!!
 //
 //        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
 //        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");

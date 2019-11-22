@@ -1,6 +1,6 @@
 $( document ).ready(function()
 {
-    const localURL = "http://localhost:8080";
+//    const localURL = "http://localhost:8080";
     console.log( "ready!" );
 
     $("#branch").click(function() {
@@ -22,7 +22,7 @@ $( document ).ready(function()
         };
         if (viewVehiclesSelected) {
             body = qViewVehiclesBody(body)
-            axios.post(localURL + "/view-vehicles", body, config).then((response) => {
+            axios.post("/view-vehicles", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
                 document.getElementById("customer-output").innerHTML = responseText;
@@ -34,7 +34,7 @@ $( document ).ready(function()
         }
         else {
             body = qReservationBody(body)
-            axios.post(localURL + "/reservation", body, config).then((response) => {
+            axios.post("/reservation", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
                 document.getElementById("customer-output").innerHTML = responseText;
@@ -54,7 +54,7 @@ $( document ).ready(function()
         let rentVehicleSelected = $("#rent").is(':checked');
         if (rentVehicleSelected) {
             body = qRentBody();
-            axios.post(localURL + "/rent", body, config).then((response) => {
+            axios.post("/rent", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
                 document.getElementById("clerk-output").innerHTML = responseText;
@@ -66,7 +66,7 @@ $( document ).ready(function()
         }
         else {
             body = qReturnBody();
-            axios.post(localURL + "/return", body, config).then((response) => {
+            axios.post("/return", body, config).then((response) => {
                 responseText = response.data;
                 console.log(responseText)
                 document.getElementById("clerk-output").innerHTML = responseText;
@@ -91,7 +91,7 @@ $( document ).ready(function()
         if (isReturnsSelected) {
             if (isBranchSelected) {
                 body = qBranchBody(body);
-                axios.post(localURL + "/daily-returns-branch", body).then((response) => {
+                axios.post("/daily-returns-branch", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
@@ -102,7 +102,7 @@ $( document ).ready(function()
                 })  
             }
             else {
-                axios.post(localURL + "/daily-returns", body).then((response) => {
+                axios.post("/daily-returns", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
@@ -116,7 +116,7 @@ $( document ).ready(function()
         else {
             if (isBranchSelected) {
                 body = qBranchBody(body);
-                axios.post(localURL + "/daily-rentals-branch", body).then((response) => {
+                axios.post("/daily-rentals-branch", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
@@ -127,7 +127,7 @@ $( document ).ready(function()
                 })  
             }
             else {
-                axios.post(localURL +  "/daily-rentals", body).then((response) => {
+                axios.post("/daily-rentals", body).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;

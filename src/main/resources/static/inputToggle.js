@@ -122,11 +122,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/res", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 1: 
@@ -135,11 +135,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/ren", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 2: 
@@ -148,11 +148,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/ret", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 3: 
@@ -161,11 +161,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/vehicle", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 4:
@@ -174,11 +174,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/vehicle-type", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 5: 
@@ -187,11 +187,11 @@ $( document ).ready(function()
                 axios.post(localURL + "/customer", body, config).then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
             case 6:
@@ -199,11 +199,11 @@ $( document ).ready(function()
                 axios.get(localURL + "/view-all").then((response) => {
                     responseText = response.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
                     responseText = error.data;
                     console.log(responseText)
-                    // document.getElementById("generate-output").innerHTML = responseText;
+                    document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
         }

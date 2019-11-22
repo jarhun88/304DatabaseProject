@@ -2,9 +2,11 @@
 
 Project for 304 Database course
 
-Run ```npm install``` to get all packages
+Run ```gradle build``` to build project jar (output in build->libs)
 
-Run ```http-server``` to start the localhost server
+Go to jar directory on terminal.
+
+Run ```java -jar 304DatabaseProject-1.jar``` to run the application
 
 Run ```
 ssh -l username -L localhost:1522:dbhost.students.cs.ubc.ca:1522 remote.students.cs.ubc.ca ```

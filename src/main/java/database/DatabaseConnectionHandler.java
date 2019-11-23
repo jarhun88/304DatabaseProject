@@ -1,5 +1,7 @@
 package database;
 
+//import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
+
 import model.*;
 
 import java.sql.*;
@@ -1161,7 +1163,8 @@ where rid = 4
 
         try {
             Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Vehicle");
+            String query = "select * from vehicle";
+            ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
                 VehicleModel model = new VehicleModel(rs.getInt("vid"),
@@ -1183,7 +1186,9 @@ where rid = 4
 
 
     // EFFECTS: delete record from vehicle with certain vid
-    public void deleteVehicle(String vid) {
+    public boolean deleteVehicle(String vid) {
+        boolean isSuccessful = false;
+
         int vidnum = Integer.parseInt(vid);
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicle WHERE vid = ?");
@@ -1192,22 +1197,28 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " Vehicle " + vid + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
-
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
     }
 
     // EFFECTS: insert a record to vehicle table
-    public void insertVehicle(String vlicense, String make, String model, String year, String color,
-                              String odometer, String status, String vtname, String location, String city) {
+    public boolean insertVehicle(String vlicense, String make, String model, String year, String color,
+                                 String odometer, String status, String vtname, String location, String city) {
+
+        boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO vehicle (vlicense, " +
+            ps = connection.prepareStatement("INSERT INTO vehicle (vlicense, " +
                     "make, model, year, color, odometer, status, vtname, location, city" +
                     ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
             ps.setString(1, vlicense);
@@ -1221,54 +1232,73 @@ where rid = 4
             ps.setString(9, location);
             ps.setString(10, city);
 
-            ps.executeUpdate();
-            connection.commit();
+            int rowCount = ps.executeUpdate();
+            if (rowCount != 0) {
+                isSuccessful = true;
+            }
 
+            connection.commit();
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return isSuccessful;
         }
     }
 
     // EFFECTS: update the table vehicle
-    public void updateVehicle(String vid, String vlicense, String make, String model, String year, String color,
-                              String odometer, String status, String vtname, String location, String city) {
+    public boolean updateVehicle(String vid, String vlicense, String make, String model, String year, String color,
+                                 String odometer, String status, String vtname, String location, String city) {
 
         int vidNum = Integer.parseInt(vid);
         String idName = "vid";
         String tableName = "vehicle";
+        boolean[] subSuccess = new boolean[9];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
 
         if (vlicense.length() > 0 || vlicense != null) {
-            updateTableWithIntegerkey(vidNum, "vlicense", vlicense, tableName, idName, TYPE_STRING);
+            subSuccess[0] = updateTableWithIntegerkey(vidNum, "vlicense", vlicense, tableName, idName, TYPE_STRING);
         }
         if (make.length() > 0 || make != null) {
-            updateTableWithIntegerkey(vidNum, "make", make, tableName, idName, TYPE_STRING);
+            subSuccess[1] = updateTableWithIntegerkey(vidNum, "make", make, tableName, idName, TYPE_STRING);
         }
         if (model.length() > 0 || model != null) {
-            updateTableWithIntegerkey(vidNum, "model", model, tableName, idName, TYPE_STRING);
+            subSuccess[2] = updateTableWithIntegerkey(vidNum, "model", model, tableName, idName, TYPE_STRING);
         }
         if (year.length() > 0 || year != null) {
-            updateTableWithIntegerkey(vidNum, "year", year, tableName, idName, TYPE_STRING);
+            subSuccess[3] = updateTableWithIntegerkey(vidNum, "year", year, tableName, idName, TYPE_STRING);
         }
         if (color.length() > 0 || color != null) {
-            updateTableWithIntegerkey(vidNum, "color", color, tableName, idName, TYPE_STRING);
+            subSuccess[4] = updateTableWithIntegerkey(vidNum, "color", color, tableName, idName, TYPE_STRING);
         }
         if (odometer.length() > 0 || odometer != null) {
-            updateTableWithIntegerkey(vidNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
+            subSuccess[5] = updateTableWithIntegerkey(vidNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
-        if (status.length() > 0 || status != null) {
-            updateTableWithIntegerkey(vidNum, "status", status, tableName, idName, TYPE_STRING);
+        if (status != null || status.length() > 0) {
+            subSuccess[6] = updateTableWithIntegerkey(vidNum, "status", status, tableName, idName, TYPE_STRING);
         }
-        if (vtname.length() > 0 || vtname != null) {
-            updateTableWithIntegerkey(vidNum, "vtname", vtname, tableName, idName, TYPE_STRING);
+        if (vtname != null | vtname.length() > 0) {
+            subSuccess[7] = updateTableWithIntegerkey(vidNum, "vtname", vtname, tableName, idName, TYPE_STRING);
         }
-        if (location.length() > 0 || location != null) {
-            updateTableWithIntegerkey(vidNum, "location", location, tableName, idName, TYPE_STRING);
+        if (location.length() > 0 || location != null || city.length() > 0 || city != null) {
+            subSuccess[8] = updateBranchInfoInTableWithIntegerkey(vidNum, location, city, tableName, idName);
         }
-        if (city.length() > 0 || city != null) {
-            updateTableWithIntegerkey(vidNum, "city", city, tableName, idName, TYPE_STRING);
+
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] == false) {
+                return false;
+            }
         }
+
+        return true;
 
 
     }
@@ -1316,7 +1346,8 @@ where rid = 4
     }
 
     // EFFECTS: delete a record from Rent based on the rid
-    public void deleteRent(String rid) {
+    public boolean deleteRent(String rid) {
+        boolean isSuccessful = false;
         int ridnum = Integer.parseInt(rid);
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM rent WHERE rid = ?");
@@ -1325,6 +1356,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " Rent " + rid + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1333,13 +1366,16 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     // EFFECTS: insert a record to rent table
-    public void insertRent(String vid, String cellphone,
-                           String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+    public boolean insertRent(String vid, String cellphone,
+                              String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+        boolean isSuccessful = false;
 
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO rent (vid, " +
@@ -1355,13 +1391,18 @@ where rid = 4
             ps.setString(8, expDate);
             ps.setInt(9, Integer.parseInt(confNo));
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
@@ -1380,42 +1421,52 @@ where rid = 4
     */
 
     // EFFECTS: update the rent
-    public void updateRent(String rid, String vid, String cellphone,
-                           String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+    public boolean updateRent(String rid, String vid, String cellphone,
+                              String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
 
         int ridNum = Integer.parseInt(rid);
         String idName = "rid";
         String tableName = "rent";
+        boolean[] subSuccess = new boolean[9];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
 
         if (vid.length() > 0 || vid != null) {
-            updateTableWithIntegerkey(ridNum, "vid", vid, tableName, idName, TYPE_INT);
+            subSuccess[0] = updateTableWithIntegerkey(ridNum, "vid", vid, tableName, idName, TYPE_INT);
         }
         if (cellphone.length() > 0 || cellphone != null) {
-            updateTableWithIntegerkey(ridNum, "cellphone", cellphone, tableName, idName, TYPE_STRING);
+            subSuccess[1] = updateTableWithIntegerkey(ridNum, "cellphone", cellphone, tableName, idName, TYPE_STRING);
         }
         if (fromDateTime.length() > 0 || fromDateTime != null) {
-            updateTableWithIntegerkey(ridNum, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
+            subSuccess[2] = updateTableWithIntegerkey(ridNum, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
         if (toDateTime.length() > 0 || toDateTime != null) {
-            updateTableWithIntegerkey(ridNum, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
+            subSuccess[3] = updateTableWithIntegerkey(ridNum, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
-
         if (odometer.length() > 0 || odometer != null) {
-            updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
+            subSuccess[4] = updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
         if (cardName.length() > 0 || cardName != null) {
-            updateTableWithIntegerkey(ridNum, "cardName", cardName, tableName, idName, TYPE_STRING);
+            subSuccess[5] = updateTableWithIntegerkey(ridNum, "cardName", cardName, tableName, idName, TYPE_STRING);
         }
         if (cardNo.length() > 0 || cardNo != null) {
-            updateTableWithIntegerkey(ridNum, "cardNo", cardNo, tableName, idName, TYPE_STRING);
+            subSuccess[6] = updateTableWithIntegerkey(ridNum, "cardNo", cardNo, tableName, idName, TYPE_STRING);
         }
         if (expDate.length() > 0 || expDate != null) {
-            updateTableWithIntegerkey(ridNum, "expDate", expDate, tableName, idName, TYPE_DATE);
+            subSuccess[7] = updateTableWithIntegerkey(ridNum, "expDate", expDate, tableName, idName, TYPE_DATE);
         }
         if (expDate.length() > 0 || expDate != null) {
-            updateTableWithIntegerkey(ridNum, "confNo", confNo, tableName, idName, TYPE_INT);
+            subSuccess[8] = updateTableWithIntegerkey(ridNum, "confNo", confNo, tableName, idName, TYPE_INT);
         }
 
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] = false) {
+                return false;
+
+            }
+        }
+        return true;
     }
 
 
@@ -1455,7 +1506,8 @@ where rid = 4
     }
 
     // EFFECTS: delete a record from reservation based on confNo
-    public void deleteReservation(String confNo) {
+    public boolean deleteReservation(String confNo) {
+        boolean isSuccessful = false;
         int confNoInt = Integer.parseInt(confNo);
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
@@ -1464,6 +1516,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " Reservation " + confNoInt + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1472,12 +1526,15 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     // EFFECTS: insert a record into reservation
-    public void insertReservation(String vid, String cellphone, String fromDateTime, String toDateTime) {
+    public boolean insertReservation(String vid, String cellphone, String fromDateTime, String toDateTime) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation (vid, " +
                     "cellphone, fromDateTime, toDateTime" +
@@ -1487,36 +1544,52 @@ where rid = 4
             ps.setString(3, fromDateTime);
             ps.setString(4, toDateTime);
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
 
     }
 
     // EFFECTS: update a record in reservation
-    public void updateReservation(String confNo, String vid, String cellphone, String fromDateTime, String toDateTime) {
+    public boolean updateReservation(String confNo, String vid, String cellphone, String fromDateTime, String toDateTime) {
         int confNoInt = Integer.parseInt(confNo);
         String idName = "confNo";
         String tableName = "reservation";
 
+        boolean[] subSuccess = new boolean[4];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
+
         if (vid.length() > 0 || vid != null) {
-            updateTableWithIntegerkey(confNoInt, "vid", vid, tableName, idName, TYPE_INT);
+            subSuccess[0] = updateTableWithIntegerkey(confNoInt, "vid", vid, tableName, idName, TYPE_INT);
         }
         if (cellphone.length() > 0 || cellphone != null) {
-            updateTableWithIntegerkey(confNoInt, "cellphone", cellphone, tableName, idName, TYPE_STRING);
+            subSuccess[1] = updateTableWithIntegerkey(confNoInt, "cellphone", cellphone, tableName, idName, TYPE_STRING);
         }
         if (fromDateTime.length() > 0 || fromDateTime != null) {
-            updateTableWithIntegerkey(confNoInt, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
+            subSuccess[2] = updateTableWithIntegerkey(confNoInt, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
         if (toDateTime.length() > 0 || toDateTime != null) {
-            updateTableWithIntegerkey(confNoInt, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
+            subSuccess[3] = updateTableWithIntegerkey(confNoInt, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] == false) {
+                return false;
+            }
+        }
+        return true;
 
     }
 
@@ -1556,12 +1629,12 @@ where rid = 4
         return result.toArray(new ReturnModel[result.size()]);
 
 
-
     }
 
     // EFFECTS: delete a record from return table
-    public void deleteReturn(String rid) {
+    public boolean deleteReturn(String rid) {
 
+        boolean isSuccessful = false;
         int ridNum = Integer.parseInt(rid);
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM return WHERE rid = ?");
@@ -1570,6 +1643,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " Return " + ridNum + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1578,11 +1653,14 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
     }
 
     // EFFECTS: insert into return
-    public void insertReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+    public boolean insertReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO return VALUES " +
                     "(?, to_timestamp(?, 'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
@@ -1592,35 +1670,51 @@ where rid = 4
             ps.setString(4, fulltank);
             ps.setDouble(5, Double.parseDouble(value));
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     //EFFECTS: update return
-    public void updateReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+    public boolean updateReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
         int ridNum = Integer.parseInt(rid);
         String idName = "rid";
         String tableName = "return";
 
+        boolean[] subSuccess = new boolean[4];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
+
         if (returnDateTime.length() > 0 || returnDateTime != null) {
-            updateTableWithIntegerkey(ridNum, "returnDateTime", returnDateTime, tableName, idName, TYPE_TIMESTAMP);
+            subSuccess[0] = updateTableWithIntegerkey(ridNum, "returnDateTime", returnDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
         if (odometer.length() > 0 || odometer != null) {
-            updateTableWithIntegerkey(ridNum, "cellphone", odometer, tableName, idName, TYPE_DOUBLE);
+            subSuccess[1] = updateTableWithIntegerkey(ridNum, "cellphone", odometer, tableName, idName, TYPE_DOUBLE);
         }
         if (fulltank.length() > 0 || fulltank != null) {
-            updateTableWithIntegerkey(ridNum, "fulltank", fulltank, tableName, idName, TYPE_STRING);
+            subSuccess[2] = updateTableWithIntegerkey(ridNum, "fulltank", fulltank, tableName, idName, TYPE_STRING);
         }
         if (value.length() > 0 || value != null) {
-            updateTableWithIntegerkey(ridNum, "value", value, tableName, idName, TYPE_DOUBLE);
+            subSuccess[3] = updateTableWithIntegerkey(ridNum, "value", value, tableName, idName, TYPE_DOUBLE);
         }
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] = false) {
+                return false;
+            }
+        }
+        return true;
 
 
     }
@@ -1663,7 +1757,8 @@ where rid = 4
     }
 
     // EFFECTS: delete a record from customer
-    public void deleteCustomer(String cellphone) {
+    public boolean deleteCustomer(String cellphone) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM customer WHERE cellphone = ?");
             ps.setString(1, cellphone);
@@ -1671,6 +1766,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " Customer with " + cellphone + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1679,12 +1776,15 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     // EFFECTS: insert customer based on cellphone
-    public void insertCustomer(String cellphone, String name, String address, String dlicense) {
+    public boolean insertCustomer(String cellphone, String name, String address, String dlicense) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO customer VALUES " +
                     "(?, ?, ?, ?)");
@@ -1693,23 +1793,33 @@ where rid = 4
             ps.setString(3, address);
             ps.setString(4, dlicense);
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
 
     }
 
     // EFFECTS: update customer
-    public void updateCustomer(String cellphone, String name, String address, String dlicense) {
+    public boolean updateCustomer(String cellphone, String name, String address, String dlicense) {
         String key = cellphone;
         String idName = "cellphone";
         String tableName = "customer";
+
+        boolean[] subSuccess = new boolean[3];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
 
         if (name.length() > 0 || name != null) {
             updateTableWithStringkey(key, "name", name, tableName, idName, TYPE_STRING);
@@ -1720,7 +1830,13 @@ where rid = 4
         if (dlicense.length() > 0 || dlicense != null) {
             updateTableWithStringkey(key, "dlicense", dlicense, tableName, idName, TYPE_STRING);
         }
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] = false) {
+                return false;
+            }
+        }
 
+        return true;
 
     }
 
@@ -1749,8 +1865,8 @@ where rid = 4
 
             while (rs.next()) {
                 VehicleTypeModel model = new VehicleTypeModel(rs.getString("vtname"), rs.getString("features"),
-                rs.getFloat("wrate"), rs.getFloat("drate"), rs.getFloat("hrate"),
-                rs.getFloat("wirate"), rs.getFloat("dirate"), rs.getFloat("hirate") ,
+                        rs.getFloat("wrate"), rs.getFloat("drate"), rs.getFloat("hrate"),
+                        rs.getFloat("wirate"), rs.getFloat("dirate"), rs.getFloat("hirate"),
                         rs.getFloat("krate"));
                 result.add(model);
             }
@@ -1766,7 +1882,8 @@ where rid = 4
     }
 
     // EFFECTS: delete a record from vehicle type
-    public void deleteVehicleType(String vtname) {
+    public boolean deleteVehicleType(String vtname) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicleType WHERE vtname = ?");
             ps.setString(1, vtname);
@@ -1774,6 +1891,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " VehicleType " + vtname + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1782,13 +1901,16 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     // EFFECTS: insert vehicle type
-    public void insertVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
-                                  String dirate, String hirate, String krate) {
+    public boolean insertVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
+                                     String dirate, String hirate, String krate) {
+        boolean isSuccessful = false;
         try {
             PreparedStatement ps = connection.prepareStatement("INSERT INTO vehicleType VALUES " +
                     "(?,?,?,?,?,?,?,?,?)");
@@ -1802,23 +1924,33 @@ where rid = 4
             ps.setFloat(8, Float.parseFloat(hirate));
             ps.setFloat(9, Float.parseFloat(krate));
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
             connection.commit();
 
             ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
 
     }
 
     // EFFECTS: update vehicle types
-    public void updateVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
-                                  String dirate, String hirate, String krate) {
+    public boolean updateVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
+                                     String dirate, String hirate, String krate) {
         String key = vtname;
         String idName = "vtname";
         String tableName = "vehicleType";
+
+        boolean[] subSuccess = new boolean[8];
+        for (int i = 0; i < subSuccess.length; i++) {
+            subSuccess[i] = true;
+        }
 
         if (features.length() > 0 || features != null) {
             updateTableWithStringkey(key, "features", features, tableName, idName, TYPE_STRING);
@@ -1845,14 +1977,20 @@ where rid = 4
             updateTableWithStringkey(key, "krate", krate, tableName, idName, TYPE_FLOAT);
         }
 
+        for (int i = 0; i < subSuccess.length; i++) {
+            if (subSuccess[i] = false) {
+                return false;
+            }
+        }
+        return true;
+
     }
-
-
 
 
     //
 
-    public void updateTableWithIntegerkey(int id, String columnName, String value, String tableName, String idName, String valueType) {
+    public boolean updateTableWithIntegerkey(int id, String columnName, String value, String tableName, String idName, String valueType) {
+        boolean isSuccessful = false;
         String query = "";
         if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE)) {
             query = queryGeneratorForUpdate(tableName, columnName, idName);
@@ -1875,6 +2013,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1883,10 +2023,41 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
     }
 
-    public void updateTableWithStringkey(String id, String columnName, String value, String tableName, String idName, String valueType) {
+    public boolean updateBranchInfoInTableWithIntegerkey(int id, String location, String city, String tableName, String idName) {
+        boolean isSuccessful = false;
+        String query = "update " + tableName + " set location = ?, city = ? where " + idName + " = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            ps.setString(1, location);
+            ps.setString(2, city);
+            ps.setInt(3, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+            } else {
+                isSuccessful = true;
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        } finally {
+            return isSuccessful;
+        }
+
+    }
+
+    public boolean updateTableWithStringkey(String id, String columnName, String value, String tableName, String idName, String valueType) {
+        boolean isSuccessful = false;
         String query = "";
         if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE) || valueType.equals(TYPE_FLOAT)) {
             query = queryGeneratorForUpdate(tableName, columnName, idName);
@@ -1909,6 +2080,8 @@ where rid = 4
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
                 System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+            } else {
+                isSuccessful = true;
             }
 
             connection.commit();
@@ -1917,6 +2090,8 @@ where rid = 4
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
+        } finally {
+            return isSuccessful;
         }
     }
 
@@ -2039,9 +2214,6 @@ where rid = 4
 //            rollbackConnection();
 //        }
 //    }
-
-
-
 
 
 }

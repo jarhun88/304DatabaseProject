@@ -26,6 +26,9 @@ public class Controller {
 
         // test the methods in DatabaseConnectionHandler class
         //testMethodsInDCHandler();
+        // testVehicleManipulation();
+//        testDailyReportRentWholeCompany();
+//        testCustomerManipulation();
 
 
         System.out.printf("here");
@@ -90,10 +93,6 @@ public class Controller {
 
         ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("" + rid, "2200-02-01:00:00", "1244", "T");
 
-        VehicleModel[] rp0 = dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
-        ReportGroupedByVehilceModel[] rp = dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
-        ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
-        int numVDayRent = Controller.dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
 
         VehicleModel[] vm = dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch("2019-01-01", "UBC", "Vancouver");
         ReportGroupedByVehilceModel[] rgv = dbHandler.getNumOfVehicleDailyRentalGBVehicleOnBranch("2019-01-01", "UBC", "Vancouver");
@@ -117,6 +116,40 @@ public class Controller {
         RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }
+
+    public static void testDailyReportRentWholeCompany() {
+        VehicleModel[] rp0 = dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
+        ReportGroupedByVehilceModel[] rp = dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
+        ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
+        int numVDayRent = Controller.dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
+
+
+    }
+
+    public static void testVehicleManipulation() {
+        VehicleModel[] all = dbHandler.getVehicleInfo();
+        boolean delete = dbHandler.deleteVehicle("10");
+        VehicleModel[] after = dbHandler.getVehicleInfo();
+//        boolean insert = dbHandler.insertVehicle("123456", "aaa", "model", "1234", "reed",
+//                "123", "available", "Economy", "UBC", "Vancouver");
+//        VehicleModel[] all2 = dbHandler.getVehicleInfo();
+//        boolean update = dbHandler.updateVehicle("11", "123455", "make2", "fjfjf", "3344", "black",
+//                "44444", "rented", "", "", "");
+//        boolean update2 = dbHandler.updateVehicle("11", "123455", "make2", "model2", "3344", "black",
+//                "44444", "rented", null, "", "");
+
+    }
+
+    public static void testCustomerManipulation() {
+        CustomerModel[] all = dbHandler.getCustomerInfo();
+        boolean insert = dbHandler.insertCustomer("1221221222", "nana nana", "akdkkd, kkdk, kd", "123123123");
+        CustomerModel[] all2 = dbHandler.getCustomerInfo();
+
+    }
+
+
+
+
     public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date){
         return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
     }

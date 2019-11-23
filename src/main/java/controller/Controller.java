@@ -56,14 +56,14 @@ public class Controller {
     }
 
     // Makes a reservation and returns the confirmation number
-    public static int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vid,
+    public static int makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                       String fromDate, String toDate) {
         return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
     }
 
     // Rents a specific vehicle
-    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer, String address,
-                                  String dLicense, String confNo, String cardName, String cardNo, String expDate) {
+    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+                                   String confNo, String cardName, String cardNo, String expDate) {
 
         return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
     }
@@ -116,6 +116,18 @@ public class Controller {
         boolean eee = dbHandler.addNewCustomer("9999999990", "John Doe", "123 w ave, van, vc", "112344888");
         RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
+    }
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date){
+        return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
+    }
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date){
+        return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
+    }
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city){
+        return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+    }
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city){
+        return dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
     }
 
 

@@ -120,11 +120,11 @@ $( document ).ready(function()
                 body = reservationHelper(tableFn);
                 console.log("reso body: " + body);
                 axios.post(localURL + "/res", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -133,11 +133,11 @@ $( document ).ready(function()
                 body = rentalHelper(tableFn);
                 console.log("rent body: " + body);
                 axios.post(localURL + "/ren", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -146,11 +146,11 @@ $( document ).ready(function()
                 body = returnHelper(tableFn);
                 console.log("return body: " + body);
                 axios.post(localURL + "/ret", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -159,11 +159,11 @@ $( document ).ready(function()
                 body = vehiclesHelper(tableFn);
                 console.log("vehicle body: " + body);
                 axios.post(localURL + "/vehicle", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -172,11 +172,11 @@ $( document ).ready(function()
                 body = vehicleTypeHelper(tableFn);
                 console.log("vehicleType body: " + body);
                 axios.post(localURL + "/vehicle-type", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -185,11 +185,11 @@ $( document ).ready(function()
                 body = customerHelper(tableFn);
                 console.log("customer body: " + body);
                 axios.post(localURL + "/customer", body, config).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
@@ -197,11 +197,11 @@ $( document ).ready(function()
             case 6:
                 console.log("viewall");
                 axios.get(localURL + "/view-all").then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("table-output").innerHTML = responseText;
                 })  

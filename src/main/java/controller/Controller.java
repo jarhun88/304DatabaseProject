@@ -29,7 +29,7 @@ public class Controller {
 
         // test the methods in DatabaseConnectionHandler class
 //        testMethodsInDCHandler();
-         testVehicleManipulation();
+//         testVehicleManipulation();
 //        testDailyReportRentWholeCompany();
 //        testCustomerManipulation();
 

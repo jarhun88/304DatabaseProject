@@ -23,11 +23,11 @@ $( document ).ready(function()
         if (viewVehiclesSelected) {
             body = qViewVehiclesBody(body)
             axios.post("/view-vehicles", body, config).then((response) => {
-                responseText = response.data;
+                responseText = JSON.stringify(response.data);
                 console.log(responseText)
                 document.getElementById("customer-output").innerHTML = responseText;
             }).catch((error) => {
-                responseText = error.data;
+                responseText = JSON.stringify(error.data);
                 console.log(responseText)
                 document.getElementById("customer-output").innerHTML = responseText;
             })
@@ -35,7 +35,7 @@ $( document ).ready(function()
         else {
             body = qReservationBody(body)
             axios.post("/reservation", body, config).then((response) => {
-                responseText = response.data;
+                responseText = JSON.stringify(response.data);
                 console.log(responseText)
                 document.getElementById("customer-output").innerHTML = responseText;
             }).catch((error) => {
@@ -55,7 +55,7 @@ $( document ).ready(function()
         if (rentVehicleSelected) {
             body = qRentBody();
             axios.post("/rent", body, config).then((response) => {
-                responseText = response.data;
+                responseText = JSON.stringify(response.data);
                 console.log(responseText)
                 document.getElementById("clerk-output").innerHTML = responseText;
             }).catch((error) => {
@@ -67,11 +67,11 @@ $( document ).ready(function()
         else {
             body = qReturnBody();
             axios.post("/return", body, config).then((response) => {
-                responseText = response.data;
+                responseText = JSON.stringify(response.data);
                 console.log(responseText)
                 document.getElementById("clerk-output").innerHTML = responseText;
             }).catch((error) => {
-                responseText = error.data;
+                responseText = JSON.stringify(error.data);
                 console.log(responseText)
                 document.getElementById("clerk-output").innerHTML = responseText;
             })  
@@ -92,22 +92,22 @@ $( document ).ready(function()
             if (isBranchSelected) {
                 body = qBranchBody(body);
                 axios.post("/daily-returns-branch", body).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }
             else {
                 axios.post("/daily-returns", body).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 })  
@@ -117,22 +117,22 @@ $( document ).ready(function()
             if (isBranchSelected) {
                 body = qBranchBody(body);
                 axios.post("/daily-rentals-branch", body).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 })  
             }
             else {
                 axios.post("/daily-rentals", body).then((response) => {
-                    responseText = response.data;
+                    responseText = JSON.stringify(response.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 }).catch((error) => {
-                    responseText = error.data;
+                    responseText = JSON.stringify(error.data);
                     console.log(responseText)
                     document.getElementById("generate-output").innerHTML = responseText;
                 })  

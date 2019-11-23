@@ -10,9 +10,9 @@ import java.util.ArrayList;
  * This class handles all database related transactions
  */
 public class DatabaseConnectionHandler {
-    private static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
-    private static final String EXCEPTION_TAG = "[EXCEPTION]";
-    private static final String WARNING_TAG = "[WARNING]";
+    public static final String ORACLE_URL = "jdbc:oracle:thin:@localhost:1522:stu";
+    public static final String EXCEPTION_TAG = "[EXCEPTION]";
+    public static final String WARNING_TAG = "[WARNING]";
 
     private Connection connection = null;
 
@@ -34,6 +34,10 @@ public class DatabaseConnectionHandler {
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
 
@@ -60,43 +64,6 @@ public class DatabaseConnectionHandler {
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
         }
-    }
-
-    // Gets all vehicles that are available
-    public VehicleModel[] getVehicleInfo() {
-        ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
-
-        try {
-            Statement stmt = connection.createStatement();
-            ResultSet rs = stmt.executeQuery("SELECT * FROM Vehicle where STATUS = 'available'");
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
-
-            while (rs.next()) {
-                VehicleModel model = new VehicleModel(rs.getInt("vid"),
-                        rs.getString("vlicense"),
-                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
-                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
-                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
-                result.add(model);
-            }
-
-            rs.close();
-            stmt.close();
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
-
-        return result.toArray(new VehicleModel[result.size()]);
     }
 
     // EFFECTS: returns the array of result sets for the query of getting available vehicles based on the params
@@ -233,7 +200,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
 
-//tested
+    //tested
     // REQUIRES: all the inputs to be non-empty
     // EFFECTS: Makes a reservation and returns confirmation number
     //          if a reservation cannot be made for some reason, it returns -1
@@ -287,7 +254,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return confNo;
     }
 
-// tested
+    // tested
     // EFFECTS: returns the Reservation detail based on the confirmation number
     public ReservationModel getReservation(int confNo) {
         ReservationModel model = null;
@@ -310,7 +277,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
         return model;
     }
 
-//tested
+    //tested
     // REQUIRES: all the inputs are in the valid format
     // EFFECTS: Rents a vehicle and returns confirmation number (rid)
     public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
@@ -388,7 +355,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
     }
 
 
-//tested
+    //tested
     // REQUIRES: all inputs must be in the valid format
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
@@ -482,7 +449,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         }
     }
 
-//tested
+    //tested
     // EFFECTS: returns the vehicles rented our on that day
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -565,7 +532,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     }
 
 
-//tested
+    //tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by branch
     public ReportGroupByBranchModel[] getNumOfVehicleDailyRentalGBBranch(String date) {
         ArrayList<ReportGroupByBranchModel> result = new ArrayList<>();
@@ -622,7 +589,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     }
 
 
-//tested
+    //tested
     // EFFECTS: returns the vehicles rented our on that day on the specified branch
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
@@ -658,7 +625,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
         return result.toArray(new VehicleModel[result.size()]);
     }
 
-// tested
+    // tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle on the branch
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -690,7 +657,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-// tested
+    // tested
     // EFFECTS: returns the number of vehicle rented out on that day in the branch
     public int getNumOfVehicleDailyRentalOnBranch(String date, String location, String city) {
         int total = -1;
@@ -782,7 +749,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-//tested
+    //tested
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname in the entire company
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -950,7 +917,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-//tested
+    //tested
     // EFFECTS: returns the total revenue per vtname on the branch
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<RevenueReportGroupedByVehilceModel> result = new ArrayList<>();
@@ -1011,7 +978,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
 
     }
 
-//tested
+    //tested
     //EFFECTS: returns true if a customer is successfully added
     //          returns false other wise
     public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
@@ -1177,6 +1144,86 @@ from rent
 where rid = 4
          */
     }
+
+
+    // table manipulation for Vehicle
+
+    // EFFECTS: returns all the vehicle in the table
+    public VehicleModel[] getVehicleInfo() {
+        ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM Vehicle");
+
+            while (rs.next()) {
+                VehicleModel model = new VehicleModel(rs.getInt("vid"),
+                        rs.getString("vlicense"),
+                        rs.getString("make"), rs.getString("model"), rs.getString("year"),
+                        rs.getString("color"), rs.getDouble("odometer"), rs.getString("status"),
+                        rs.getString("vtname"), rs.getString("location"), rs.getString("city"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new VehicleModel[result.size()]);
+    }
+
+
+    // EFFECTS: delete record from vehicle with certain vid
+    public void deleteVehicle(int vid) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicle WHERE vid = ?");
+            ps.setInt(1, vid);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Branch " + vid + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    // EFFECTS: insert a record to vehicle table
+    public void insertVehicle(String vlicense, String make, String model, String year, String color,
+                              String odometer, String status, String vtname, String location, String city) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO vehicle (vlicense, " +
+                    "make, model, year, color, odometer, status, vtname, location, city" +
+                    ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+            ps.setString(1, vlicense);
+            ps.setString(2, make);
+            ps.setString(3, model);
+            ps.setString(4, year);
+            ps.setString(5, color);
+            ps.setString(6, odometer);
+            ps.setString(7, status);
+            ps.setString(8, vtname);
+            ps.setString(9, location);
+            ps.setString(10, city);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+
 
 
 }

@@ -52,14 +52,14 @@ public class Controller {
     }
 
     // Makes a reservation and returns the confirmation number
-    public static int makeReservation(String phoneNumber, String name, String address, String city, String dlicense, String vid,
+    public static int makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                       String fromDate, String toDate) {
         return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
     }
 
     // Rents a specific vehicle
-    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer, String address,
-                                  String dLicense, String confNo, String cardName, String cardNo, String expDate) {
+    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+                                   String confNo, String cardName, String cardNo, String expDate) {
 
         return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
     }

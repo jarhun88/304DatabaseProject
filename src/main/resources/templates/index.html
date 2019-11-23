@@ -1,0 +1,218 @@
+﻿<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+  <meta charset="utf-8">
+  <title></title>
+  <meta name="description" content="">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src= "http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="main.js" type="module"></script>
+  <script src="inputToggle.js"></script>
+
+  <link rel="stylesheet" href="main.css">
+  <meta name="theme-color" content="#fafafa">
+</head>
+
+<body>
+  <div class="title">
+    <h1>Welcome to the Vehicle SuperRent System</h1>
+  </div>
+  <div class="subtitle">
+      <h2>Query Functionality</h2>
+  </div>
+
+    <div class="user-type-box">
+      <div class="function-box">
+        <div class="function-title">
+            <h3>Customer Functions</h3>
+        </div>
+
+        <form class="radio-form">
+          <input id="view-vehicles" type="radio" name="input" value="male" checked> View Vehicles
+          <input id="make-reservation" type="radio" name="input" value="female"> Make Reservation
+        </form>
+
+        <div class="input-box" id="view-vehicles-fields">
+          <input type="text" id="vv-car-type" placeholder="car type">
+          <input type="text" id="vv-location" placeholder="location">
+          <input type="text" id="vv-city" placeholder="city">
+          <input type="text" id="vv-from" placeholder="from date">
+          <input type="text" id="vv-to" placeholder="from time">
+        </div>
+
+        <div class="input-box" id="make-reservation-fields">
+          <div class="customer-info-fields">
+            <input type="text" id="mr-phone-num" placeholder="phone number">
+            <input type="text" id="mr-name" placeholder="name">
+            <input type="text" id="mr-address" placeholder="address">
+            <input type="text" id="mr-city" placeholder="city">
+            <input type="text" id="mr-driver-license" placeholder="driver license">
+          </div>
+
+          <div class="reservation-info-fields">
+            <input type="text" id="mr-vtname" placeholder="vtname">
+            <input type="text" id="mr-from" placeholder="from date">
+            <input type="text" id="mr-to" placeholder="to time">
+          </div>
+        </div>  
+        <button class="button" id="customer-button" type="button">Submit</button>
+        <p id="customer-output"name="result">Output will display here</p>
+      </div>
+
+      <div class="function-box">
+        <div class="function-title">
+          <h3>Clerk Rent/Reserve Functions</h3>
+        </div>
+        <form class="radio-form">
+          <input id="rent"type="radio" name="input" value="male" checked> Renting Vehicle
+          <input id="return" type="radio" name="input" value="female"> Returning Vehicle
+        </form>
+        <div class="input-box" id="make-rental-fields">
+          <div class="customer-info-fields">
+            <input type="text" id="rent-phone-num" placeholder="phone number">
+            <input type="text" id="rent-name" placeholder="name">
+            <input type="text" id="rent-address" placeholder="address">
+            <input type="text" id="rent-driver-license" placeholder="driver license">
+          </div>
+            <input type="text" id="rent-vtname" placeholder="vtname">
+            <input type="text" id="rent-city" placeholder="city">
+            <input type="text" id="rent-from" placeholder="from date">
+            <input type="text" id="rent-to" placeholder="to time">
+        </div>
+
+        <div class="input-box" id="make-return-fields">
+            <input type="text" id="return-rid" placeholder="rid">
+            <input type="text" id="return-vtname" placeholder="vtname">
+            <input type="text" id="return-city" placeholder="city">
+            <input type="text" id="return-time" placeholder="to time">
+        </div>
+
+        <button class="button" id="rent-reserve-button" type="button">Submit</button>
+        <p id="clerk-output" name="result">Output will display here</p>
+      </div>
+
+      <div class="function-box">
+        <div class="function-title">
+          <h3>Clerk Generate Functions</h3>
+        </div>
+
+        <form class="radio-form">
+          <input id="daily-returns"type="radio" name="input" value="male" checked> Generate Daily Returns
+          <input id="daily-rentals"type="radio" name="input" value="female"> Generate Daily Rentals
+        </form>
+
+        <form class="checkbox-form">
+          <input id="branch" type="checkbox" name="input" value="male" checked> For Branch
+        </form>
+
+        <div class="input-box" id="date-fields">
+            <input type="text" id="g-date" placeholder="date">
+        </div>
+
+        <div class="input-box" id="branch-fields">
+          <input type="text" id="g-address" placeholder="address">
+          <input type="text" id="g-city" placeholder="city">
+        </div>
+
+        <button class="button" id="generate-button" type="button">Submit</button>
+        <p id="generate-output" name="result">Output will display here</p>
+      </div>
+    </div>
+
+    <!--End of Query Functions Segment -->
+
+    <div class="subtitle">
+        <h2>Table Manipulation</h2>
+    </div>
+    <form class="radio-form">
+        <input id="add" type="radio" name="input" value="male"> Add Field
+        <input id="delete" type="radio" name="input"> Remove Field
+        <input id="update" type="radio" name="input"> Update Field
+        <input id="view" type="radio" name="input"> View Fields
+    </form>
+    <form class="radio-form">
+        <input id="reservation" type="radio" name="input"> Reservation
+        <input id="rentals" type="radio" name="input"> Rentals
+        <input id="returns" type="radio" name="input"> Returns
+        <input id="vehicles" type="radio" name="input"> Vehicles
+        <input id="vehicleTypes" type="radio" name="input"> Vehicle Types
+        <input id="customer" type="radio" name="input" value="male" > Customers     
+        <input id="all" type="radio" name="input"> All
+    </form>
+
+    <div class="user-type-box">
+        <div class="function-box">    
+          <div class="title-box" id="primary-key"> 
+            <span class="key-input" id="pk-title">Primary Key</span>
+            <input type="text" id="pk-input">
+          </div>
+
+          <div class="title-box" id="update-header">
+              <span class="key-input" id="pk-title">Select any Fields to Update (minimum one field)</span>
+          </div>
+
+          <div class="input-box" id="rs">
+            <input type="text" id="rs-vtname" placeholder="vtname">
+            <input type="text" id="rs-phone-num" placeholder="phone number">
+            <input type="text" id="rs-from" placeholder="from date">
+            <input type="text" id="rs-to" placeholder="to time">
+          </div>
+
+          <div class="input-box" id="r-rent">
+            <input type="text" id="r-vid" placeholder="vtname">
+            <input type="text" id="r-phone-num" placeholder="phone number">
+            <input type="text" id="r-from" placeholder="from date">
+            <input type="text" id="r-to" placeholder="to time">
+            <input type="text" id="r-odometer" placeholder="odometer">
+            <input type="text" id="r-cardName" placeholder="cardName">
+            <input type="text" id="r-cardNo" placeholder="cardNo">
+            <input type="text" id="r-expDate" placeholder="expDate">
+            <input type="text" id="r-confNo" placeholder="confNo">
+          </div>
+
+          <div class="input-box" id="r-return">
+            <input type="text" id="return-date" placeholder="return date">
+            <input type="text" id="return-odometer" placeholder="odometer">
+            <input type="text" id="return-fulltank" placeholder="fulltank">
+            <input type="text" id="return-value" placeholder="value">
+          </div>
+
+          <div class="input-box" id="vehicle">
+            <input type="text" id="v-vlicense" placeholder="vlicense">
+            <input type="text" id="v-make" placeholder="make">
+            <input type="text" id="v-model" placeholder="model">
+            <input type="text" id="v-year" placeholder="year">
+            <input type="text" id="v-color" placeholder="color">
+            <input type="text" id="v-odometer" placeholder="odometer">
+            <input type="text" id="v-status" placeholder="status">
+            <input type="text" id="v-vtname" placeholder="vtname">
+            <input type="text" id="v-location" placeholder="location">
+            <input type="text" id="v-city" placeholder="city">
+          </div>
+
+          <div class="input-box" id="vehicle-type">
+            <input type="text" id="vt-features" placeholder="features">
+            <input type="text" id="vt-wrate" placeholder="wrate">
+            <input type="text" id="vt-drate" placeholder="drate">
+            <input type="text" id="vt-hrate" placeholder="hrate">
+            <input type="text" id="vt-wirate" placeholder="wirate">
+            <input type="text" id="vt-dirate" placeholder="dirate">
+            <input type="text" id="vt-hirate" placeholder="hirate">
+            <input type="text" id="vt-krate" placeholder="krate">
+          </div>
+
+          <div class="input-box" id="customers">
+            <input type="text" id="c-name" placeholder="name">
+            <input type="text" id="c-address" placeholder="address">
+            <input type="text" id="c-city" placeholder="city">
+            <input type="text" id="c-driver-license" placeholder="driver license">
+          </div>
+
+          <button class="button" id="m-button" type="button">Submit</button>
+          <p id="table-output"name="result">Output will display here</p>
+        </div>
+</body>
+
+</html>

@@ -14,6 +14,12 @@ public class DatabaseConnectionHandler {
     public static final String EXCEPTION_TAG = "[EXCEPTION]";
     public static final String WARNING_TAG = "[WARNING]";
 
+    public static final String TYPE_STRING = "String";
+    public static final String TYPE_DOUBLE = "double";
+    public static final String TYPE_INT = "int";
+    public static final String TYPE_TIMESTAMP = "timestamp";
+    public static final String TYPE_DATE = "date";
+
     private Connection connection = null;
 
     public DatabaseConnectionHandler() {
@@ -1184,7 +1190,7 @@ where rid = 4
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " Branch " + vid + " does not exist!");
+                System.out.println(WARNING_TAG + " Vehicle " + vid + " does not exist!");
             }
 
             connection.commit();
@@ -1208,7 +1214,7 @@ where rid = 4
             ps.setString(3, model);
             ps.setString(4, year);
             ps.setString(5, color);
-            ps.setString(6, odometer);
+            ps.setDouble(6, Double.parseDouble(odometer));
             ps.setString(7, status);
             ps.setString(8, vtname);
             ps.setString(9, location);
@@ -1233,49 +1239,91 @@ where rid = 4
         String tableName = "vehicle";
 
         if (vlicense.length() > 0 || vlicense != null) {
-            updateStringTypeWithIntegerKey(vidNum, "vlicense", vlicense, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "vlicense", vlicense, tableName, idName, TYPE_STRING);
         }
         if (make.length() > 0 || make != null) {
-            updateStringTypeWithIntegerKey(vidNum, "make", make, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "make", make, tableName, idName, TYPE_STRING);
         }
         if (model.length() > 0 || model != null) {
-            updateStringTypeWithIntegerKey(vidNum, "model", model, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "model", model, tableName, idName, TYPE_STRING);
         }
         if (year.length() > 0 || year != null) {
-            updateStringTypeWithIntegerKey(vidNum, "year", year, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "year", year, tableName, idName, TYPE_STRING);
         }
         if (color.length() > 0 || color != null) {
-            updateStringTypeWithIntegerKey(vidNum, "color", color, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "color", color, tableName, idName, TYPE_STRING);
         }
         if (odometer.length() > 0 || odometer != null) {
-            updateDoubleTypeWithIntegerKey(vidNum, "odometer", odometer, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
         if (status.length() > 0 || status != null) {
-            updateStringTypeWithIntegerKey(vidNum, "status", status, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "status", status, tableName, idName, TYPE_STRING);
         }
         if (vtname.length() > 0 || vtname != null) {
-            updateStringTypeWithIntegerKey(vidNum, "vtname", vtname, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "vtname", vtname, tableName, idName, TYPE_STRING);
         }
         if (location.length() > 0 || location != null) {
-            updateStringTypeWithIntegerKey(vidNum, "location", location, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "location", location, tableName, idName, TYPE_STRING);
         }
         if (city.length() > 0 || city != null) {
-            updateStringTypeWithIntegerKey(vidNum, "city", city, tableName, idName);
+            updateTableWithIntegerkey(vidNum, "city", city, tableName, idName, TYPE_STRING);
         }
 
 
     }
 
-    // EFFECTS: helper to update Vehicle
-    public void updateStringTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+    // table manipulation for Rent
+
+    /*
+    RID					   NOT NULL NUMBER(38)
+    VID						    NUMBER(38)
+    CELLPHONE					    CHAR(10)
+    FROMDATETIME					    TIMESTAMP(6)
+    TODATETIME					    TIMESTAMP(6)
+    ODOMETER					    NUMBER
+    CARDNAME					    VARCHAR2(50) //
+    CARDNO 					    CHAR(16)//
+    EXPDATE					    DATE
+    CONFNO 					    NUMBER(38)
+    */
+
+    // EFFECTS: returns all records in rent table
+    public RentModel[] getRentInfo() {
+        ArrayList<RentModel> result = new ArrayList<RentModel>();
+
         try {
-            PreparedStatement ps = connection.prepareStatement(queryGeneratorForVehicleUpdate(tableName, columnName, idName));
-            ps.setString(1, value);
-            ps.setInt(2, id);
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM rent");
+
+            while (rs.next()) {
+                RentModel model = new RentModel(rs.getInt("rid"), rs.getInt("vid"),
+                        rs.getString("cellphone"), rs.getTimestamp("fromDateTime"),
+                        rs.getTimestamp("toDateTIme"), rs.getDouble("odometer"),
+                        rs.getString("cardName"), rs.getString("cardNo"),
+                        rs.getDate("expDate"), rs.getInt("confNo"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new RentModel[result.size()]);
+
+    }
+
+    // EFFECTS: delete a record from Rent based on the rid
+    public void deleteRent(String rid) {
+        int ridnum = Integer.parseInt(rid);
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM rent WHERE rid = ?");
+            ps.setInt(1, ridnum);
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
+                System.out.println(WARNING_TAG + " Rent " + rid + " does not exist!");
             }
 
             connection.commit();
@@ -1288,15 +1336,110 @@ where rid = 4
 
     }
 
-    public void updateDoubleTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+    // EFFECTS: insert a record to rent table
+    public void insertRent(String vid, String cellphone,
+                           String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+
         try {
-            PreparedStatement ps = connection.prepareStatement(queryGeneratorForVehicleUpdate(tableName, columnName, idName));
-            ps.setDouble(1, Double.parseDouble(value));
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO rent (vid, " +
+                    "cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo" +
+                    ") VALUES (?,?,to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),?,?,?,to_date(?, 'YYYY-MM-DD'),?)");
+            ps.setInt(1, Integer.parseInt(vid));
+            ps.setString(2, cellphone);
+            ps.setString(3, fromDateTime);
+            ps.setString(4, toDateTime);
+            ps.setDouble(5, Double.parseDouble(odometer));
+            ps.setString(6, cardName);
+            ps.setString(7, cardNo);
+            ps.setString(8, expDate);
+            ps.setInt(9, Integer.parseInt(confNo));
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+        /*
+    RID					   NOT NULL NUMBER(38)
+    VID						    NUMBER(38)
+    CELLPHONE					    CHAR(10)
+    FROMDATETIME					    TIMESTAMP(6)
+    TODATETIME					    TIMESTAMP(6)
+    ODOMETER					    NUMBER
+    CARDNAME					    VARCHAR2(50) //
+    CARDNO 					    CHAR(16)//
+    EXPDATE					    DATE
+    CONFNO 					    NUMBER(38)
+    */
+
+    // EFFECTS: update the rent
+    public void updateRent(String rid, String vid, String cellphone,
+                           String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+
+        int ridNum = Integer.parseInt(rid);
+        String idName = "rid";
+        String tableName = "rent";
+
+        if (vid.length() > 0 || vid != null) {
+            updateTableWithIntegerkey(ridNum, "vid", vid, tableName, idName, TYPE_INT);
+        }
+        if (cellphone.length() > 0 || cellphone != null) {
+            updateTableWithIntegerkey(ridNum, "cellphone", cellphone, tableName, idName, TYPE_STRING);
+        }
+        if (fromDateTime.length() > 0 || fromDateTime != null) {
+            updateTableWithIntegerkey(ridNum, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
+        }
+        if (toDateTime.length() > 0 || toDateTime != null) {
+            updateTableWithIntegerkey(ridNum, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
+        }
+
+        if (odometer.length() > 0 || odometer != null) {
+            updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
+        }
+        if (cardName.length() > 0 || cardName != null) {
+            updateTableWithIntegerkey(ridNum, "cardName", cardName, tableName, idName, TYPE_STRING);
+        }
+        if (cardNo.length() > 0 || cardNo != null) {
+            updateTableWithIntegerkey(ridNum, "cardNo", cardNo, tableName, idName, TYPE_STRING);
+        }
+        if (expDate.length() > 0 || expDate != null) {
+            updateTableWithIntegerkey(ridNum, "expDate", expDate, tableName, idName, TYPE_DATE);
+        }
+        if (expDate.length() > 0 || expDate != null) {
+            updateTableWithIntegerkey(ridNum, "confNo", confNo, tableName, idName, TYPE_INT);
+        }
+        
+    }
+
+    public void updateTableWithIntegerkey(int id, String columnName, String value, String tableName, String idName, String valueType) {
+        String query = "";
+        if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE)) {
+            query = queryGeneratorForUpdate(tableName, columnName, idName);
+        } else if (valueType.equals(TYPE_TIMESTAMP)) {
+            query = queryGeneratorTimeStampForUpdate(tableName, columnName, idName);
+        } else {
+            query = queryGeneratorDateForUpdate(tableName, columnName, idName);
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            if (valueType.equals(TYPE_INT)) {
+                ps.setInt(1, Integer.parseInt(value));
+            } else if (valueType.equals(TYPE_DOUBLE)) {
+                ps.setDouble(1, Double.parseDouble(value));
+            } else {
+                ps.setString(1, value);
+            }
             ps.setInt(2, id);
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
+                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
             }
 
             connection.commit();
@@ -1309,9 +1452,125 @@ where rid = 4
     }
 
 
+//    // EFFECTS: helper to update Vehicle
+//    public void updateStringTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
+//            ps.setString(1, value);
+//            ps.setInt(2, id);
+//
+//            int rowCount = ps.executeUpdate();
+//            if (rowCount == 0) {
+//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
+//            }
+//
+//            connection.commit();
+//
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//            rollbackConnection();
+//        }
+//
+//    }
+//
+//
+//    public void updateTimeStampTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(queryGeneratorTimeStampForUpdate(tableName, columnName, idName));
+//            ps.setString(1, value);
+//            ps.setInt(2, id);
+//
+//            int rowCount = ps.executeUpdate();
+//            if (rowCount == 0) {
+//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
+//            }
+//
+//            connection.commit();
+//
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//            rollbackConnection();
+//        }
+//
+//    }
+//
+//    public void updateDateTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(queryGeneratorDateForUpdate(tableName, columnName, idName));
+//            ps.setString(1, value);
+//            ps.setInt(2, id);
+//
+//            int rowCount = ps.executeUpdate();
+//            if (rowCount == 0) {
+//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
+//            }
+//
+//            connection.commit();
+//
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//            rollbackConnection();
+//        }
+//
+//    }
+//
+//
+//    public void updateDoubleTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
+//            ps.setDouble(1, Double.parseDouble(value));
+//            ps.setInt(2, id);
+//
+//            int rowCount = ps.executeUpdate();
+//            if (rowCount == 0) {
+//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
+//            }
+//
+//            connection.commit();
+//
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//            rollbackConnection();
+//        }
+//    }
+//
+//
+//    public void updateIntTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+//        try {
+//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
+//            ps.setInt(1, Integer.parseInt(value));
+//            ps.setInt(2, id);
+//
+//            int rowCount = ps.executeUpdate();
+//            if (rowCount == 0) {
+//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
+//            }
+//
+//            connection.commit();
+//
+//            ps.close();
+//        } catch (SQLException e) {
+//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+//            rollbackConnection();
+//        }
+//    }
 
-    public String queryGeneratorForVehicleUpdate(String tableName, String columnName, String idName) {
+
+    public String queryGeneratorForUpdate(String tableName, String columnName, String idName) {
         return "UPDATE " + tableName + " SET " + columnName + " = ? WHERE " + idName + " = ?";
+    }
+
+    public String queryGeneratorTimeStampForUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = to_timestamp(?, 'YYYY-MM-DD:HH24:MI') WHERE " + idName + " = ?";
+    }
+
+
+    public String queryGeneratorDateForUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = to_date(?, 'YYYY-MM-DD') WHERE " + idName + " = ?";
     }
 
 

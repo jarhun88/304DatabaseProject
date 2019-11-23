@@ -25,7 +25,7 @@ public class Controller {
         boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
 
         // test the methods in DatabaseConnectionHandler class
-        testMethodsInDCHandler();
+        //testMethodsInDCHandler();
 
 
         System.out.printf("here");
@@ -131,6 +131,33 @@ public class Controller {
     }
 
 
+    public static void reservationManipulation(String mType, String confNo, String vtname, String phoneNum, String from, String to) {
+        switch (mType){
+            case "update":
+                break;
+        }
+    }
+
+    public static void rentalManipulation(String mType, String date, String vtname, String phoneNum, String from, String to,
+                                          String odometer, String cardName, String city, String license, String confNo) {
+    }
+
+    public static void returnManipulation(String mType, String rid, String date, String odometer, String fulltank, String value) {
+    }
+
+    public static void vehicleManipulation(String mType, String vid, String vlicense, String model, String year, String color, String odometer,
+                                           String status, String vtname, String location, String city) {
+    }
+
+    public static void vehicleTypeManipulation(String mType, String date, String features, String wrate, String drate, String hrate,
+                                               String wirate, String dirate, String hirate, String krate) {
+    }
+
+    public static void customerManipulation(String mType, String phoneNum, String address, String name, String city, String license) {
+    }
+
+    public static void viewAll() {
+    }
 }
 
 

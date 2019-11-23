@@ -25,8 +25,8 @@ public class Controller {
         boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
 
         // test the methods in DatabaseConnectionHandler class
-        //testMethodsInDCHandler();
-        // testVehicleManipulation();
+//        testMethodsInDCHandler();
+         testVehicleManipulation();
 //        testDailyReportRentWholeCompany();
 //        testCustomerManipulation();
 

@@ -103,9 +103,9 @@ public class DatabaseConnectionHandler {
                     "and r.toDateTime >= to_timestamp('" + endTime + "','YYYY-MM-DD:HH24:MI'))";
         }
 
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT distinct * FROM Vehicle v where status = 'available'";
             // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
@@ -133,12 +133,19 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        }
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
 
-        return result.toArray(new VehicleModel[result.size()]);
+            return result.toArray(new VehicleModel[result.size()]);
+        }
     }
 
     // EFFECTS: returns the number of available vehicles based on params
@@ -175,9 +182,10 @@ and v.vid not in (select r.vid from reservation r, vehicle v1 where v1.vid = r.v
 and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
          */
         int resultNum = 0;
+        Statement stmt = null;
 
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT distinct * FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
             // Add filter list to query
             query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
@@ -200,12 +208,19 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             }
 
             rs.close();
-            stmt.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return resultNum;
         }
 
-        return resultNum;
+
     }
 
 
@@ -1189,9 +1204,10 @@ where rid = 4
     public boolean deleteVehicle(String vid) {
         boolean isSuccessful = false;
 
+        PreparedStatement ps = null;
         int vidnum = Integer.parseInt(vid);
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicle WHERE vid = ?");
+            ps = connection.prepareStatement("DELETE FROM vehicle WHERE vid = ?");
             ps.setInt(1, vidnum);
 
             int rowCount = ps.executeUpdate();
@@ -1202,11 +1218,22 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                connection.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             return isSuccessful;
         }
     }
@@ -1245,6 +1272,12 @@ where rid = 4
         } finally {
             try {
                 ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            try {
+                connection.close();
             } catch (SQLException e) {
                 e.printStackTrace();
             }

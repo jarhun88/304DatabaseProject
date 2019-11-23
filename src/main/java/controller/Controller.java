@@ -112,6 +112,18 @@ public class Controller {
         RentConfirmationMessageModel rmdd =  dbHandler.getRentConfMessage(2);
 
     }
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date){
+        return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
+    }
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date){
+        return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
+    }
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city){
+        return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+    }
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city){
+        return dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
+    }
 
 
 }

@@ -52,8 +52,9 @@ public class QueryController {
                        @RequestPart(name="license", required=false) String license,
                        @RequestPart(name="vtname", required=false) String vtname, //TODO change to vid
                        @RequestPart(name="from", required=false) String from,
-                       @RequestPart(name="to", required=false) String to) { //TODO need to odometer
+                       @RequestPart(name="to", required=false) String to) { //TODO need odometer
 
+        //TODO add these to params
         String odometer ="";
         String confNum = "";
         String cardName ="";
@@ -70,6 +71,7 @@ public class QueryController {
                           @RequestPart(name="city", required=false) String city,
                           @RequestPart(name="time", required=false) String time) {
         //String rid, String returnDateTime, String odometer, String fulltank
+        // TODO add these to params
         String retDate ="";
         String odometer ="";
         String fulltank="";

@@ -19,6 +19,7 @@ public class DatabaseConnectionHandler {
     public static final String TYPE_INT = "int";
     public static final String TYPE_TIMESTAMP = "timestamp";
     public static final String TYPE_DATE = "date";
+    public static final String TYPE_FLOAT = "float";
 
     private Connection connection = null;
 
@@ -1719,7 +1720,130 @@ where rid = 4
         if (dlicense.length() > 0 || dlicense != null) {
             updateTableWithStringkey(key, "dlicense", dlicense, tableName, idName, TYPE_STRING);
         }
-        
+
+
+    }
+
+
+    // table maipulation for Vehicle type
+
+    /*
+     VTNAME 				   NOT NULL VARCHAR2(9)
+ FEATURES					    VARCHAR2(100)
+ WRATE						    FLOAT(126)
+ DRATE						    FLOAT(126)
+ HRATE						    FLOAT(126)
+ WIRATE 					    FLOAT(126)
+ DIRATE 					    FLOAT(126)
+ HIRATE 					    FLOAT(126)
+ KRATE						    FLOAT(126)
+     */
+
+    // EFFECTS: returns all vehicle types
+    public VehicleTypeModel[] getVehicleTypeInfo() {
+        ArrayList<VehicleTypeModel> result = new ArrayList<VehicleTypeModel>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM vehicleType");
+
+            while (rs.next()) {
+                VehicleTypeModel model = new VehicleTypeModel(rs.getString("vtname"), rs.getString("features"),
+                rs.getFloat("wrate"), rs.getFloat("drate"), rs.getFloat("hrate"),
+                rs.getFloat("wirate"), rs.getFloat("dirate"), rs.getFloat("hirate") ,
+                        rs.getFloat("krate"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new VehicleTypeModel[result.size()]);
+
+    }
+
+    // EFFECTS: delete a record from vehicle type
+    public void deleteVehicleType(String vtname) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicleType WHERE vtname = ?");
+            ps.setString(1, vtname);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " VehicleType " + vtname + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    // EFFECTS: insert vehicle type
+    public void insertVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
+                                  String dirate, String hirate, String krate) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO vehicleType VALUES " +
+                    "(?,?,?,?,?,?,?,?,?)");
+            ps.setString(1, vtname);
+            ps.setString(2, features);
+            ps.setFloat(3, Float.parseFloat(wrate));
+            ps.setFloat(4, Float.parseFloat(drate));
+            ps.setFloat(5, Float.parseFloat(hrate));
+            ps.setFloat(6, Float.parseFloat(wirate));
+            ps.setFloat(7, Float.parseFloat(dirate));
+            ps.setFloat(8, Float.parseFloat(hirate));
+            ps.setFloat(9, Float.parseFloat(krate));
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    // EFFECTS: update vehicle types
+    public void updateVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
+                                  String dirate, String hirate, String krate) {
+        String key = vtname;
+        String idName = "vtname";
+        String tableName = "vehicleType";
+
+        if (features.length() > 0 || features != null) {
+            updateTableWithStringkey(key, "features", features, tableName, idName, TYPE_STRING);
+        }
+        if (wrate.length() > 0 || wrate != null) {
+            updateTableWithStringkey(key, "wrate", wrate, tableName, idName, TYPE_FLOAT);
+        }
+        if (drate.length() > 0 || drate != null) {
+            updateTableWithStringkey(key, "drate", drate, tableName, idName, TYPE_FLOAT);
+        }
+        if (hrate.length() > 0 || hrate != null) {
+            updateTableWithStringkey(key, "hrate", hrate, tableName, idName, TYPE_FLOAT);
+        }
+        if (wirate.length() > 0 || wirate != null) {
+            updateTableWithStringkey(key, "wirate", wirate, tableName, idName, TYPE_FLOAT);
+        }
+        if (dirate.length() > 0 || dirate != null) {
+            updateTableWithStringkey(key, "dirate", dirate, tableName, idName, TYPE_FLOAT);
+        }
+        if (hirate.length() > 0 || hirate != null) {
+            updateTableWithStringkey(key, "hirate", hirate, tableName, idName, TYPE_FLOAT);
+        }
+        if (krate.length() > 0 || krate != null) {
+            updateTableWithStringkey(key, "krate", krate, tableName, idName, TYPE_FLOAT);
+        }
 
     }
 
@@ -1764,7 +1888,7 @@ where rid = 4
 
     public void updateTableWithStringkey(String id, String columnName, String value, String tableName, String idName, String valueType) {
         String query = "";
-        if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE)) {
+        if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE) || valueType.equals(TYPE_FLOAT)) {
             query = queryGeneratorForUpdate(tableName, columnName, idName);
         } else if (valueType.equals(TYPE_TIMESTAMP)) {
             query = queryGeneratorTimeStampForUpdate(tableName, columnName, idName);

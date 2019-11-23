@@ -1,5 +1,6 @@
 package api;
 
+import controller.Controller;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -13,6 +14,7 @@ public class TableManipulationController {
                                           @RequestPart(name="phoneNum", required=false) String phoneNum,
                                           @RequestPart(name="from", required=false) String from,
                                           @RequestPart(name="to", required=false) String to) {
+        Controller.reservationManipulation(mType, confNo, vtname, phoneNum, from, to);
         return "reservationManipulation";
     }
 
@@ -29,6 +31,7 @@ public class TableManipulationController {
                                      @RequestPart(name="cardNo", required=false) String city,
                                      @RequestPart(name="expDate", required=false) String license,
                                      @RequestPart(name="confNo", required=false) String confNo) {
+        Controller.rentalManipulation(mType, date, vtname, phoneNum, from, to, odometer, cardName, city, license, confNo);
         return "rentalManipulation";
     }
 
@@ -40,6 +43,7 @@ public class TableManipulationController {
                                      @RequestPart(name="odometer", required=false) String odometer,
                                      @RequestPart(name="fulltank", required=false) String fulltank,
                                      @RequestPart(name="value", required=false) String value) {
+        Controller.returnManipulation(mType, rid, date, odometer, fulltank, value);
         return "returnManipulation";
     }
 
@@ -56,6 +60,8 @@ public class TableManipulationController {
                                       @RequestPart(name="vtname", required=false) String vtname,
                                       @RequestPart(name="location", required=false) String location,
                                       @RequestPart(name="city", required=false) String city) {
+
+        Controller.vehicleManipulation(mType, vid, vlicense, model, year, color, odometer, status, vtname, location, city);
         return "vehicleManipulation";
     }
 
@@ -71,6 +77,8 @@ public class TableManipulationController {
                                           @RequestPart(name="dirate", required=false) String dirate,
                                           @RequestPart(name="hirate", required=false) String hirate,
                                           @RequestPart(name="krate", required=false) String krate) {
+
+        Controller.vehicleTypeManipulation(mType, date, features, wrate, drate, hrate, wirate, dirate, hirate, krate);
         return "vehicleTypeManipulation";
     }
 
@@ -82,12 +90,15 @@ public class TableManipulationController {
                                        @RequestPart(name="name", required=false) String name,
                                        @RequestPart(name="city", required=false) String city,
                                        @RequestPart(name="license", required=false) String license) {
+        Controller.customerManipulation(mType, phoneNum, address, name, city, license);
+
         return "customerManipulation";
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @GetMapping(path = "/view-all")
     public String viewAll() {
+        Controller.viewAll();
         return "viewall";
     }
 

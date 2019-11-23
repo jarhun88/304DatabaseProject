@@ -31,6 +31,10 @@ public class Controller {
         System.out.printf("here");
     }
 
+    public static DatabaseConnectionHandler getDbHandler() {
+        return dbHandler;
+    }
+
     // Adds a new customer
     public static boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
         return dbHandler.addNewCustomer(cellphone, name, address, dlicense);
@@ -71,45 +75,46 @@ public class Controller {
     }
 
 
-    // EFFECTS: tests the method in DatabaseConnectionhandler
     public static void testMethodsInDCHandler() {
 
-        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19","2019-01-30");
-        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19","2019-01-30");
-        int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("","","","","");
+        VehicleModel[] ddd = dbHandler.getVehicleInfo();
+
+        VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19", "2019-01-30");
+        VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19", "2019-01-30");
+        int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("", "", "", "", "");
         int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
                 "2200-01-01:00:00", "2200-02-01:00:00");
-        ReservationModel reservationModel =  dbHandler.getReservation(1);
-       int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
-             "" + confNo, "Visa","4444777788889999", "2200-10-10");
+        ReservationModel reservationModel = dbHandler.getReservation(1);
+        int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
+                "" + confNo, "Visa", "4444777788889999", "2200-10-10");
 
-        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle(""+rid, "2200-02-01:00:00", "1244", "T");
+        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("" + rid, "2200-02-01:00:00", "1244", "T");
 
-        VehicleModel[] rp0 =  dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
-        ReportGroupedByVehilceModel[] rp =  dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
+        VehicleModel[] rp0 = dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
+        ReportGroupedByVehilceModel[] rp = dbHandler.getNumOfVehicleDailyRentalGBVehicle("2019-01-02");
         ReportGroupByBranchModel[] rp2 = dbHandler.getNumOfVehicleDailyRentalGBBranch("2019-01-02");
-        int numVDayRent =  dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
+        int numVDayRent = Controller.dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
 
         VehicleModel[] vm = dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch("2019-01-01", "UBC", "Vancouver");
         ReportGroupedByVehilceModel[] rgv = dbHandler.getNumOfVehicleDailyRentalGBVehicleOnBranch("2019-01-01", "UBC", "Vancouver");
-        int numRentB =  dbHandler.getNumOfVehicleDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
+        int numRentB = dbHandler.getNumOfVehicleDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
         int numnewB = dbHandler.getNumOfVehicleNewlyDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
 
-        VehicleModel[] vmreturn =  dbHandler.generateReportDailyReturnsAllVehicleInfo("2019-01-07");
-        ReportGroupedByVehilceModel[] rgbvreturn =  dbHandler.getNumOdVehicleDailyReturnGBVehicle("2019-01-07");
-        RevenueReportGroupedByVehilceModel[] rrgbvm =  dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
+        VehicleModel[] vmreturn = dbHandler.generateReportDailyReturnsAllVehicleInfo("2019-01-07");
+        ReportGroupedByVehilceModel[] rgbvreturn = dbHandler.getNumOdVehicleDailyReturnGBVehicle("2019-01-07");
+        RevenueReportGroupedByVehilceModel[] rrgbvm = dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
         ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
 
         VehicleModel[] vmreturntes = dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch("2019-01-07", "UBC", "Vancouver");
         ReportGroupedByVehilceModel[] rgbvreturnB = dbHandler.getNumOdVehicleDailyReturnGBVehicleOnBranch(
                 "2019-01-07", "UBC", "Vancouver");
-        RevenueReportGroupedByVehilceModel[] rgmvmreturnB =  dbHandler.getRevenueDailyReturnGBVehicleOnBranch(
+        RevenueReportGroupedByVehilceModel[] rgmvmreturnB = dbHandler.getRevenueDailyReturnGBVehicleOnBranch(
                 "2019-01-07", "UBC", "Vancouver");
-        ReportTotalNumAndRevenueOnBranchModel resulttt =  dbHandler.getTotalRevAndNumRentalsOnBranch(
+        ReportTotalNumAndRevenueOnBranchModel resulttt = dbHandler.getTotalRevAndNumRentalsOnBranch(
                 "2019-01-07", "UBC", "Vancouver");
 
         boolean eee = dbHandler.addNewCustomer("9999999990", "John Doe", "123 w ave, van, vc", "112344888");
-        RentConfirmationMessageModel rmdd =  dbHandler.getRentConfMessage(2);
+        RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }
     public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date){

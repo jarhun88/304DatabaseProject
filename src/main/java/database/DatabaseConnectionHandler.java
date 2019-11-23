@@ -1519,6 +1519,111 @@ where rid = 4
 
     }
 
+
+    // table manipulation for Return
+    /*
+     RID					   NOT NULL NUMBER(38)
+ RETURNDATETIME 				    TIMESTAMP(6)
+ ODOMETER					    NUMBER
+ FULLTANK					    CHAR(1)
+ VALUE						    NUMBER
+
+
+     */
+
+    //EFFECTS: returns all returns
+    public ReturnModel[] getReturnInfo() {
+        ArrayList<ReturnModel> result = new ArrayList<ReturnModel>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM return");
+
+            while (rs.next()) {
+                ReturnModel model = new ReturnModel(rs.getInt("rid"), rs.getTimestamp("returnDateTime"),
+                        rs.getDouble("odometer"),
+                        rs.getString("fulltank"), rs.getDouble("value"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new ReturnModel[result.size()]);
+
+
+
+    }
+
+    // EFFECTS: delete a record from return table
+    public void deleteReturn(String rid) {
+
+        int ridNum = Integer.parseInt(rid);
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM return WHERE rid = ?");
+            ps.setInt(1, ridNum);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Return " + ridNum + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    // EFFECTS: insert into return
+    public void insertReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO return VALUES " +
+                    "(?, to_timestamp(?, 'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
+            ps.setInt(1, Integer.parseInt(rid));
+            ps.setString(2, returnDateTime);
+            ps.setDouble(3, Double.parseDouble(odometer));
+            ps.setString(4, fulltank);
+            ps.setDouble(5, Double.parseDouble(value));
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    //EFFECTS: update return
+    public void updateReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+        int ridNum = Integer.parseInt(rid);
+        String idName = "rid";
+        String tableName = "return";
+
+        if (returnDateTime.length() > 0 || returnDateTime != null) {
+            updateTableWithIntegerkey(ridNum, "returnDateTime", returnDateTime, tableName, idName, TYPE_TIMESTAMP);
+        }
+        if (odometer.length() > 0 || odometer != null) {
+            updateTableWithIntegerkey(ridNum, "cellphone", odometer, tableName, idName, TYPE_DOUBLE);
+        }
+        if (fulltank.length() > 0 || fulltank != null) {
+            updateTableWithIntegerkey(ridNum, "fulltank", fulltank, tableName, idName, TYPE_STRING);
+        }
+        if (value.length() > 0 || value != null) {
+            updateTableWithIntegerkey(ridNum, "value", value, tableName, idName, TYPE_DOUBLE);
+        }
+
+
+    }
+
     
 
 

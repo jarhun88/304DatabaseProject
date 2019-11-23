@@ -1624,7 +1624,106 @@ where rid = 4
 
     }
 
-    
+
+    // table manipulation for Customer
+
+    /*
+     CELLPHONE				   NOT NULL CHAR(10)
+ NAME						    VARCHAR2(50)
+ ADDRESS					    VARCHAR2(50)
+ DLICENSE					    CHAR(9)
+
+
+     */
+
+    // EFFECTS: returns all customers
+    public CustomerModel[] getCustomerInfo() {
+        ArrayList<CustomerModel> result = new ArrayList<CustomerModel>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
+
+            while (rs.next()) {
+                CustomerModel model = new CustomerModel(rs.getString("cellphone"), rs.getString("name"),
+                        rs.getString("address"),
+                        rs.getString("dlicense"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new CustomerModel[result.size()]);
+
+    }
+
+    // EFFECTS: delete a record from customer
+    public void deleteCustomer(String cellphone) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM customer WHERE cellphone = ?");
+            ps.setString(1, cellphone);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Customer with " + cellphone + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    // EFFECTS: insert customer based on cellphone
+    public void insertCustomer(String cellphone, String name, String address, String dlicense) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO customer VALUES " +
+                    "(?, ?, ?, ?)");
+            ps.setString(1, cellphone);
+            ps.setString(2, name);
+            ps.setString(3, address);
+            ps.setString(4, dlicense);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+
+    }
+
+    // EFFECTS: update customer
+    public void updateCustomer(String cellphone, String name, String address, String dlicense) {
+        String key = cellphone;
+        String idName = "cellphone";
+        String tableName = "customer";
+
+        if (name.length() > 0 || name != null) {
+            updateTableWithStringkey(key, "name", name, tableName, idName, TYPE_STRING);
+        }
+        if (address.length() > 0 || address != null) {
+            updateTableWithStringkey(key, "address", address, tableName, idName, TYPE_STRING);
+        }
+        if (dlicense.length() > 0 || dlicense != null) {
+            updateTableWithStringkey(key, "dlicense", dlicense, tableName, idName, TYPE_STRING);
+        }
+        
+
+    }
+
+
 
 
     //
@@ -1648,6 +1747,40 @@ where rid = 4
                 ps.setString(1, value);
             }
             ps.setInt(2, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+    public void updateTableWithStringkey(String id, String columnName, String value, String tableName, String idName, String valueType) {
+        String query = "";
+        if (valueType.equals(TYPE_STRING) || valueType.equals(TYPE_INT) || valueType.equals(TYPE_DOUBLE)) {
+            query = queryGeneratorForUpdate(tableName, columnName, idName);
+        } else if (valueType.equals(TYPE_TIMESTAMP)) {
+            query = queryGeneratorTimeStampForUpdate(tableName, columnName, idName);
+        } else {
+            query = queryGeneratorDateForUpdate(tableName, columnName, idName);
+        }
+        try {
+            PreparedStatement ps = connection.prepareStatement(query);
+            if (valueType.equals(TYPE_INT)) {
+                ps.setInt(1, Integer.parseInt(value));
+            } else if (valueType.equals(TYPE_DOUBLE)) {
+                ps.setDouble(1, Double.parseDouble(value));
+            } else {
+                ps.setString(1, value);
+            }
+            ps.setString(2, id);
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {

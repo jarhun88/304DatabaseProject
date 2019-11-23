@@ -14,62 +14,77 @@ drop table Branch cascade constraints purge
 /
 create table Reservation(
 confNo integer generated always as identity,
-vid integer,
-cellphone char(10),
-fromDateTime timestamp,
-toDateTime timestamp,
+vid integer not null,
+cellphone char(10) not null,
+fromDateTime timestamp not null,
+toDateTime timestamp not null,
 primary key(confNo))
 /
 create table Rent(
 rid integer generated always as identity,
-vid integer,
-cellphone char(10),
-fromDateTime timestamp,
-toDateTime timestamp,
-odometer number,
-cardName varchar(50),
-cardNo char(16),
-expDate date,
-confNo integer,
+vid integer not null,
+cellphone char(10) not null,
+fromDateTime timestamp not null,
+toDateTime timestamp not null,
+odometer number not null,
+cardName varchar(50) not null,
+cardNo char(16) not null,
+expDate date not null,
+confNo integer not null,
 primary key (rid))
 /
 create table Vehicle(
 vid integer generated always as identity,
-vlicense char(6),
-make varchar(30),
-model varchar(30),
-year varchar(4),
-color varchar(20),
-odometer number,
-status varchar(20),
-vtname varchar(9),
+vlicense char(6) not null,
+make varchar(30) not null,
+model varchar(30) not null,
+year varchar(4) not null,
+color varchar(20) not null,
+odometer number not null,
+status varchar(20) not null,
+vtname varchar(9) not null,
+location varchar(20) not null,
+city varchar(20) not null,
+primary key(vid))
+/
+create table Branch(
 location varchar(20),
 city varchar(20),
-primary key(vid))
+primary key (location, city))
 /
 create table VehicleType(
 vtname varchar(9) primary key,
-features varchar(100),
-wrate float,
-drate float,
-hrate float,
-wirate float,
-dirate float,
-hirate float,
-krate float)
+features varchar(100) not null,
+wrate float not null,
+drate float not null,
+hrate float not null,
+wirate float not null,
+dirate float not null,
+hirate float not null,
+krate float not null)
 /
 create table Customer(
 cellphone char(10) primary key,
-name varchar(50),
-address varchar(50),
-dlicense char(9))
+name varchar(50)  not null,
+address varchar(50) not null,
+dlicense char(9) not null)
+/
+alter table Vehicle
+add foreign key (vtname)
+references VehicleType (vtname)
+on delete cascade
+/
+alter table Vehicle
+add foreign key (location, city)
+references Branch (location, city)
+on delete cascade
 /
 create table Return(
 rid integer primary key,
-returnDateTime timestamp,
-odometer number,
-fulltank char(1),
-value number)
+returnDateTime timestamp not null,
+odometer number not null,
+fulltank char(1) not null,
+value number not null)
 /
 alter table Reservation
 add foreign key(vid)
@@ -94,21 +109,6 @@ on delete cascade
 alter table Rent
 add foreign key (confNo)
 references Reservation (confNo)
-on delete cascade
-/
-alter table Vehicle
-add foreign key (vtname)
-references VehicleType (vtname)
-on delete cascade
-/
-create table Branch(
-location varchar(20),
-city varchar(20),
-primary key (location, city))
-/
-alter table Vehicle
-add foreign key (location, city)
-references Branch (location, city)
 on delete cascade
 /
 alter table Return
@@ -156,25 +156,25 @@ insert into Customer values (
 '4564561234', 'Santa Ono', '123 Sesame st, Vancouver, BC', '789456132')
 /
 insert into VehicleType values (
-'Economy', null, 60, 10, 0.5, 10, 5, 1, 0.25)
+'Economy', 'great value', 60, 10, 0.5, 10, 5, 1, 0.25)
 /
 insert into VehicleType values (
-'Compact', null, 60, 10, 0.5, 10, 5, 1, 0.25)
+'Compact', 'easy to drive', 60, 10, 0.5, 10, 5, 1, 0.25)
 /
 insert into VehicleType values (
-'Mid-size', null, 100, 15, 0.75, 5, 2, 1, 0.5)
+'Mid-size', 'good for vacation', 100, 15, 0.75, 5, 2, 1, 0.5)
 /
 insert into VehicleType values (
-'Standard', null, 60, 10, 0.5, 10 ,5, 1, 0.25)
+'Standard', 'most popular', 60, 10, 0.5, 10 ,5, 1, 0.25)
 /
 insert into VehicleType values (
-'Full-size', null, 130, 20, 1.5, 20, 10, 5, 0.5)
+'Full-size', 'good for road trip', 130, 20, 1.5, 20, 10, 5, 0.5)
 /
 insert into VehicleType values (
-'SUV', null, 130, 20, 1.5, 20, 10, 5, 0.5)
+'SUV', 'reasonable', 130, 20, 1.5, 20, 10, 5, 0.5)
 /
 insert into VehicleType values (
-'Truck', null, 130, 20, 1.5, 20, 10 , 5, 0.5)
+'Truck', 'for any purpose', 130, 20, 1.5, 20, 10 , 5, 0.5)
 /
 insert into vehicle (vlicense, make, model, year, color, odometer, status, vtname, location, city) values (
 '123456', 'Ford', 'Fusion', '2019', 'Red', 123456789, 'available',
@@ -277,32 +277,32 @@ insert into rent (vid, cellphone, fromDateTime, toDateTime, odometer, cardName, 
 3, '7804564567', to_timestamp('2019-06-01:00:00', 'YYYY-MM-DD:HH24:MI'), to_timestamp('2019-06-30:00:00', 'YYYY-MM-DD:HH24:MI'), 321221458, 'Visa', '4111111111111122', to_date('2023-07-01', 'YYYY-MM-DD'), 3)
 /
 insert into Return values (
-1, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 123456801, 'T', null)
+1, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 123456801, 'T', 111)
 /
 insert into Return values (
-2, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 200000153, 'T', null)
+2, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 200000153, 'T', 345)
 /
 insert into Return values (
-3, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 321221464, 'T', null)
+3, to_timestamp('2019-01-07:00:00','YYYY-MM-DD:HH24:MI'), 321221464, 'T', 454)
 /
 insert into Return values (
-4, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221711, 'F', null)
+4, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221711, 'F', 444)
 /
 insert into Return values (
-5, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221590, 'F', null)
+5, to_timestamp('2019-02-01:00:00','YYYY-MM-DD:HH24:MI'), 321221590, 'F', 455)
 /
 insert into Return values (
-6, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 151031744, 'T', null)
+6, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 151031744, 'T', 677)
 /
 insert into Return values (
-7, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 990179, 'F', null)
+7, to_timestamp('2019-02-02:00:00','YYYY-MM-DD:HH24:MI'), 990179, 'F', 677)
 /
 insert into Return values (
-8, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 170, 'F', null)
+8, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 170, 'F', 678)
 /
 insert into Return values (
-9, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 321221550, 'T', null)
+9, to_timestamp('2019-03-01:00:00','YYYY-MM-DD:HH24:MI'), 321221550, 'T', 666)
 /
 insert into Return values (
-10, to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'), 321221600, 'T', null)
+10, to_timestamp('2019-06-30:00:00','YYYY-MM-DD:HH24:MI'), 321221600, 'T', 777)
 /

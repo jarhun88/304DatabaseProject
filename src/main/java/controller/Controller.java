@@ -4,6 +4,7 @@ import database.DatabaseConnectionHandler;
 import model.*;
 import org.json.JSONArray;
 
+import javax.naming.spi.ResolveResult;
 import java.util.Arrays;
 
 //This is the main controller class that will orchestrate everything.
@@ -32,6 +33,7 @@ public class Controller {
 //         testVehicleManipulation();
 //        testDailyReportRentWholeCompany();
 //        testCustomerManipulation();
+        testRentManipulationandReservation();
 
 
         System.out.printf("here");
@@ -124,11 +126,14 @@ public class Controller {
         VehicleModel[] all = dbHandler.getVehicleInfo();
 //        boolean delete = dbHandler.deleteVehicle("10");
 //        VehicleModel[] after = dbHandler.getVehicleInfo();
-        boolean insert = dbHandler.insertVehicle("123456", "aaa", "model", "1234", "reed",
-                "123", "available", "Economy", "UBC", "Vancouver");
-        VehicleModel[] all2 = dbHandler.getVehicleInfo();
-        boolean update = dbHandler.updateVehicle("11", "123455", "make2", "fjfjf", "3344", "black",
-                "44444", "rented", "", "", "");
+//        boolean insert = dbHandler.insertVehicle("123456", "aaa", "model", "1234", "reed",
+//                "123", "available", "Economy", "UBC", "Vancouver");
+//        VehicleModel[] all2 = dbHandler.getVehicleInfo();
+//        boolean update = dbHandler.updateVehicle("11", "123455", "make2", "fjfjf", "3344", "black",
+//                "44444", "rented", "", "", "");
+        boolean delete = dbHandler.deleteVehicle("11");
+        VehicleModel[] all3 = dbHandler.getVehicleInfo();
+
 //        boolean update2 = dbHandler.updateVehicle("11", "123455", "make2", "model2", "3344", "black",
 //                "44444", "rented", null, "", "");
 
@@ -138,7 +143,30 @@ public class Controller {
         CustomerModel[] all = dbHandler.getCustomerInfo();
         boolean insert = dbHandler.insertCustomer("1221221222", "nana nana", "akdkkd, kkdk, kd", "123123123");
         CustomerModel[] all2 = dbHandler.getCustomerInfo();
+        boolean update = dbHandler.updateCustomer("12212212222", "nana nana", "", "");
+        CustomerModel[] all3 = dbHandler.getCustomerInfo();
+        boolean delete = dbHandler.deleteCustomer("12212212222");
 
+    }
+
+    public static void testRentManipulationandReservation() {
+        ReservationModel[] reservationModels = dbHandler.getReservationInfo();
+        boolean insertReservation = dbHandler.insertReservation("10", "1234567890", "2019-01-01", "2019-01-01");
+        ReservationModel[] reservationModels2 = dbHandler.getReservationInfo();
+        RentModel[] all = dbHandler.getRentInfo();
+        boolean insert = dbHandler.insertRent("10", "1234567890",
+                "2019-01-01", "2019-01-02", "123", "Visa", "1234123412341234", "1234-12-12", "11");
+        RentModel[] all2 = dbHandler.getRentInfo();
+        boolean update = dbHandler.updateRent("11", "10", "1234567890",
+                "2019-02-01", "2019-02-02", "111", "Visa", "1234123412342222", "2222-12-12", "11");
+        RentModel[] all3 = dbHandler.getRentInfo();
+        boolean delete = dbHandler.deleteRent("11");
+
+        boolean updateR = dbHandler.updateReservation("11", "9", "", "2019-01-01:00:00", "2019-02-04:00:11");
+        ReservationModel[] after = dbHandler.getReservationInfo();
+
+        boolean deleteR = dbHandler.deleteReservation("11");
+        ReservationModel[] after2 = dbHandler.getReservationInfo();
     }
 
 

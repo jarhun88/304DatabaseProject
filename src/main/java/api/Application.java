@@ -10,5 +10,6 @@ public class Application {
     public static void main(String[] args) {
         Controller.start();
         SpringApplication.run(Application.class, args);
+        Controller.terminalTransactionsFinished();
     }
 }

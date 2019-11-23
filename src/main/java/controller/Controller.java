@@ -191,6 +191,13 @@ public class Controller {
 
     public static void viewAll() {
     }
+
+    public static void terminalTransactionsFinished() {
+        dbHandler.close();
+        dbHandler = null;
+
+        System.exit(0);
+    }
 }
 
 

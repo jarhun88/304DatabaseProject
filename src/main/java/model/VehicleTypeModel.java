@@ -64,12 +64,14 @@ public class VehicleTypeModel {
     public String toString() {
         return "VehicleTypeModel{" +
                 "vtname='" + vtname + '\'' +
+                ", features='" + features + '\'' +
                 ", wrate=" + wrate +
                 ", drate=" + drate +
                 ", hrate=" + hrate +
                 ", wirate=" + wirate +
                 ", dirate=" + dirate +
                 ", hirate=" + hirate +
+                ", krate=" + krate +
                 '}';
     }
 }

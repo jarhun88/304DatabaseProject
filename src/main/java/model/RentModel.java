@@ -68,4 +68,20 @@ public class RentModel {
     public int getRid() {
         return rid;
     }
+
+    @Override
+    public String toString() {
+        return "RentModel{" +
+                "rid=" + rid +
+                ", vid=" + vid +
+                ", cellphone='" + cellphone + '\'' +
+                ", fromDateTime=" + fromDateTime +
+                ", toDateTime=" + toDateTime +
+                ", odometer=" + odometer +
+                ", cardName='" + cardName + '\'' +
+                ", cardNo='" + cardNo + '\'' +
+                ", expDate=" + expDate +
+                ", confNo=" + confNo +
+                '}';
+    }
 }

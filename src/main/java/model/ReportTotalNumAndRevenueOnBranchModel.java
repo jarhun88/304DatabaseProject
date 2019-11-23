@@ -19,4 +19,11 @@ public class ReportTotalNumAndRevenueOnBranchModel {
         return totalNumOfVehicle;
     }
 
+    @Override
+    public String toString() {
+        return "ReportTotalNumAndRevenueOnBranchModel{" +
+                "totalRevenue=" + totalRevenue +
+                ", totalNumOfVehicle=" + totalNumOfVehicle +
+                '}';
+    }
 }

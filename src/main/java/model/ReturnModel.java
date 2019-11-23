@@ -37,4 +37,15 @@ public class ReturnModel {
     public int getRid() {
         return rid;
     }
+
+    @Override
+    public String toString() {
+        return "ReturnModel{" +
+                "rid=" + rid +
+                ", returnDateTime=" + returnDateTime +
+                ", odometer=" + odometer +
+                ", fulltank='" + fulltank + '\'' +
+                ", value=" + value +
+                '}';
+    }
 }

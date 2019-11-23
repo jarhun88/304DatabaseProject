@@ -42,4 +42,15 @@ public class ReservationModel {
     public int getConfNo() {
         return confNo;
     }
+
+    @Override
+    public String toString() {
+        return "ReservationModel{" +
+                "confNo=" + confNo +
+                ", vid=" + vid +
+                ", cellphone='" + cellphone + '\'' +
+                ", fromDateTime=" + fromDateTime +
+                ", toDateTime=" + toDateTime +
+                '}';
+    }
 }

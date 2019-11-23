@@ -29,4 +29,14 @@ public class ReportTotalNumAndRevenueGBBranchModel {
     public String getCity() {
         return city;
     }
+
+    @Override
+    public String toString() {
+        return "ReportTotalNumAndRevenueGBBranchModel{" +
+                "totalRevenue=" + totalRevenue +
+                ", totalNumOfVehicle=" + totalNumOfVehicle +
+                ", location='" + location + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

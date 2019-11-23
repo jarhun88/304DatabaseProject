@@ -93,6 +93,26 @@ public class RentConfirmationMessageModel {
     public String getCity() {
         return city;
     }
+
+    @Override
+    public String toString() {
+        return "RentConfirmationMessageModel{" +
+                "rid=" + rid +
+                ", cellphone='" + cellphone + '\'' +
+                ", fromDateTime=" + fromDateTime +
+                ", toDateTime=" + toDateTime +
+                ", cardName='" + cardName + '\'' +
+                ", cardNo='" + cardNo + '\'' +
+                ", expDate=" + expDate +
+                ", odometer=" + odometer +
+                ", confNo=" + confNo +
+                ", vid=" + vid +
+                ", vlicense='" + vlicense + '\'' +
+                ", vtname='" + vtname + '\'' +
+                ", location='" + location + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }
 
 

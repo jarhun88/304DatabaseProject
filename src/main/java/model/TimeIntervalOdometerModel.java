@@ -24,4 +24,13 @@ public class TimeIntervalOdometerModel {
     public double getOdometer() {
         return odometer;
     }
+
+    @Override
+    public String toString() {
+        return "TimeIntervalOdometerModel{" +
+                "fromDateTime=" + fromDateTime +
+                ", toDateTime=" + toDateTime +
+                ", odometer=" + odometer +
+                '}';
+    }
 }

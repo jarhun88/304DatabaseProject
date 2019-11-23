@@ -16,4 +16,12 @@ public class RevenueReportGroupedByVehilceModel {
     public String getVtname() {
         return vtname;
     }
+
+    @Override
+    public String toString() {
+        return "RevenueReportGroupedByVehilceModel{" +
+                "total=" + total +
+                ", vtname='" + vtname + '\'' +
+                '}';
+    }
 }

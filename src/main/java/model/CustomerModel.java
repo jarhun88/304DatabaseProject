@@ -29,4 +29,14 @@ public class CustomerModel {
     public String getCellphone() {
         return cellphone;
     }
+
+    @Override
+    public String toString() {
+        return "CustomerModel{" +
+                "cellphone='" + cellphone + '\'' +
+                ", name='" + name + '\'' +
+                ", address='" + address + '\'' +
+                ", dlicense='" + dlicense + '\'' +
+                '}';
+    }
 }

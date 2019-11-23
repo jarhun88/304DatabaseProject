@@ -18,4 +18,12 @@ public class BranchModel {
 	public String getLocation() {
 		return location;
 	}
+
+    @Override
+    public String toString() {
+        return "BranchModel{" +
+                "city='" + city + '\'' +
+                ", location='" + location + '\'' +
+                '}';
+    }
 }

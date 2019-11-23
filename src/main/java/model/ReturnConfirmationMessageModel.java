@@ -31,4 +31,13 @@ public class ReturnConfirmationMessageModel {
         return calculationDetail;
     }
 
+    @Override
+    public String toString() {
+        return "ReturnConfirmationMessageModel{" +
+                "rid=" + rid +
+                ", returnDateTime='" + returnDateTime + '\'' +
+                ", value=" + value +
+                ", calculationDetail='" + calculationDetail + '\'' +
+                '}';
+    }
 }

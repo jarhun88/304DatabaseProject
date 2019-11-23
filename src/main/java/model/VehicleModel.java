@@ -71,4 +71,21 @@ public class VehicleModel {
     public int getVid() {
         return vid;
     }
+
+    @Override
+    public String toString() {
+        return "VehicleModel{" +
+                "vid=" + vid +
+                ", vlicense='" + vlicense + '\'' +
+                ", make='" + make + '\'' +
+                ", model='" + model + '\'' +
+                ", year='" + year + '\'' +
+                ", color='" + color + '\'' +
+                ", odometer=" + odometer +
+                ", status='" + status + '\'' +
+                ", vtname='" + vtname + '\'' +
+                ", location='" + location + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

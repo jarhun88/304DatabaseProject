@@ -22,4 +22,13 @@ public class ReportGroupByBranchModel {
     public String getCity() {
         return city;
     }
+
+    @Override
+    public String toString() {
+        return "ReportGroupByBranchModel{" +
+                "total=" + total +
+                ", location='" + location + '\'' +
+                ", city='" + city + '\'' +
+                '}';
+    }
 }

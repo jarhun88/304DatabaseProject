@@ -128,13 +128,13 @@ public class Controller {
 
     public static void testVehicleManipulation() {
         VehicleModel[] all = dbHandler.getVehicleInfo();
-        boolean delete = dbHandler.deleteVehicle("10");
-        VehicleModel[] after = dbHandler.getVehicleInfo();
-//        boolean insert = dbHandler.insertVehicle("123456", "aaa", "model", "1234", "reed",
-//                "123", "available", "Economy", "UBC", "Vancouver");
-//        VehicleModel[] all2 = dbHandler.getVehicleInfo();
-//        boolean update = dbHandler.updateVehicle("11", "123455", "make2", "fjfjf", "3344", "black",
-//                "44444", "rented", "", "", "");
+//        boolean delete = dbHandler.deleteVehicle("10");
+//        VehicleModel[] after = dbHandler.getVehicleInfo();
+        boolean insert = dbHandler.insertVehicle("123456", "aaa", "model", "1234", "reed",
+                "123", "available", "Economy", "UBC", "Vancouver");
+        VehicleModel[] all2 = dbHandler.getVehicleInfo();
+        boolean update = dbHandler.updateVehicle("11", "123455", "make2", "fjfjf", "3344", "black",
+                "44444", "rented", "", "", "");
 //        boolean update2 = dbHandler.updateVehicle("11", "123455", "make2", "model2", "3344", "black",
 //                "44444", "rented", null, "", "");
 

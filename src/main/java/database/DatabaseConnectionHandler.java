@@ -3,6 +3,7 @@ package database;
 //import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 
 import model.*;
+import oracle.jdbc.proxy.annotation.Pre;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -1176,8 +1177,9 @@ where rid = 4
     public VehicleModel[] getVehicleInfo() {
         ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select * from vehicle";
             ResultSet rs = stmt.executeQuery(query);
 
@@ -1191,12 +1193,18 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new VehicleModel[result.size()]);
         }
 
-        return result.toArray(new VehicleModel[result.size()]);
+
     }
 
 
@@ -1229,11 +1237,6 @@ where rid = 4
                 e.printStackTrace();
             }
 
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             return isSuccessful;
         }
     }
@@ -1265,7 +1268,6 @@ where rid = 4
             }
 
             connection.commit();
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
@@ -1276,11 +1278,6 @@ where rid = 4
                 e.printStackTrace();
             }
 
-            try {
-                connection.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
             return isSuccessful;
         }
     }
@@ -2032,8 +2029,10 @@ where rid = 4
         } else {
             query = queryGeneratorDateForUpdate(tableName, columnName, idName);
         }
+
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             if (valueType.equals(TYPE_INT)) {
                 ps.setInt(1, Integer.parseInt(value));
             } else if (valueType.equals(TYPE_DOUBLE)) {
@@ -2052,11 +2051,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            }
             return isSuccessful;
         }
     }
@@ -2064,8 +2068,9 @@ where rid = 4
     public boolean updateBranchInfoInTableWithIntegerkey(int id, String location, String city, String tableName, String idName) {
         boolean isSuccessful = false;
         String query = "update " + tableName + " set location = ?, city = ? where " + idName + " = ?";
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             ps.setString(1, location);
             ps.setString(2, city);
             ps.setInt(3, id);
@@ -2079,11 +2084,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             return isSuccessful;
         }
 
@@ -2099,8 +2109,10 @@ where rid = 4
         } else {
             query = queryGeneratorDateForUpdate(tableName, columnName, idName);
         }
+
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement(query);
+            ps = connection.prepareStatement(query);
             if (valueType.equals(TYPE_INT)) {
                 ps.setInt(1, Integer.parseInt(value));
             } else if (valueType.equals(TYPE_DOUBLE)) {
@@ -2119,11 +2131,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             return isSuccessful;
         }
     }

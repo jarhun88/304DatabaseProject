@@ -84,18 +84,22 @@ on delete cascade
 alter table Rent
 add foreign key (vid)
 references Vehicle (vid)
+on delete cascade
 /
 alter table Rent
 add foreign key (cellphone)
 references Customer (cellphone)
+on delete cascade
 /
 alter table Rent
 add foreign key (confNo)
 references Reservation (confNo)
+on delete cascade
 /
 alter table Vehicle
 add foreign key (vtname)
 references VehicleType (vtname)
+on delete cascade
 /
 create table Branch(
 location varchar(20),
@@ -110,6 +114,7 @@ on delete cascade
 alter table Return
 add foreign key (rid)
 references Rent (rid)
+on delete cascade
 /
 insert into branch Values (
 'UBC', 'Vancouver')

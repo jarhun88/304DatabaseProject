@@ -2,6 +2,9 @@ package controller;
 
 import database.DatabaseConnectionHandler;
 import model.*;
+import org.json.JSONArray;
+
+import java.util.Arrays;
 
 //This is the main controller class that will orchestrate everything.
 public class Controller {
@@ -38,15 +41,6 @@ public class Controller {
         return dbHandler;
     }
 
-    // Adds a new customer
-    public static boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
-        return dbHandler.addNewCustomer(cellphone, name, address, dlicense);
-    }
-    // Adds a new vehicle
-    // TODO
-    public static int addNewVehicle( ){
-        return 0;
-    }
 
     //Returns array of all vehicles
     public static VehicleModel[] viewVehicles() {
@@ -164,32 +158,127 @@ public class Controller {
     }
 
 
-    public static void reservationManipulation(String mType, String confNo, String vtname, String phoneNum, String from, String to) {
+    public static String reservationManipulation(String mType, String confNo, String vid, String phoneNum, String from, String to) {
+        String  ret = "";
         switch (mType){
             case "update":
+                ret = String.valueOf(dbHandler.updateReservation(confNo,  vid,  phoneNum,  from,  to));
                 break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertReservation(vid,  phoneNum, from, to));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteReservation(confNo));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getReservationInfo()));
+                return mJSONArray.toString();
         }
+        return ret;
     }
 
-    public static void rentalManipulation(String mType, String date, String vtname, String phoneNum, String from, String to,
-                                          String odometer, String cardName, String city, String license, String confNo) {
+    public static String rentalManipulation(String mType, String rid, String vid, String phoneNum, String from, String to,
+                                          String odometer, String cardName, String cardNo, String expDate, String confNo) {
+        String ret = "";
+        switch (mType){
+            case "update":
+               ret = String.valueOf(dbHandler.updateRent(rid, vid, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo));
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertRent(vid, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteRent(rid));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getRentInfo()));
+                return mJSONArray.toString();
+        }
+        return ret;
     }
 
-    public static void returnManipulation(String mType, String rid, String date, String odometer, String fulltank, String value) {
+    public static String returnManipulation(String mType, String rid, String date, String odometer, String fulltank, String value) {
+        String ret = "";
+        switch (mType){
+            case "update":
+                ret = String.valueOf(dbHandler.updateReturn(rid, date, odometer, fulltank, value));
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertReturn(rid, date, odometer, fulltank, value));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteReturn(rid));
+            break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getReturnInfo()));
+                return mJSONArray.toString();
+
+        }
+        return ret;
     }
 
-    public static void vehicleManipulation(String mType, String vid, String vlicense, String model, String year, String color, String odometer,
-                                           String status, String vtname, String location, String city) {
+    public static String vehicleManipulation(String mType, String vid, String vlicense, String make, String model, String year,
+                                              String color, String odometer, String status, String vtname, String location, String city) {
+        String ret = "";
+        switch (mType){
+            case "update":
+               ret = String.valueOf(dbHandler.updateVehicle(vid, vlicense, make, model, year, color, odometer, status, vtname, location, city));
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertVehicle(vlicense, make, model, year, color, odometer, status, vtname, location, city));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteVehicle(vid));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getVehicleInfo()));
+                return mJSONArray.toString();
+        }
+        return ret;
+
     }
 
-    public static void vehicleTypeManipulation(String mType, String date, String features, String wrate, String drate, String hrate,
+    public static String vehicleTypeManipulation(String mType, String vtname, String features, String wrate, String drate, String hrate,
                                                String wirate, String dirate, String hirate, String krate) {
+        String ret = "";
+        switch (mType){
+            case "update":
+                ret = String.valueOf(dbHandler.updateVehicleType(vtname, features, wrate, drate, hrate, wirate, dirate, hirate, krate));
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertVehicleType(vtname, features, wrate, drate,hrate,wirate,dirate,hirate,krate));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteVehicleType(vtname));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getVehicleTypeInfo()));
+                return mJSONArray.toString();
+        }
+        return ret;
     }
 
-    public static void customerManipulation(String mType, String phoneNum, String address, String name, String city, String license) {
+    public static String customerManipulation(String mType, String phoneNum, String address, String name, String license) {
+        String ret ="";
+        switch (mType){
+            case "update":
+                ret = String.valueOf(dbHandler.updateCustomer(phoneNum, name, address, license));
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertCustomer(phoneNum, name, address, license));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteCustomer(phoneNum));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getCustomerInfo()));
+                return mJSONArray.toString();
+        }
+        return ret;
     }
 
-    public static void viewAll() {
+    public static String viewAll() {
+        return  "";
     }
 
     public static void terminalTransactionsFinished() {

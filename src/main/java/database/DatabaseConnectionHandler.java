@@ -1452,7 +1452,8 @@ where rid = 4
 
     // EFFECTS: update the rent
     public boolean updateRent(String rid, String vid, String cellphone,
-                              String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
+                              String fromDateTime, String toDateTime, String odometer, String cardName,
+                              String cardNo, String expDate, String confNo) {
 
         int ridNum = Integer.parseInt(rid);
         String idName = "rid";

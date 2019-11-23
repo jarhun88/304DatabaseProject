@@ -1414,8 +1414,115 @@ where rid = 4
         if (expDate.length() > 0 || expDate != null) {
             updateTableWithIntegerkey(ridNum, "confNo", confNo, tableName, idName, TYPE_INT);
         }
-        
+
     }
+
+
+    // table manipulation for
+
+    /*
+     CONFNO 				   NOT NULL NUMBER(38)
+ VID						    NUMBER(38)
+ CELLPHONE					    CHAR(10)
+ FROMDATETIME					    TIMESTAMP(6)
+ TODATETIME					    TIMESTAMP(6)
+     */
+
+    // EFFECTS: returns all reservations
+    public ReservationModel[] getReservationInfo() {
+        ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
+
+        try {
+            Statement stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
+
+            while (rs.next()) {
+                ReservationModel model = new ReservationModel(rs.getInt("confNo"), rs.getInt("vid"),
+                        rs.getString("cellphone"),
+                        rs.getTimestamp("fromDateTime"), rs.getTimestamp("toDateTime"));
+                result.add(model);
+            }
+
+            rs.close();
+            stmt.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        }
+
+        return result.toArray(new ReservationModel[result.size()]);
+
+    }
+
+    // EFFECTS: delete a record from reservation based on confNo
+    public void deleteReservation(String confNo) {
+        int confNoInt = Integer.parseInt(confNo);
+        try {
+            PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
+            ps.setInt(1, confNoInt);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Reservation " + confNoInt + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    // EFFECTS: insert a record into reservation
+    public void insertReservation(String vid, String cellphone, String fromDateTime, String toDateTime) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation (vid, " +
+                    "cellphone, fromDateTime, toDateTime" +
+                    ") VALUES (?,?,to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),to_timestamp(?, 'YYYY-MM-DD:HH24:MI'))");
+            ps.setInt(1, Integer.parseInt(vid));
+            ps.setString(2, cellphone);
+            ps.setString(3, fromDateTime);
+            ps.setString(4, toDateTime);
+
+            ps.executeUpdate();
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+
+    }
+
+    // EFFECTS: update a record in reservation
+    public void updateReservation(String confNo, String vid, String cellphone, String fromDateTime, String toDateTime) {
+        int confNoInt = Integer.parseInt(confNo);
+        String idName = "confNo";
+        String tableName = "reservation";
+
+        if (vid.length() > 0 || vid != null) {
+            updateTableWithIntegerkey(confNoInt, "vid", vid, tableName, idName, TYPE_INT);
+        }
+        if (cellphone.length() > 0 || cellphone != null) {
+            updateTableWithIntegerkey(confNoInt, "cellphone", cellphone, tableName, idName, TYPE_STRING);
+        }
+        if (fromDateTime.length() > 0 || fromDateTime != null) {
+            updateTableWithIntegerkey(confNoInt, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
+        }
+        if (toDateTime.length() > 0 || toDateTime != null) {
+            updateTableWithIntegerkey(confNoInt, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
+        }
+
+    }
+
+    
+
+
+    //
 
     public void updateTableWithIntegerkey(int id, String columnName, String value, String tableName, String idName, String valueType) {
         String query = "";
@@ -1451,6 +1558,18 @@ where rid = 4
         }
     }
 
+    public String queryGeneratorForUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = ? WHERE " + idName + " = ?";
+    }
+
+    public String queryGeneratorTimeStampForUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = to_timestamp(?, 'YYYY-MM-DD:HH24:MI') WHERE " + idName + " = ?";
+    }
+
+
+    public String queryGeneratorDateForUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = to_date(?, 'YYYY-MM-DD') WHERE " + idName + " = ?";
+    }
 
 //    // EFFECTS: helper to update Vehicle
 //    public void updateStringTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
@@ -1560,18 +1679,7 @@ where rid = 4
 //    }
 
 
-    public String queryGeneratorForUpdate(String tableName, String columnName, String idName) {
-        return "UPDATE " + tableName + " SET " + columnName + " = ? WHERE " + idName + " = ?";
-    }
 
-    public String queryGeneratorTimeStampForUpdate(String tableName, String columnName, String idName) {
-        return "UPDATE " + tableName + " SET " + columnName + " = to_timestamp(?, 'YYYY-MM-DD:HH24:MI') WHERE " + idName + " = ?";
-    }
-
-
-    public String queryGeneratorDateForUpdate(String tableName, String columnName, String idName) {
-        return "UPDATE " + tableName + " SET " + columnName + " = to_date(?, 'YYYY-MM-DD') WHERE " + idName + " = ?";
-    }
 
 
 }

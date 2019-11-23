@@ -571,8 +571,8 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             Statement stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total " +
                     "FROM Rent " +
-                    "WHERE fromDateTime >=  to_timestamp('"+date+":00:00','YYYY-MM-DD:HH24:MI') " +
-                    "AND fromDateTime <=  to_timestamp('"+date+":23:59','YYYY-MM-DD:HH24:MI')";
+                    "WHERE fromDateTime >=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
+                    "AND fromDateTime <=  to_timestamp('" + date + ":23:59','YYYY-MM-DD:HH24:MI')";
 
             ResultSet rs = stmt.executeQuery(query);
 
@@ -848,7 +848,7 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     //tested
 
     // EFFECTS: returns the information of vehicle returned on that day on the specified branch
-    public VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date,String location,  String city) {
+    public VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
         try {
             Statement stmt = connection.createStatement();
@@ -1176,10 +1176,11 @@ where rid = 4
 
 
     // EFFECTS: delete record from vehicle with certain vid
-    public void deleteVehicle(int vid) {
+    public void deleteVehicle(String vid) {
+        int vidnum = Integer.parseInt(vid);
         try {
             PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicle WHERE vid = ?");
-            ps.setInt(1, vid);
+            ps.setInt(1, vidnum);
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
@@ -1223,7 +1224,95 @@ where rid = 4
         }
     }
 
+    // EFFECTS: update the table vehicle
+    public void updateVehicle(String vid, String vlicense, String make, String model, String year, String color,
+                              String odometer, String status, String vtname, String location, String city) {
 
+        int vidNum = Integer.parseInt(vid);
+        String idName = "vid";
+        String tableName = "vehicle";
+
+        if (vlicense.length() > 0 || vlicense != null) {
+            updateStringTypeWithIntegerKey(vidNum, "vlicense", vlicense, tableName, idName);
+        }
+        if (make.length() > 0 || make != null) {
+            updateStringTypeWithIntegerKey(vidNum, "make", make, tableName, idName);
+        }
+        if (model.length() > 0 || model != null) {
+            updateStringTypeWithIntegerKey(vidNum, "model", model, tableName, idName);
+        }
+        if (year.length() > 0 || year != null) {
+            updateStringTypeWithIntegerKey(vidNum, "year", year, tableName, idName);
+        }
+        if (color.length() > 0 || color != null) {
+            updateStringTypeWithIntegerKey(vidNum, "color", color, tableName, idName);
+        }
+        if (odometer.length() > 0 || odometer != null) {
+            updateDoubleTypeWithIntegerKey(vidNum, "odometer", odometer, tableName, idName);
+        }
+        if (status.length() > 0 || status != null) {
+            updateStringTypeWithIntegerKey(vidNum, "status", status, tableName, idName);
+        }
+        if (vtname.length() > 0 || vtname != null) {
+            updateStringTypeWithIntegerKey(vidNum, "vtname", vtname, tableName, idName);
+        }
+        if (location.length() > 0 || location != null) {
+            updateStringTypeWithIntegerKey(vidNum, "location", location, tableName, idName);
+        }
+        if (city.length() > 0 || city != null) {
+            updateStringTypeWithIntegerKey(vidNum, "city", city, tableName, idName);
+        }
+
+
+    }
+
+    // EFFECTS: helper to update Vehicle
+    public void updateStringTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryGeneratorForVehicleUpdate(tableName, columnName, idName));
+            ps.setString(1, value);
+            ps.setInt(2, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+
+    }
+
+    public void updateDoubleTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
+        try {
+            PreparedStatement ps = connection.prepareStatement(queryGeneratorForVehicleUpdate(tableName, columnName, idName));
+            ps.setDouble(1, Double.parseDouble(value));
+            ps.setInt(2, id);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Branch " + id + " does not exist!");
+            }
+
+            connection.commit();
+
+            ps.close();
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        }
+    }
+
+
+
+    public String queryGeneratorForVehicleUpdate(String tableName, String columnName, String idName) {
+        return "UPDATE " + tableName + " SET " + columnName + " = ? WHERE " + idName + " = ?";
+    }
 
 
 }

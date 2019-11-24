@@ -1105,8 +1105,8 @@ public class DatabaseConnectionHandler {
     test case
 makereservation shoud be null when (based on a certain vid)
 actualfd <= inputfd and inputtd <= actualtd
-inputfd <= actualfd and inputtd <= actualtd
-actualfd <= inputfd and actualtd <= inputtd
+inputfd <= actualfd and actualfd <= inputtd and inputtd <= actualtd
+actualfd <= inputfd and inputfd <= actuadtd and actualtd <= inputtd
 inputfd <= actualfd and actualtd <= inputtd
 
      */
@@ -1118,15 +1118,17 @@ inputfd <= actualfd and actualtd <= inputtd
 
     }
 
-    // EFFECTS: returns string necessary for isOverBooked inputfd <= actualfd and inputtd <= actualtd
+    // EFFECTS: returns string necessary for isOverBooked inputfd <= actualfd and actualfd <= inputtd and inputtd <= actualtd
     public String get2ValidationStringTimeIAIA(String fromDateTime, String toDateTime) {
         return " and to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') <= fromDateTime " +
+                "and fromDateTime <= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
                 "and to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') <= toDateTime";
     }
 
-    // EFFECTS: returns string necessary for isOverBooked actualfd <= inputfd and actualtd <= inputtd
+    // EFFECTS: returns string necessary for isOverBooked actualfd <= inputfd and inputfd <= actuadtd and actualtd <= inputtd
     public String get3ValidationStringTimeAIAI(String fromDateTime, String toDateTime) {
         return " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
+                "and to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') <= toDateTime " +
                 "and toDateTime <= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') ";
     }
 

@@ -1,7 +1,10 @@
 package api;
 
 import controller.Controller;
+import org.json.JSONArray;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Arrays;
 
 @RestController
 public class TableManipulationController {
@@ -104,7 +107,8 @@ public class TableManipulationController {
     @GetMapping(path = "/view-all")
     public String viewAll() {
 
-        return Controller.viewAll();
+        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewAll()));
+        return mJSONArray.toString();
     }
 
 }

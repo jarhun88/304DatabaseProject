@@ -56,14 +56,13 @@ public class QueryController {
                        @RequestPart(name="to", required=false) String to) { //TODO need odometer
 
         //TODO add these to params
-        String odometer ="";
         String confNum = "";
         String cardName ="";
         String cardNo="";
         String expDate ="";
 
-        // todo like makeReservation method, please change the assignment so that it returns the rentConfMassage
-        int rid = -1; //Controller.rentVehicle(vtname, phoneNum, from, to, odometer, confNum, cardName, cardNo, expDate);
+        // todo (like makeReservation method,) please change the assignment so that it returns the rentConfMassage
+        int rid = -1;
         return String.valueOf(rid);
     }
 

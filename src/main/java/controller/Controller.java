@@ -63,10 +63,14 @@ public class Controller {
     }
 
     // Rents a specific vehicle
-    public static RentConfirmationMessageModel rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+    public static RentConfirmationMessageModel rentVehicle(String name, String address, String dlicense, String vid, String cellphone, String fromDateTime, String toDateTime,
                                   String confNo, String cardName, String cardNo, String expDate) {
-
-        return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
+        confNo = dbHandler.nullStringConverter(confNo);
+        if (confNo.equals("")) {
+            return dbHandler.rentVehicleWithoutReservation(name,address,dlicense, vid, cellphone,fromDateTime,toDateTime,cardName,cardNo,expDate);
+        } else {
+            return dbHandler.rentVehicle(cellphone, fromDateTime, toDateTime, confNo, cardName, cardNo, expDate);
+        }
     }
 
     // Returns a vehicle
@@ -240,13 +244,24 @@ public class Controller {
                 "2019-01-01:00:00", "2019-01-06:00:00");
         ReservationModel resultShouldBeNull2 = dbHandler.makeReservation("1234567890", "","","","1",
                 "2019-01-01:00:00", "2019-01-30:00:00");
+        ReservationModel resultShouldBeNull3 = dbHandler.makeReservation("1234567890", "","","","1",
+                "2019-01-4:00:00", "2019-01-30:00:00");
+        ReservationModel resultExistingcustomer = dbHandler.makeReservation("1234567890", "","","","1",
+                "2030-01-01:00:00", "2030-05-30:00:00");
         ReservationModel reservationModel = dbHandler.getReservationDetail(11);
         ReservationModel[] all = dbHandler.getReservationInfo();
-//        RentConfirmationMessageModel rentConf = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
-//                "unknown", "Visa", "4444777788889999", "2200-10-10");
+        RentConfirmationMessageModel rentConf = dbHandler.rentVehicle("1234567890", "2200-01-01:00:00", "2200-02-01:00:00",
+                "11", "Visa", "4444777788889999", "2200-10-10");
+        RentConfirmationMessageModel rentCOnfWihoutRsercarion = dbHandler.rentVehicleWithoutReservation("yey", "aaa",
+                "111111111", "9", "8888888888", "2020-01-01:00:00", "2020-01-05:00:00",
+                "mdmmd", "3333333355556666", "2020-03-03");
+        ReservationModel[] afterabove = dbHandler.getReservationInfo();
+        RentModel[] rentModel = dbHandler.getRentInfo();
 
 
-//        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("", "2200-02-01:00:00", "1244", "T");
+
+        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("11", "2200-02-01:00:00", "1244.00", "T");
+        ReturnModel[] returnModelsafter = dbHandler.getReturnInfo();
 //
 //        RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 

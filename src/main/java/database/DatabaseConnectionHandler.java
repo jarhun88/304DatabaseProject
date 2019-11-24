@@ -179,9 +179,24 @@ public class DatabaseConnectionHandler {
         boolean insertReservation = insertReservation(vid, phoneNumber, fromDateTime, toDateTime);
         if (insertReservation == false) {
             return null;
+        } else {
+
+            // get confirmation number
+            confNo = getMostRecentConfNoFromReservation();
+
+            if (confNo != -1) {
+                return getReservationDetail(confNo);
+            } else {
+                return null;
+            }
         }
 
+    }
+
+    // Returns the most recent confirmation number for reservation
+    public int getMostRecentConfNoFromReservation() {
         // get confirmation number
+        int confNo = -1;
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
@@ -203,12 +218,8 @@ public class DatabaseConnectionHandler {
                     e.printStackTrace();
                 }
             }
-        }
 
-        if (confNo != -1) {
-            return getReservationDetail(confNo);
-        } else {
-            return null;
+            return confNo;
         }
 
     }
@@ -244,22 +255,95 @@ public class DatabaseConnectionHandler {
 
     }
 
+    // EEFECTS: get current odometer of the vehicle
+    public double getCurrentOdometerOfVehicle(int vid) {
+        double curOdometer = 0;
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String query = "select odometer from vehicle where vid = " + vid;
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.next();
+            curOdometer = rs.getDouble("odometer");
+
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return curOdometer;
+        }
+
+
+    }
+
+    // EFFECTS; returns confirmation message for the rental this is the case when customer does not have any reservation
+    public RentConfirmationMessageModel rentVehicleWithoutReservation(String name, String address, String dlicense, String vid, String cellphone, String fromDateTime, String toDateTime,
+                                                                      String cardName, String cardNo, String expDate) {
+        int confNo = -1;
+        ReservationModel reservation = makeReservation(cellphone,name,address,dlicense,vid,fromDateTime,toDateTime);
+        if (reservation != null) {
+            confNo = getMostRecentConfNoFromReservation();
+            return rentVehicle(cellphone,fromDateTime,toDateTime,""+confNo,cardName,cardNo,expDate);
+        } else {
+            return null;
+        }
+
+
+
+    }
+
+    // EFFECTS: returns vid from the reservation based on confNo
+    public int getVidForReservation(int confNo) {
+        int vid = 0;
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            String query = "select vid from reservation where confNo = " + confNo;
+            ResultSet rs = stmt.executeQuery(query);
+
+            rs.next();
+            vid = rs.getInt("vid");
+
+            rs.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return vid;
+        }
+    }
+
     //tested
     // REQUIRES: all the inputs are in the valid format
-    // EFFECTS: Rents a vehicle and returns confirmation number (rid)
-    public RentConfirmationMessageModel rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+    // EFFECTS: Rents a vehicle and returns confirmation message)
+    public RentConfirmationMessageModel rentVehicle(String cellphone, String fromDateTime, String toDateTime,
                                                     String confNo, String cardName, String cardNo, String expDate) {
 
-
         int rid = -1;
-        boolean isSuccessful = insertRent(vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo);
+        int vid = getVidForReservation(Integer.parseInt(confNo));
+        double curOdometer = getCurrentOdometerOfVehicle(vid);
+        boolean isSuccessful = insertRent(""+vid, cellphone, fromDateTime, toDateTime, "" + curOdometer, cardName, cardNo, expDate, confNo);
         if (isSuccessful == false) {
             return null;
         }
         PreparedStatement ps = null;
         try {
             ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
-            ps.setInt(1, Integer.parseInt(vid));
+            ps.setInt(1, vid);
             ps.executeUpdate();
             connection.commit();
 
@@ -272,7 +356,7 @@ public class DatabaseConnectionHandler {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
+            rid = getRidForRent(Integer.parseInt(confNo), vid);
         }
 
         if (rid == -1) {
@@ -357,7 +441,8 @@ public class DatabaseConnectionHandler {
 
         PreparedStatement ps = null;
         try {
-            ps = connection.prepareStatement("update vehicle set status = 'available'" +
+            ps = connection.prepareStatement("update vehicle set status = 'available'," +
+                    " odometer = " + odometer +
                     " where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = ?)");
             ps.setInt(1, Integer.parseInt(rid));
 

@@ -5,6 +5,7 @@ package database;
 import model.*;
 import oracle.jdbc.proxy.annotation.Pre;
 
+import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -821,9 +822,9 @@ public class DatabaseConnectionHandler {
     //returns the total revenue and the number of cars returned grouped by branch
     public ReportTotalNumAndRevenueGBBranchModel[] getTotalNumAndRevenueGBBranch(String date) {
         ArrayList<ReportTotalNumAndRevenueGBBranchModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT sum(r.value) as totalRev, count(*) as totalNum, v.location, v.city " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
@@ -839,12 +840,18 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReportTotalNumAndRevenueGBBranchModel[result.size()]);
+
         }
 
-        return result.toArray(new ReportTotalNumAndRevenueGBBranchModel[result.size()]);
 
     }
 
@@ -854,8 +861,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the information of vehicle returned on that day on the specified branch
     public VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -878,12 +886,18 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new VehicleModel[result.size()]);
+
         }
 
-        return result.toArray(new VehicleModel[result.size()]);
     }
 
 
@@ -892,9 +906,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname on the branch
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT count(*) as total, v.vtname " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -911,12 +925,17 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
-        return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
+        }
 
 
     }
@@ -925,9 +944,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the total revenue per vtname on the branch
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<RevenueReportGroupedByVehilceModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT sum(r.value) as total, v.vtname " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -944,12 +963,18 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new RevenueReportGroupedByVehilceModel[result.size()]);
+
         }
 
-        return result.toArray(new RevenueReportGroupedByVehilceModel[result.size()]);
 
     }
 
@@ -958,8 +983,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the total revenue and total num of cars returned on that day on the branch
     public ReportTotalNumAndRevenueOnBranchModel getTotalRevAndNumRentalsOnBranch(String date, String location, String city) {
         ReportTotalNumAndRevenueOnBranchModel result = null;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT sum(r.value) as totalRev, count(*) as totalNum " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -971,42 +997,22 @@ public class DatabaseConnectionHandler {
             rs.next();
             result = new ReportTotalNumAndRevenueOnBranchModel(rs.getDouble(1), rs.getInt(2));
 
-
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result;
+
         }
 
-        return result;
 
     }
 
-    //tested
-    //EFFECTS: returns true if a customer is successfully added
-    //          returns false other wise
-    public boolean addNewCustomer(String cellphone, String name, String address, String dlicense) {
-        boolean isSuccessful = false;
-        try {
-            PreparedStatement ps = connection.prepareStatement("insert into customer values (?,?,?,?)");
-            ps.setString(1, cellphone);
-            ps.setString(2, name);
-            ps.setString(3, address);
-            ps.setString(4, dlicense);
-
-            ps.executeUpdate();
-            connection.commit();
-
-            ps.close();
-            isSuccessful = true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            rollbackConnection();
-        }
-        return isSuccessful;
-
-
-    }
 
     //tested
     // REQUIRES: cellphone has to be in a valid format, and cannot be empty
@@ -1014,8 +1020,9 @@ public class DatabaseConnectionHandler {
     //          returns false otherwise
     public boolean isCustomerMember(String cellphone) {
         int resultCount = 0;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select count(*) as total from customer where cellphone = '" + cellphone + "'";
             ResultSet rs = stmt.executeQuery(query);
 
@@ -1024,12 +1031,18 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return resultCount > 0;
+
         }
 
-        return resultCount > 0;
 
     }
 
@@ -1039,8 +1052,9 @@ public class DatabaseConnectionHandler {
     //          returns false otherwise
     public boolean isOverBooked(String vid, String fromDateTime, String toDateTime) {
         int resultCount = 0;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select count(*) as total " +
                     "from reservation " +
                     "where vid = " + Integer.parseInt(vid) + " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
@@ -1052,12 +1066,18 @@ public class DatabaseConnectionHandler {
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return resultCount > 0;
+
         }
 
-        return resultCount > 0;
 
     }
 
@@ -1065,8 +1085,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the confirmation message model for renting based on the rid
     public RentConfirmationMessageModel getRentConfMessage(int rid) {
         RentConfirmationMessageModel result = null;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select r.rid, r.cellphone, r.fromDateTime, r.toDateTime, r.cardName, r.cardNo, r.expDate, " +
                     "r.odometer, r.confNo, v.vid, v.vlicense, v.vtname, v.location, v.city " +
                     "from Rent r, Vehicle v where r.vid = v.vid and r.rid =" + rid;
@@ -1082,12 +1103,18 @@ public class DatabaseConnectionHandler {
                     rs.getString("city"));
 
             rs.close();
-            stmt.close();
 
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result;
+
         }
-        return result;
 
 
     }
@@ -1095,8 +1122,9 @@ public class DatabaseConnectionHandler {
     //tested
     public VehicleTypeModel getRateInfo(int rid) {
         VehicleTypeModel result = null;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select * from VehicleType vt " +
                     "where vt.vtname = ANY( select v.vtname From rent r, " +
                     "vehicle v where r.vid = v.vid and r.rid = " + rid + ")";
@@ -1110,12 +1138,18 @@ public class DatabaseConnectionHandler {
                     rs.getFloat("krate"));
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result;
+
         }
 
-        return result;
 
     }
 

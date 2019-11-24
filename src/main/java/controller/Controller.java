@@ -254,7 +254,6 @@ public class Controller {
         ReportTotalNumAndRevenueOnBranchModel resulttt = dbHandler.getTotalRevAndNumRentalsOnBranch(
                 "2019-01-07", "UBC", "Vancouver");
 
-        boolean eee = dbHandler.addNewCustomer("9999999990", "John Doe", "123 w ave, van, vc", "112344888");
         RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }

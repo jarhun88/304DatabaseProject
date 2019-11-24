@@ -152,75 +152,11 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the number of available vehicles based on params
     // this is redundant, but leaves here anyway...
     public int getAvailableNumOfVehicle(String carType, String location, String city, String startTime, String endTime) {
-        ArrayList<VehicleModel> result = new ArrayList<VehicleModel>();
-
-        // Build up filter list based on input
-        String cTypeFilter = "";
-        String locFilter = "";
-        String cityFilter = "";
-        String timeIntFilter = "";
-        if (carType != null && carType.length() > 0) {
-            cTypeFilter = "AND v.vtname = '" + carType + "'";
+        VehicleModel[] models = getVehicleInfo(carType, location, city, startTime, endTime);
+        if (models == null) {
+            return 0;
         }
-        if (location != null && location.length() > 0) {
-            locFilter = "AND v.location = '" + location + "'";
-        }
-        if (city != null && city.length() > 0) {
-            cityFilter = "AND v.city = '" + city + "'";
-        }
-        // Checks to see if a reservation has already been made from that interval
-        if (startTime != null && endTime != null && startTime.length() > 0 && endTime.length() > 0) {
-            //  not exists( Select * from reservation where timeInterval between (FROMDATETIME, TODATETIME)
-            timeIntFilter = "and v.vid not in (select r.vid " +
-                    "from reservation r, vehicle v1 " +
-                    "where v1.vid = r.vid and r.fromDateTime <= to_timestamp('" + startTime + "','YYYY-MM-DD:HH24:MI')" +
-                    "and r.toDateTime >= to_timestamp('" + endTime + "','YYYY-MM-DD:HH24:MI'))";
-        }
-
-        /*
-        select distinct * from vehicle v where v.vtname = 'Compact' and v.location = 'UBC' and v.city = 'Vancouver'
-and v.vid not in (select r.vid from reservation r, vehicle v1 where v1.vid = r.vid and r.fromDateTime <= to_timestamp('2019-01-02:00:00','YYYY-MM-DD:HH24:MI')
-and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
-         */
-        int resultNum = 0;
-        Statement stmt = null;
-
-        try {
-            stmt = connection.createStatement();
-            String query = "SELECT distinct * FROM Vehicle v where status <> 'maintenance'"; // rented is okay because the current state does not matter
-            // Add filter list to query
-            query = query + cTypeFilter + locFilter + cityFilter + timeIntFilter;
-            ResultSet rs = stmt.executeQuery(query);
-
-//    		// get info on ResultSet
-//    		ResultSetMetaData rsmd = rs.getMetaData();
-//
-//    		System.out.println(" ");
-//
-//    		// display column names;
-//    		for (int i = 0; i < rsmd.getColumnCount(); i++) {
-//    			// get column name and print it
-//    			System.out.printf("%-15s", rsmd.getColumnName(i + 1));
-//    		}
-
-            // Reads sql result into vehicle array
-            while (rs.next()) {
-                resultNum++;
-            }
-
-            rs.close();
-
-        } catch (SQLException e) {
-            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-        } finally {
-            try {
-                stmt.close();
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
-            return resultNum;
-        }
-
+        return models.length;
 
     }
 
@@ -233,37 +169,22 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                                String fromDateTime, String toDateTime) {
         int confNo = -1;
         if (!isCustomerMember(phoneNumber)) {
-            boolean status = addNewCustomer(phoneNumber, name, address, dlicense);
+            boolean status = insertCustomer(phoneNumber, name, address, dlicense);
         }
 
         if (isOverBooked(vid, fromDateTime, toDateTime)) {
             return confNo;
         }
 
-        PreparedStatement ps = null;
-        try {
-            ps = connection.prepareStatement("insert into reservation (vid, cellphone, fromDateTime, toDateTime) values ( " +
-                    "?, ?, to_timestamp(?, 'YYYY-MM-DD:HH24:MI'), " +
-                    "to_timestamp(?, 'YYYY-MM-DD:HH24:MI'))");
-            ps.setInt(1, Integer.parseInt(vid));
-            ps.setString(2, phoneNumber);
-            ps.setString(3, fromDateTime);
-            ps.setString(4, toDateTime);
-
-            ps.executeUpdate();
-            connection.commit();
-
-            ps.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            rollbackConnection();
+        boolean insertReservation = insertReservation(vid, phoneNumber, fromDateTime, toDateTime);
+        if (insertReservation == false) {
+            return confNo;
         }
 
-
         // get confirmation number
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select confNo from reservation where confNo = " +
                     "(select max(confNo) from reservation)";
             ResultSet rs = stmt.executeQuery(query);
@@ -272,19 +193,28 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
             confNo = rs.getInt("confNo");
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return confNo;
         }
-        return confNo;
+
     }
 
     // tested
     // EFFECTS: returns the Reservation detail based on the confirmation number
     public ReservationModel getReservation(int confNo) {
         ReservationModel model = null;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select * from reservation where confNo = " + confNo;
             ResultSet rs = stmt.executeQuery(query);
 
@@ -293,13 +223,20 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
                     rs.getString("cellphone"), rs.getTimestamp("fromDateTime"), rs.getTimestamp("toDateTime"));
 
             rs.close();
-            stmt.close();
-
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            if (stmt != null) {
+                try {
+                    stmt.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+            return model;
         }
 
-        return model;
+
     }
 
     //tested
@@ -310,31 +247,7 @@ and r.toDateTime >= to_timestamp('2019-01-03','YYYY-MM-DD'))
 
         boolean isSuccessful = false;
         int rid = -1;
-        try {
-            PreparedStatement ps = connection.prepareStatement("insert into rent (vid, cellphone, fromDateTime, " +
-                    "toDateTime, odometer, cardName, cardNo, expDate, confNo) values (" +
-                    "?, ?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), to_timestamp(?,'YYYY-MM-DD:HH24:MI'), " +
-                    "?, ?, ?, to_date(?, 'YYYY-MM-DD'), ?)");
-            ps.setInt(1, Integer.parseInt(vid));
-            ps.setString(2, cellphone);
-            ps.setString(3, fromDateTime);
-            ps.setString(4, toDateTime);
-            ps.setDouble(5, Double.parseDouble(odometer));
-            ps.setString(6, cardName);
-            ps.setString(7, cardNo);
-            ps.setString(8, expDate);
-            ps.setInt(9, Integer.parseInt(confNo));
-
-            ps.executeUpdate();
-            connection.commit();
-            isSuccessful = true;
-
-            ps.close();
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            rollbackConnection();
-        }
+        isSuccessful = insertRent(vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo);
 
         if (isSuccessful) {
             try {
@@ -1478,7 +1391,7 @@ where rid = 4
             return false;
         }
 
-        vid =  nullStringConverter(vid);
+        vid = nullStringConverter(vid);
         cellphone = nullStringConverter(cellphone);
         fromDateTime = nullStringConverter(fromDateTime);
         toDateTime = nullStringConverter(toDateTime);
@@ -1765,7 +1678,7 @@ where rid = 4
     //EFFECTS: update return
     public boolean updateReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
         rid = nullStringConverter(rid);
-        if (rid.equals("")|| !isInt(rid)) {
+        if (rid.equals("") || !isInt(rid)) {
             return false;
         }
 
@@ -2040,7 +1953,7 @@ where rid = 4
                                      String dirate, String hirate, String krate) {
 
         if (vtname.equals("")) {
-            return  false;
+            return false;
         }
 
         features = nullStringConverter(features);
@@ -2257,113 +2170,5 @@ where rid = 4
         return true;
 
     }
-
-//    // EFFECTS: helper to update Vehicle
-//    public void updateStringTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
-//            ps.setString(1, value);
-//            ps.setInt(2, id);
-//
-//            int rowCount = ps.executeUpdate();
-//            if (rowCount == 0) {
-//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
-//            }
-//
-//            connection.commit();
-//
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//            rollbackConnection();
-//        }
-//
-//    }
-//
-//
-//    public void updateTimeStampTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(queryGeneratorTimeStampForUpdate(tableName, columnName, idName));
-//            ps.setString(1, value);
-//            ps.setInt(2, id);
-//
-//            int rowCount = ps.executeUpdate();
-//            if (rowCount == 0) {
-//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
-//            }
-//
-//            connection.commit();
-//
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//            rollbackConnection();
-//        }
-//
-//    }
-//
-//    public void updateDateTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(queryGeneratorDateForUpdate(tableName, columnName, idName));
-//            ps.setString(1, value);
-//            ps.setInt(2, id);
-//
-//            int rowCount = ps.executeUpdate();
-//            if (rowCount == 0) {
-//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
-//            }
-//
-//            connection.commit();
-//
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//            rollbackConnection();
-//        }
-//
-//    }
-//
-//
-//    public void updateDoubleTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
-//            ps.setDouble(1, Double.parseDouble(value));
-//            ps.setInt(2, id);
-//
-//            int rowCount = ps.executeUpdate();
-//            if (rowCount == 0) {
-//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
-//            }
-//
-//            connection.commit();
-//
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//            rollbackConnection();
-//        }
-//    }
-//
-//
-//    public void updateIntTypeWithIntegerKey(int id, String columnName, String value, String tableName, String idName) {
-//        try {
-//            PreparedStatement ps = connection.prepareStatement(queryGeneratorForUpdate(tableName, columnName, idName));
-//            ps.setInt(1, Integer.parseInt(value));
-//            ps.setInt(2, id);
-//
-//            int rowCount = ps.executeUpdate();
-//            if (rowCount == 0) {
-//                System.out.println(WARNING_TAG + " "+tableName+" " + id + " does not exist!");
-//            }
-//
-//            connection.commit();
-//
-//            ps.close();
-//        } catch (SQLException e) {
-//            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
-//            rollbackConnection();
-//        }
-//    }
-
 
 }

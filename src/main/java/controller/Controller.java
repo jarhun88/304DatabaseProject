@@ -63,39 +63,42 @@ public class Controller {
 
     // Rents a specific vehicle
     public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
-                                   String confNo, String cardName, String cardNo, String expDate) {
+                                  String confNo, String cardName, String cardNo, String expDate) {
 
         return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
     }
 
     // Returns a vehicle
     public static ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
-        return dbHandler.returnVehicle(rid, returnDateTime,odometer, fulltank);
+        return dbHandler.returnVehicle(rid, returnDateTime, odometer, fulltank);
         // String rid, String returnDateTime, String odometer, String fulltank, String confNo
     }
 
-    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date){
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
     }
-    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date){
+
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
         return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
     }
-    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city){
+
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
         return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
     }
-    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city){
+
+    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         return dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
     }
 
 
     public static String reservationManipulation(String mType, String confNo, String vid, String phoneNum, String from, String to) {
-        String  ret = "";
-        switch (mType){
+        String ret = "";
+        switch (mType) {
             case "update":
-                ret = String.valueOf(dbHandler.updateReservation(confNo,  vid,  phoneNum,  from,  to));
+                ret = String.valueOf(dbHandler.updateReservation(confNo, vid, phoneNum, from, to));
                 break;
             case "add":
-                ret = String.valueOf(dbHandler.insertReservation(vid,  phoneNum, from, to));
+                ret = String.valueOf(dbHandler.insertReservation(vid, phoneNum, from, to));
                 break;
             case "remove":
                 ret = String.valueOf(dbHandler.deleteReservation(confNo));
@@ -108,11 +111,11 @@ public class Controller {
     }
 
     public static String rentalManipulation(String mType, String rid, String vid, String phoneNum, String from, String to,
-                                          String odometer, String cardName, String cardNo, String expDate, String confNo) {
+                                            String odometer, String cardName, String cardNo, String expDate, String confNo) {
         String ret = "";
-        switch (mType){
+        switch (mType) {
             case "update":
-               ret = String.valueOf(dbHandler.updateRent(rid, vid, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo));
+                ret = String.valueOf(dbHandler.updateRent(rid, vid, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo));
                 break;
             case "add":
                 ret = String.valueOf(dbHandler.insertRent(vid, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo));
@@ -129,7 +132,7 @@ public class Controller {
 
     public static String returnManipulation(String mType, String rid, String date, String odometer, String fulltank, String value) {
         String ret = "";
-        switch (mType){
+        switch (mType) {
             case "update":
                 ret = String.valueOf(dbHandler.updateReturn(rid, date, odometer, fulltank, value));
                 break;
@@ -138,7 +141,7 @@ public class Controller {
                 break;
             case "remove":
                 ret = String.valueOf(dbHandler.deleteReturn(rid));
-            break;
+                break;
             case "view":
                 JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getReturnInfo()));
                 return mJSONArray.toString();
@@ -148,11 +151,11 @@ public class Controller {
     }
 
     public static String vehicleManipulation(String mType, String vid, String vlicense, String make, String model, String year,
-                                              String color, String odometer, String status, String vtname, String location, String city) {
+                                             String color, String odometer, String status, String vtname, String location, String city) {
         String ret = "";
-        switch (mType){
+        switch (mType) {
             case "update":
-               ret = String.valueOf(dbHandler.updateVehicle(vid, vlicense, make, model, year, color, odometer, status, vtname, location, city));
+                ret = String.valueOf(dbHandler.updateVehicle(vid, vlicense, make, model, year, color, odometer, status, vtname, location, city));
                 break;
             case "add":
                 ret = String.valueOf(dbHandler.insertVehicle(vlicense, make, model, year, color, odometer, status, vtname, location, city));
@@ -169,14 +172,14 @@ public class Controller {
     }
 
     public static String vehicleTypeManipulation(String mType, String vtname, String features, String wrate, String drate, String hrate,
-                                               String wirate, String dirate, String hirate, String krate) {
+                                                 String wirate, String dirate, String hirate, String krate) {
         String ret = "";
-        switch (mType){
+        switch (mType) {
             case "update":
                 ret = String.valueOf(dbHandler.updateVehicleType(vtname, features, wrate, drate, hrate, wirate, dirate, hirate, krate));
                 break;
             case "add":
-                ret = String.valueOf(dbHandler.insertVehicleType(vtname, features, wrate, drate,hrate,wirate,dirate,hirate,krate));
+                ret = String.valueOf(dbHandler.insertVehicleType(vtname, features, wrate, drate, hrate, wirate, dirate, hirate, krate));
                 break;
             case "remove":
                 ret = String.valueOf(dbHandler.deleteVehicleType(vtname));
@@ -189,8 +192,8 @@ public class Controller {
     }
 
     public static String customerManipulation(String mType, String phoneNum, String address, String name, String license) {
-        String ret ="";
-        switch (mType){
+        String ret = "";
+        switch (mType) {
             case "update":
                 ret = String.valueOf(dbHandler.updateCustomer(phoneNum, name, address, license));
                 break;
@@ -208,7 +211,7 @@ public class Controller {
     }
 
     public static String viewAll() {
-        return  "";
+        return "";
     }
 
     public static void terminalTransactionsFinished() {
@@ -219,44 +222,29 @@ public class Controller {
     }
 
 
-
-    public static void testMethodsInDCHandler() {
-
-        VehicleModel[] ddd = dbHandler.getVehicleInfo();
-
+    public void testViewAvailableCar() {
         VehicleModel[] temp = dbHandler.getVehicleInfo("Economy", "UBC", "Vancouver", "2019-01-19", "2019-01-30");
         VehicleModel[] temp1 = dbHandler.getVehicleInfo("", "UBC", "Vancouver", "2019-01-19", "2019-01-30");
         int numOfAvailableCar = dbHandler.getAvailableNumOfVehicle("", "", "", "", "");
+
+    }
+
+    public static void testMakeReservationRentReturn() {
+
         int confNo = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
                 "2200-01-01:00:00", "2200-02-01:00:00");
         ReservationModel reservationModel = dbHandler.getReservation(1);
         int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
                 "" + confNo, "Visa", "4444777788889999", "2200-10-10");
 
-        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("" + rid, "2200-02-01:00:00", "1244", "T");
 
-
-        VehicleModel[] vm = dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch("2019-01-01", "UBC", "Vancouver");
-        ReportGroupedByVehilceModel[] rgv = dbHandler.getNumOfVehicleDailyRentalGBVehicleOnBranch("2019-01-01", "UBC", "Vancouver");
-        int numRentB = dbHandler.getNumOfVehicleDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
-        int numnewB = dbHandler.getNumOfVehicleNewlyDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
-
-        VehicleModel[] vmreturn = dbHandler.generateReportDailyReturnsAllVehicleInfo("2019-01-07");
-        ReportGroupedByVehilceModel[] rgbvreturn = dbHandler.getNumOdVehicleDailyReturnGBVehicle("2019-01-07");
-        RevenueReportGroupedByVehilceModel[] rrgbvm = dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
-        ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
-
-        VehicleModel[] vmreturntes = dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch("2019-01-07", "UBC", "Vancouver");
-        ReportGroupedByVehilceModel[] rgbvreturnB = dbHandler.getNumOdVehicleDailyReturnGBVehicleOnBranch(
-                "2019-01-07", "UBC", "Vancouver");
-        RevenueReportGroupedByVehilceModel[] rgmvmreturnB = dbHandler.getRevenueDailyReturnGBVehicleOnBranch(
-                "2019-01-07", "UBC", "Vancouver");
-        ReportTotalNumAndRevenueOnBranchModel resulttt = dbHandler.getTotalRevAndNumRentalsOnBranch(
-                "2019-01-07", "UBC", "Vancouver");
+        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("", "2200-02-01:00:00", "1244", "T");
 
         RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }
+
+
 
     public static void testDailyReportRentWholeCompany() {
         VehicleModel[] rp0 = dbHandler.generateReportDailyRentalsAllVehicleInfo("2019-01-02");
@@ -265,6 +253,32 @@ public class Controller {
         int numVDayRent = Controller.dbHandler.getNumOfVehicleNewlyDailyRental("2019-01-01");
 
 
+    }
+
+
+    public static void testDailyReportOnSpecificBranch() {
+        VehicleModel[] vm = dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch("2019-01-01", "UBC", "Vancouver");
+        ReportGroupedByVehilceModel[] rgv = dbHandler.getNumOfVehicleDailyRentalGBVehicleOnBranch("2019-01-01", "UBC", "Vancouver");
+        int numRentB = dbHandler.getNumOfVehicleDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
+        int numnewB = dbHandler.getNumOfVehicleNewlyDailyRentalOnBranch("2019-01-01", "UBC", "Vancouver");
+
+    }
+
+    public static void testDailyReportReturnWholeCompany() {
+        VehicleModel[] vmreturn = dbHandler.generateReportDailyReturnsAllVehicleInfo("2019-01-07");
+        ReportGroupedByVehilceModel[] rgbvreturn = dbHandler.getNumOdVehicleDailyReturnGBVehicle("2019-01-07");
+        RevenueReportGroupedByVehilceModel[] rrgbvm = dbHandler.getRevenueDailyReturnGBVehicle("2019-01-07");
+        ReportTotalNumAndRevenueGBBranchModel[] total = dbHandler.getTotalNumAndRevenueGBBranch("2019-01-07");
+    }
+
+    public static void tesetDailyReportReturnOnSpecificBranch() {
+        VehicleModel[] vmreturntes = dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch("2019-01-07", "UBC", "Vancouver");
+        ReportGroupedByVehilceModel[] rgbvreturnB = dbHandler.getNumOdVehicleDailyReturnGBVehicleOnBranch(
+                "2019-01-07", "UBC", "Vancouver");
+        RevenueReportGroupedByVehilceModel[] rgmvmreturnB = dbHandler.getRevenueDailyReturnGBVehicleOnBranch(
+                "2019-01-07", "UBC", "Vancouver");
+        ReportTotalNumAndRevenueOnBranchModel resulttt = dbHandler.getTotalRevAndNumRentalsOnBranch(
+                "2019-01-07", "UBC", "Vancouver");
     }
 
 
@@ -310,7 +324,7 @@ public class Controller {
         ReturnModel[] returnModels = dbHandler.getReturnInfo();
         boolean insertReturn = dbHandler.insertReturn("11", "2019-02-02", "123", "T", "123");
         ReturnModel[] returnModels2 = dbHandler.getReturnInfo();
-        boolean updateReturn = dbHandler.updateReturn("11", "2019-01-01","123","","");
+        boolean updateReturn = dbHandler.updateReturn("11", "2019-01-01", "123", "", "");
         ReturnModel[] returnModels3 = dbHandler.getReturnInfo();
         boolean deleteRerturn = dbHandler.deleteReturn("11");
 
@@ -340,9 +354,9 @@ public class Controller {
 
 
         VehicleModel[] models3 = dbHandler.getVehicleInfo();
-        boolean updateSome = dbHandler.updateVehicle("2","123455","",
-                "","","Black","123","",
-                "","East","Richmond");
+        boolean updateSome = dbHandler.updateVehicle("2", "123455", "",
+                "", "", "Black", "123", "",
+                "", "East", "Richmond");
         VehicleModel[] models33 = dbHandler.getVehicleInfo();
 
 
@@ -358,8 +372,6 @@ public class Controller {
 //                "whatever","1234","Black","1234","available",
 //                "Standard","UBC","Richmond");
 //        VehicleModel[] modell55 = dbHandler.getVehicleInfo();
-
-
 
 
     }

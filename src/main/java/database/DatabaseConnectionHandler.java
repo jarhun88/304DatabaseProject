@@ -3,9 +3,7 @@ package database;
 //import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 
 import model.*;
-import oracle.jdbc.proxy.annotation.Pre;
 
-import javax.swing.plaf.nimbus.State;
 import java.sql.*;
 import java.util.ArrayList;
 
@@ -1062,13 +1060,25 @@ public class DatabaseConnectionHandler {
     //          returns false otherwise
     public boolean isOverBooked(String vid, String fromDateTime, String toDateTime) {
         int resultCount = 0;
+        resultCount += helperCheckOverBooking(get1tValidationStringTimeAIIA(fromDateTime,toDateTime), Integer.parseInt(vid));
+        resultCount += helperCheckOverBooking(get2ValidationStringTimeIAIA(fromDateTime,toDateTime), Integer.parseInt(vid));
+        resultCount += helperCheckOverBooking(get3ValidationStringTimeAIAI(fromDateTime,toDateTime), Integer.parseInt(vid));
+        resultCount += helperCheckOverBooking(get4ValidationStringTimeIAAI(fromDateTime,toDateTime), Integer.parseInt(vid));
+
+        return resultCount > 0;
+
+
+    }
+
+    // EFFECTS: do the query to check if there is over booking
+    public int helperCheckOverBooking(String condition, int vid) {
+        int resultCount = 0;
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
             String query = "select count(*) as total " +
                     "from reservation " +
-                    "where vid = " + Integer.parseInt(vid) + " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
-                    "and toDateTime >= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI')";
+                    "where vid = " + vid + condition;
             ResultSet rs = stmt.executeQuery(query);
 
             while (rs.next()) {
@@ -1084,12 +1094,52 @@ public class DatabaseConnectionHandler {
             } catch (SQLException e) {
                 e.printStackTrace();
             }
-            return resultCount > 0;
+            return resultCount;
 
         }
 
+    }
+
+
+    /*
+    test case
+makereservation shoud be null when (based on a certain vid)
+actualfd <= inputfd and inputtd <= actualtd
+inputfd <= actualfd and inputtd <= actualtd
+actualfd <= inputfd and actualtd <= inputtd
+inputfd <= actualfd and actualtd <= inputtd
+
+     */
+
+    // EFFECTS: returns string necessary for isOverBooked actualfd <= inputfd and inputtd <= actualtd
+    public String get1tValidationStringTimeAIIA(String fromDateTime, String toDateTime) {
+        return " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
+                "and to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') <= toDateTime";
 
     }
+
+    // EFFECTS: returns string necessary for isOverBooked inputfd <= actualfd and inputtd <= actualtd
+    public String get2ValidationStringTimeIAIA(String fromDateTime, String toDateTime) {
+        return " and to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') <= fromDateTime " +
+                "and to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') <= toDateTime";
+    }
+
+    // EFFECTS: returns string necessary for isOverBooked actualfd <= inputfd and actualtd <= inputtd
+    public String get3ValidationStringTimeAIAI(String fromDateTime, String toDateTime) {
+        return " and fromDateTime <= to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') " +
+                "and toDateTime <= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') ";
+    }
+
+    // EFFECTS: returns string necessary for isOverBooked inputfd <= actualfd and actualtd <= inputtd
+    public String get4ValidationStringTimeIAAI(String fromDateTime, String toDateTime) {
+        return " and to_timestamp('" + fromDateTime + "', 'YYYY-MM-DD:HH24:MI') <= fromDateTime " +
+                "and toDateTime <= to_timestamp('" + toDateTime + "', 'YYYY-MM-DD:HH24:MI') ";
+    }
+
+
+
+
+
 
     //tested
     // EFFECTS: returns the confirmation message model for renting based on the rid

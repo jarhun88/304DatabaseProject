@@ -34,7 +34,8 @@ public class Controller {
 //        testCustomerManipulation();
 //        testRentManipulationandReservationandReturn();
 //        testVehicleUpdate();
-        testViewAll();
+//        testViewAll();
+        testMakeReservationRentReturn();
 
 
         System.out.printf("here");
@@ -232,16 +233,22 @@ public class Controller {
 
     public static void testMakeReservationRentReturn() {
 
-        ReservationModel result = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
+        ReservationModel[] initial = dbHandler.getReservationInfo();
+        ReservationModel result = dbHandler.makeReservation("1112223333", "asdf", "asdf", "111111111", "10",
                 "2200-01-01:00:00", "2200-02-01:00:00");
-        ReservationModel reservationModel = dbHandler.getReservationDetail(1);
-        RentConfirmationMessageModel rentConf = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
-                "unknown", "Visa", "4444777788889999", "2200-10-10");
+        ReservationModel resultShouldBeNull = dbHandler.makeReservation("1234567890", "","","","1",
+                "2019-01-01:00:00", "2019-01-06:00:00");
+        ReservationModel resultShouldBeNull2 = dbHandler.makeReservation("1234567890", "","","","1",
+                "2019-01-01:00:00", "2019-01-30:00:00");
+        ReservationModel reservationModel = dbHandler.getReservationDetail(11);
+        ReservationModel[] all = dbHandler.getReservationInfo();
+//        RentConfirmationMessageModel rentConf = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
+//                "unknown", "Visa", "4444777788889999", "2200-10-10");
 
 
-        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("", "2200-02-01:00:00", "1244", "T");
-
-        RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
+//        ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("", "2200-02-01:00:00", "1244", "T");
+//
+//        RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }
 

@@ -167,7 +167,7 @@ public class DatabaseConnectionHandler {
     // EFFECTS: Makes a reservation and returns reservation details
     //          if a reservation cannot be made for some reason, it returns null;
     public ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
-                               String fromDateTime, String toDateTime) {
+                                            String fromDateTime, String toDateTime) {
         ReservationModel result = null;
         int confNo = -1;
         if (!isCustomerMember(phoneNumber)) {
@@ -249,35 +249,39 @@ public class DatabaseConnectionHandler {
     //tested
     // REQUIRES: all the inputs are in the valid format
     // EFFECTS: Rents a vehicle and returns confirmation number (rid)
-    public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
-                           String confNo, String cardName, String cardNo, String expDate) {
+    public RentConfirmationMessageModel rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+                                                    String confNo, String cardName, String cardNo, String expDate) {
+
 
         int rid = -1;
         boolean isSuccessful = insertRent(vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo);
+        if (isSuccessful == false) {
+            return null;
+        }
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
+            ps.setInt(1, Integer.parseInt(vid));
+            ps.executeUpdate();
+            connection.commit();
 
-        if (isSuccessful) {
-            PreparedStatement ps = null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            rollbackConnection();
+        } finally {
             try {
-                ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
-                ps.setInt(1, Integer.parseInt(vid));
-                ps.executeUpdate();
-                connection.commit();
-
+                ps.close();
             } catch (SQLException e) {
                 e.printStackTrace();
-                rollbackConnection();
-            } finally {
-                try {
-                    ps.close();
-                } catch (SQLException e) {
-                    e.printStackTrace();
-                }
-                rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
             }
-
-
+            rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
         }
-        return rid;
+
+        if (rid == -1) {
+            return null;
+        } else {
+            return getRentConfMessage(rid);
+        }
 
     }
 

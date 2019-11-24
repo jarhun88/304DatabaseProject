@@ -62,7 +62,7 @@ public class Controller {
     }
 
     // Rents a specific vehicle
-    public static int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
+    public static RentConfirmationMessageModel rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
                                   String confNo, String cardName, String cardNo, String expDate) {
 
         return dbHandler.rentVehicle(vid, cellphone, fromDateTime, toDateTime, odometer, confNo, cardName, cardNo, expDate);
@@ -235,7 +235,7 @@ public class Controller {
         ReservationModel result = dbHandler.makeReservation("1234567890", "asdf", "asdf", "111111111", "10",
                 "2200-01-01:00:00", "2200-02-01:00:00");
         ReservationModel reservationModel = dbHandler.getReservationDetail(1);
-        int rid = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
+        RentConfirmationMessageModel rentConf = dbHandler.rentVehicle("10", "1234567890", "2200-01-01:00:00", "2200-02-01:00:00", "1234",
                 "unknown", "Visa", "4444777788889999", "2200-10-10");
 
 

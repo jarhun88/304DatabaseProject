@@ -61,7 +61,9 @@ public class QueryController {
         String cardName ="";
         String cardNo="";
         String expDate ="";
-        int rid = Controller.rentVehicle(vtname, phoneNum, from, to, odometer, confNum, cardName, cardNo, expDate);
+
+        // todo like makeReservation method, please change the assignment so that it returns the rentConfMassage
+        int rid = -1; //Controller.rentVehicle(vtname, phoneNum, from, to, odometer, confNum, cardName, cardNo, expDate);
         return String.valueOf(rid);
     }
 

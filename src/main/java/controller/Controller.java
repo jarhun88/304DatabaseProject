@@ -33,7 +33,7 @@ public class Controller {
 //         testVehicleManipulation();
 //        testDailyReportRentWholeCompany();
 //        testCustomerManipulation();
-        testRentManipulationandReservation();
+//        testRentManipulationandReservationandReturn();
 
 
         System.out.printf("here");
@@ -149,7 +149,7 @@ public class Controller {
 
     }
 
-    public static void testRentManipulationandReservation() {
+    public static void testRentManipulationandReservationandReturn() {
         ReservationModel[] reservationModels = dbHandler.getReservationInfo();
         boolean insertReservation = dbHandler.insertReservation("10", "1234567890", "2019-01-01", "2019-01-01");
         ReservationModel[] reservationModels2 = dbHandler.getReservationInfo();
@@ -159,6 +159,14 @@ public class Controller {
         RentModel[] all2 = dbHandler.getRentInfo();
         boolean update = dbHandler.updateRent("11", "10", "1234567890",
                 "2019-02-01", "2019-02-02", "111", "Visa", "1234123412342222", "2222-12-12", "11");
+
+        ReturnModel[] returnModels = dbHandler.getReturnInfo();
+        boolean insertReturn = dbHandler.insertReturn("11", "2019-02-02", "123", "T", "123");
+        ReturnModel[] returnModels2 = dbHandler.getReturnInfo();
+        boolean updateReturn = dbHandler.updateReturn("11", "2019-01-01","123","","");
+        ReturnModel[] returnModels3 = dbHandler.getReturnInfo();
+        boolean deleteRerturn = dbHandler.deleteReturn("11");
+
         RentModel[] all3 = dbHandler.getRentInfo();
         boolean delete = dbHandler.deleteRent("11");
 
@@ -168,7 +176,6 @@ public class Controller {
         boolean deleteR = dbHandler.deleteReservation("11");
         ReservationModel[] after2 = dbHandler.getReservationInfo();
     }
-
 
 
 

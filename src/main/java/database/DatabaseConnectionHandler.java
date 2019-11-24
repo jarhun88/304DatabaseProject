@@ -1732,7 +1732,7 @@ where rid = 4
             subSuccess[0] = updateTableWithIntegerkey(ridNum, "returnDateTime", returnDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
         if (odometer.length() > 0 || odometer != null) {
-            subSuccess[1] = updateTableWithIntegerkey(ridNum, "cellphone", odometer, tableName, idName, TYPE_DOUBLE);
+            subSuccess[1] = updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
         if (fulltank.length() > 0 || fulltank != null) {
             subSuccess[2] = updateTableWithIntegerkey(ridNum, "fulltank", fulltank, tableName, idName, TYPE_STRING);

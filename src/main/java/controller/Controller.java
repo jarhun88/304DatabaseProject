@@ -211,8 +211,9 @@ public class Controller {
         return ret;
     }
 
-    public static String viewAll() {
-        return "";
+    public static String[][] viewAll() {
+
+        return dbHandler.viewAll();
     }
 
     public static void terminalTransactionsFinished() {

@@ -164,22 +164,23 @@ public class DatabaseConnectionHandler {
 
     //tested
     // REQUIRES: all the inputs to be non-empty
-    // EFFECTS: Makes a reservation and returns confirmation number
-    //          if a reservation cannot be made for some reason, it returns -1
-    public int makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
+    // EFFECTS: Makes a reservation and returns reservation details
+    //          if a reservation cannot be made for some reason, it returns null;
+    public ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                String fromDateTime, String toDateTime) {
+        ReservationModel result = null;
         int confNo = -1;
         if (!isCustomerMember(phoneNumber)) {
             boolean status = insertCustomer(phoneNumber, name, address, dlicense);
         }
 
         if (isOverBooked(vid, fromDateTime, toDateTime)) {
-            return confNo;
+            return null;
         }
 
         boolean insertReservation = insertReservation(vid, phoneNumber, fromDateTime, toDateTime);
         if (insertReservation == false) {
-            return confNo;
+            return null;
         }
 
         // get confirmation number
@@ -204,14 +205,19 @@ public class DatabaseConnectionHandler {
                     e.printStackTrace();
                 }
             }
-            return confNo;
+        }
+
+        if (confNo != -1) {
+            return getReservationDetail(confNo);
+        } else {
+            return null;
         }
 
     }
 
     // tested
     // EFFECTS: returns the Reservation detail based on the confirmation number
-    public ReservationModel getReservation(int confNo) {
+    public ReservationModel getReservationDetail(int confNo) {
         ReservationModel model = null;
         Statement stmt = null;
         try {
@@ -1391,8 +1397,9 @@ where rid = 4
     public RentModel[] getRentInfo() {
         ArrayList<RentModel> result = new ArrayList<RentModel>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM rent");
 
             while (rs.next()) {
@@ -1405,12 +1412,19 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new RentModel[result.size()]);
+
+
         }
 
-        return result.toArray(new RentModel[result.size()]);
 
     }
 
@@ -1418,8 +1432,9 @@ where rid = 4
     public boolean deleteRent(String rid) {
         boolean isSuccessful = false;
         int ridnum = Integer.parseInt(rid);
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM rent WHERE rid = ?");
+            ps = connection.prepareStatement("DELETE FROM rent WHERE rid = ?");
             ps.setInt(1, ridnum);
 
             int rowCount = ps.executeUpdate();
@@ -1431,11 +1446,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
+
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
             return isSuccessful;
         }
 
@@ -1446,8 +1466,9 @@ where rid = 4
                               String fromDateTime, String toDateTime, String odometer, String cardName, String cardNo, String expDate, String confNo) {
         boolean isSuccessful = false;
 
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO rent (vid, " +
+            ps = connection.prepareStatement("INSERT INTO rent (vid, " +
                     "cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo" +
                     ") VALUES (?,?,to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),?,?,?,to_date(?, 'YYYY-MM-DD'),?)");
             ps.setInt(1, Integer.parseInt(vid));
@@ -1466,11 +1487,16 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1569,8 +1595,9 @@ where rid = 4
     public ReservationModel[] getReservationInfo() {
         ArrayList<ReservationModel> result = new ArrayList<ReservationModel>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM reservation");
 
             while (rs.next()) {
@@ -1581,12 +1608,20 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result.toArray(new ReservationModel[result.size()]);
+
+
         }
 
-        return result.toArray(new ReservationModel[result.size()]);
 
     }
 
@@ -1594,8 +1629,9 @@ where rid = 4
     public boolean deleteReservation(String confNo) {
         boolean isSuccessful = false;
         int confNoInt = Integer.parseInt(confNo);
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
+            ps = connection.prepareStatement("DELETE FROM reservation WHERE confNo = ?");
             ps.setInt(1, confNoInt);
 
             int rowCount = ps.executeUpdate();
@@ -1607,11 +1643,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1620,8 +1661,9 @@ where rid = 4
     // EFFECTS: insert a record into reservation
     public boolean insertReservation(String vid, String cellphone, String fromDateTime, String toDateTime) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO reservation (vid, " +
+            ps = connection.prepareStatement("INSERT INTO reservation (vid, " +
                     "cellphone, fromDateTime, toDateTime" +
                     ") VALUES (?,?,to_timestamp(?, 'YYYY-MM-DD:HH24:MI'),to_timestamp(?, 'YYYY-MM-DD:HH24:MI'))");
             ps.setInt(1, Integer.parseInt(vid));
@@ -1635,11 +1677,16 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1706,8 +1753,9 @@ where rid = 4
     public ReturnModel[] getReturnInfo() {
         ArrayList<ReturnModel> result = new ArrayList<ReturnModel>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM return");
 
             while (rs.next()) {
@@ -1718,12 +1766,18 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
-        }
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReturnModel[result.size()]);
 
-        return result.toArray(new ReturnModel[result.size()]);
+
+        }
 
 
     }
@@ -1733,8 +1787,9 @@ where rid = 4
 
         boolean isSuccessful = false;
         int ridNum = Integer.parseInt(rid);
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM return WHERE rid = ?");
+            ps = connection.prepareStatement("DELETE FROM return WHERE rid = ?");
             ps.setInt(1, ridNum);
 
             int rowCount = ps.executeUpdate();
@@ -1746,11 +1801,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
     }
@@ -1758,8 +1818,9 @@ where rid = 4
     // EFFECTS: insert into return
     public boolean insertReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO return VALUES " +
+            ps = connection.prepareStatement("INSERT INTO return VALUES " +
                     "(?, to_timestamp(?, 'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
             ps.setInt(1, Integer.parseInt(rid));
             ps.setString(2, returnDateTime);
@@ -1773,11 +1834,16 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1841,9 +1907,9 @@ where rid = 4
     // EFFECTS: returns all customers
     public CustomerModel[] getCustomerInfo() {
         ArrayList<CustomerModel> result = new ArrayList<CustomerModel>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM customer");
 
             while (rs.next()) {
@@ -1854,20 +1920,28 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result.toArray(new CustomerModel[result.size()]);
+
         }
 
-        return result.toArray(new CustomerModel[result.size()]);
 
     }
 
     // EFFECTS: delete a record from customer
     public boolean deleteCustomer(String cellphone) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM customer WHERE cellphone = ?");
+            ps = connection.prepareStatement("DELETE FROM customer WHERE cellphone = ?");
             ps.setString(1, cellphone);
 
             int rowCount = ps.executeUpdate();
@@ -1879,11 +1953,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1892,8 +1971,9 @@ where rid = 4
     // EFFECTS: insert customer based on cellphone
     public boolean insertCustomer(String cellphone, String name, String address, String dlicense) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO customer VALUES " +
+            ps = connection.prepareStatement("INSERT INTO customer VALUES " +
                     "(?, ?, ?, ?)");
             ps.setString(1, cellphone);
             ps.setString(2, name);
@@ -1906,11 +1986,16 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -1975,8 +2060,9 @@ where rid = 4
     public VehicleTypeModel[] getVehicleTypeInfo() {
         ArrayList<VehicleTypeModel> result = new ArrayList<VehicleTypeModel>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             ResultSet rs = stmt.executeQuery("SELECT * FROM vehicleType");
 
             while (rs.next()) {
@@ -1988,20 +2074,27 @@ where rid = 4
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new VehicleTypeModel[result.size()]);
+
         }
 
-        return result.toArray(new VehicleTypeModel[result.size()]);
 
     }
 
     // EFFECTS: delete a record from vehicle type
     public boolean deleteVehicleType(String vtname) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("DELETE FROM vehicleType WHERE vtname = ?");
+            ps = connection.prepareStatement("DELETE FROM vehicleType WHERE vtname = ?");
             ps.setString(1, vtname);
 
             int rowCount = ps.executeUpdate();
@@ -2013,11 +2106,16 @@ where rid = 4
 
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -2027,8 +2125,9 @@ where rid = 4
     public boolean insertVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
                                      String dirate, String hirate, String krate) {
         boolean isSuccessful = false;
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("INSERT INTO vehicleType VALUES " +
+            ps = connection.prepareStatement("INSERT INTO vehicleType VALUES " +
                     "(?,?,?,?,?,?,?,?,?)");
             ps.setString(1, vtname);
             ps.setString(2, features);
@@ -2046,11 +2145,16 @@ where rid = 4
             }
             connection.commit();
 
-            ps.close();
         } catch (SQLException e) {
             System.out.println(EXCEPTION_TAG + " " + e.getMessage());
             rollbackConnection();
         } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
             return isSuccessful;
         }
 
@@ -2117,6 +2221,105 @@ where rid = 4
 
     }
 
+
+    // EFFECTS: returns all information on branch table
+    public BranchModel[] getBranchInfo() {
+        ArrayList<BranchModel> result = new ArrayList<>();
+
+        Statement stmt = null;
+        try {
+            stmt = connection.createStatement();
+            ResultSet rs = stmt.executeQuery("SELECT * FROM branch");
+
+            while (rs.next()) {
+                BranchModel model = new BranchModel(rs.getString("location"), rs.getString("city"));
+                result.add(model);
+            }
+
+            rs.close();
+        } catch (SQLException e) {
+            System.out.println(DatabaseConnectionHandler.EXCEPTION_TAG + " " + e.getMessage());
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new BranchModel[result.size()]);
+
+        }
+
+    }
+
+    // EFFECTS: delete the branch with specified location and city
+    public boolean deleteBranch(String location, String city) {
+        boolean isSuccessful = false;
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("DELETE FROM branch WHERE location = ? and city = ?");
+            ps.setString(1, location);
+            ps.setString(2, city);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount == 0) {
+                System.out.println(WARNING_TAG + " Branch at " + location + " in " + city + " does not exist!");
+            } else {
+                isSuccessful = true;
+            }
+
+            connection.commit();
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return isSuccessful;
+        }
+
+    }
+
+    // EFFECTS: insert branch
+    public boolean insertBrnach(String location, String city) {
+        boolean isSuccessful = false;
+        PreparedStatement ps = null;
+        try {
+            ps = connection.prepareStatement("INSERT INTO branch VALUES " +
+                    "(?,?)");
+            ps.setString(1, location);
+            ps.setString(2, city);
+
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful = true;
+            }
+            connection.commit();
+
+        } catch (SQLException e) {
+            System.out.println(EXCEPTION_TAG + " " + e.getMessage());
+            rollbackConnection();
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return isSuccessful;
+        }
+
+    }
+
+    // the update method for branch table is not added, since it only contains pairs of primary keys
+    // and the primary key has to be immutable.
+
+
+    // EFFECTS: returns all the info in the table except branch
     public String[][] viewAll() {
         String[][] allInfo = new String[6][];
         VehicleModel[] vehicles = getVehicleInfo();
@@ -2133,32 +2336,32 @@ where rid = 4
         ArrayList<String> rentalStrings = new ArrayList<>();
         ArrayList<String> returnStrings = new ArrayList<>();
 
-        for (VehicleModel vehicle: vehicles) {
+        for (VehicleModel vehicle : vehicles) {
             vehicleStrings.add(vehicle.toString());
         }
         String[] vehicleFinal = vehicleStrings.toArray(new String[vehicleStrings.size()]);
 
-        for (VehicleTypeModel vt: vehicleTypes) {
+        for (VehicleTypeModel vt : vehicleTypes) {
             vehicleTypeStrings.add(vt.toString());
         }
         String[] vehicleTypeFinal = vehicleTypeStrings.toArray(new String[vehicleTypeStrings.size()]);
 
-        for (CustomerModel customer: customers) {
+        for (CustomerModel customer : customers) {
             customerStrings.add(customer.toString());
         }
         String[] customerFinal = customerStrings.toArray(new String[customerStrings.size()]);
 
-        for (ReservationModel reservation: reservations) {
+        for (ReservationModel reservation : reservations) {
             reservationStrings.add(reservation.toString());
         }
         String[] reservationFinal = reservationStrings.toArray(new String[reservationStrings.size()]);
 
-        for (RentModel rental: rentals) {
+        for (RentModel rental : rentals) {
             rentalStrings.add(rental.toString());
         }
         String[] rentalFinal = rentalStrings.toArray(new String[rentalStrings.size()]);
 
-        for (ReturnModel returnModel: retuns) {
+        for (ReturnModel returnModel : retuns) {
             returnStrings.add(returnModel.toString());
         }
         String[] returnFinal = returnStrings.toArray(new String[rentalStrings.size()]);
@@ -2174,7 +2377,6 @@ where rid = 4
 
 
     }
-
 
 
     //

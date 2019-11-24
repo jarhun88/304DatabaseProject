@@ -39,7 +39,8 @@ public class QueryController {
                               @RequestPart(name="to", required=false) String to) {
 
 
-        int confNum = Controller.makeReservation(phoneNum, name, address, license, vtname, from, to);
+        //todo change this assignment so that we can store ReservationModel
+        int confNum = -1; //Controller.makeReservation(phoneNum, name, address, license, vtname, from, to);
         return String.valueOf(confNum);
     }
 

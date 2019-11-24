@@ -245,25 +245,29 @@ public class DatabaseConnectionHandler {
     public int rentVehicle(String vid, String cellphone, String fromDateTime, String toDateTime, String odometer,
                            String confNo, String cardName, String cardNo, String expDate) {
 
-        boolean isSuccessful = false;
         int rid = -1;
-        isSuccessful = insertRent(vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo);
+        boolean isSuccessful = insertRent(vid, cellphone, fromDateTime, toDateTime, odometer, cardName, cardNo, expDate, confNo);
 
         if (isSuccessful) {
+            PreparedStatement ps = null;
             try {
-                PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
+                ps = connection.prepareStatement("update vehicle set status = 'rented' where vid = ?");
                 ps.setInt(1, Integer.parseInt(vid));
                 ps.executeUpdate();
                 connection.commit();
 
-                ps.close();
-
             } catch (SQLException e) {
                 e.printStackTrace();
                 rollbackConnection();
+            } finally {
+                try {
+                    ps.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
             }
 
-            rid = getRidForRent(Integer.parseInt(confNo), Integer.parseInt(vid));
 
         }
         return rid;
@@ -274,8 +278,9 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the rid (confirmation of the rent) based on the confNo of reservation and vid
     public int getRidForRent(int confNo, int vid) {
         int rid = -1;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT rid from Rent where confNo = " + confNo + " AND vid = " + vid;
             ResultSet rs = stmt.executeQuery(query);
 
@@ -283,12 +288,19 @@ public class DatabaseConnectionHandler {
             rid = rs.getInt("rid");
 
             rs.close();
-            stmt.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return rid;
         }
 
-        return rid;
 
     }
 
@@ -298,8 +310,6 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
         ReturnConfirmationMessageModel confMessage = null;
-
-        // double afterOdometer = Double.parseDouble(odometer);
 
         // calculate the amount
         VehicleTypeModel rateInfo = getRateInfo(Integer.parseInt(rid));
@@ -332,53 +342,34 @@ public class DatabaseConnectionHandler {
 
         String calculationDetail = regularCalDetail + insCalDetail;
 
-        boolean success = false;
+        boolean isSuccessful = insertReturn(rid, returnDateTime, odometer, fulltank, "" + value);
+
+        boolean isSuccessful2 = false;
+
+        PreparedStatement ps = null;
         try {
-            PreparedStatement ps = connection.prepareStatement("insert into return values " +
-                    "(?, to_timestamp(?,'YYYY-MM-DD:HH24:MI'), ?, ?, ?)");
-            ps.setInt(1, Integer.parseInt(rid));
-            ps.setString(2, returnDateTime);
-            ps.setDouble(3, Double.parseDouble(odometer));
-            ps.setString(4, fulltank);
-            ps.setDouble(5, value);
-
-            ps.executeUpdate();
-            connection.commit();
-
-            /*
-            insert into return values (13, to_date('2200-03-19','YYYY-MM-DD'), 999999999, 'T', 1000)
-/
-update vehicle set status = 'available' where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = 13)
-/
-             */
-            ps.close();
-            success = true;
-
-        } catch (SQLException e) {
-            e.printStackTrace();
-            rollbackConnection();
-        }
-
-        boolean success2 = false;
-
-        try {
-            PreparedStatement ps = connection.prepareStatement("update vehicle set status = 'available'" +
+            ps = connection.prepareStatement("update vehicle set status = 'available'" +
                     " where vid = ANY (select v.vid from vehicle v, rent r where v.vid = r.vid and r.rid = ?)");
             ps.setInt(1, Integer.parseInt(rid));
 
-            ps.executeUpdate();
+            int rowCount = ps.executeUpdate();
+            if (rowCount > 0) {
+                isSuccessful2 = true;
+            }
             connection.commit();
-
-
-            ps.close();
-            success2 = true;
 
         } catch (SQLException e) {
             e.printStackTrace();
             rollbackConnection();
+        } finally {
+            try {
+                ps.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
 
-        if (success && success2) {
+        if (isSuccessful && isSuccessful2) {
             confMessage = new ReturnConfirmationMessageModel(Integer.parseInt(rid), returnDateTime, value, calculationDetail);
             return confMessage;
 
@@ -392,8 +383,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
 
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, " +
                     "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Rent r, Vehicle v " +
@@ -415,12 +407,20 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result.toArray(new VehicleModel[result.size()]);
+
         }
 
-        return result.toArray(new VehicleModel[result.size()]);
+
 
         /*
          VID					   NOT NULL NUMBER(38)
@@ -442,8 +442,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total, v.vtname " +
                     "FROM Vehicle v, Rent r " +
                     "WHERE fromDateTime <= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -460,12 +461,17 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
         }
 
-        return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
     }
 
@@ -474,8 +480,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of vehicles rented out on that day grouped by branch
     public ReportGroupByBranchModel[] getNumOfVehicleDailyRentalGBBranch(String date) {
         ArrayList<ReportGroupByBranchModel> result = new ArrayList<>();
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total, v.location, v.city " +
                     "FROM Vehicle v, Rent r " +
                     "WHERE fromDateTime <=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -491,12 +498,18 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+
+            return result.toArray(new ReportGroupByBranchModel[result.size()]);
         }
 
-        return result.toArray(new ReportGroupByBranchModel[result.size()]);
 
     }
 
@@ -505,8 +518,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of new rental on that day in the entire company
     public int getNumOfVehicleNewlyDailyRental(String date) {
         int total = -1;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total " +
                     "FROM Rent " +
                     "WHERE fromDateTime >=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -521,8 +535,15 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return total;
         }
-        return total;
+
 
     }
 
@@ -531,9 +552,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the vehicles rented our on that day on the specified branch
     public VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         ArrayList<VehicleModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year," +
                     "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Rent r, Vehicle v " +
@@ -555,20 +576,27 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new VehicleModel[result.size()]);
         }
 
-        return result.toArray(new VehicleModel[result.size()]);
+
     }
 
     // tested
     // EFFECTS: returns the number of vehicles rented out on that day grouped by vehicle on the branch
     public ReportGroupedByVehilceModel[] getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total, v.vtname " +
                     "FROM Vehicle v, Rent r " +
                     "WHERE fromDateTime <= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI')  " +
@@ -586,12 +614,18 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
+
         }
 
-        return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
     }
 
@@ -599,8 +633,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of vehicle rented out on that day in the branch
     public int getNumOfVehicleDailyRentalOnBranch(String date, String location, String city) {
         int total = -1;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total " +
                     "FROM Vehicle v, Rent r " +
                     "WHERE fromDateTime <=  to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -613,11 +648,17 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             total = rs.getInt(1);
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return total;
+
         }
-        return total;
 
     }
 
@@ -627,8 +668,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of new rental on that day in the branch
     public int getNumOfVehicleNewlyDailyRentalOnBranch(String date, String location, String city) {
         int total = -1;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT COUNT(*) as total " +
                     "FROM Rent r, Vehicle v " +
                     "WHERE fromDateTime >= to_timestamp('" + date + ":00:00','YYYY-MM-DD:HH24:MI') " +
@@ -641,11 +683,17 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             total = rs.getInt(1);
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return total;
         }
-        return total;
+
 
     }
 
@@ -654,8 +702,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns all the vehicle returned on that day in the entire ccompany
     public VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
         ArrayList<VehicleModel> result = new ArrayList<>();
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT v.vid, v.vlicense, v.make, v.model, v.year, " +
                     "v.color, v.odometer, v.status, v.vtname, v.location, v.city " +
                     "FROM Return r, Rent rt, Vehicle v " +
@@ -678,12 +727,18 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new VehicleModel[result.size()]);
+
         }
 
-        return result.toArray(new VehicleModel[result.size()]);
 
     }
 
@@ -691,9 +746,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the number of vehicles returned on the day grouped by vtname in the entire company
     public ReportGroupedByVehilceModel[] getNumOdVehicleDailyReturnGBVehicle(String date) {
         ArrayList<ReportGroupedByVehilceModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT count(*) as total, v.vtname " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
@@ -709,12 +764,17 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
-        }
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
 
-        return result.toArray(new ReportGroupedByVehilceModel[result.size()]);
+        }
 
 
     }
@@ -723,9 +783,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the total revenue per vtname in the entire company
     public RevenueReportGroupedByVehilceModel[] getRevenueDailyReturnGBVehicle(String date) {
         ArrayList<RevenueReportGroupedByVehilceModel> result = new ArrayList<>();
-
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "SELECT sum(r.value) as total, v.vtname " +
                     "FROM Return r, Rent rt, Vehicle v " +
                     "WHERE r.rid = rt.rid AND rt.vid = v.vid AND r.returnDateTime >= to_timestamp('" + date + ":00:00', 'YYYY-MM-DD:HH24:MI') " +
@@ -741,12 +801,18 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
             }
 
             rs.close();
-            stmt.close();
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result.toArray(new RevenueReportGroupedByVehilceModel[result.size()]);
+
         }
 
-        return result.toArray(new RevenueReportGroupedByVehilceModel[result.size()]);
 
     }
 
@@ -1057,8 +1123,9 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
     // EFFECTS: returns the model for time interval and odometer to calculate cost
     public TimeIntervalOdometerModel getTimeIntervalAndOdometer(int rid) {
         TimeIntervalOdometerModel result = null;
+        Statement stmt = null;
         try {
-            Statement stmt = connection.createStatement();
+            stmt = connection.createStatement();
             String query = "select fromDateTime, toDateTime, odometer " +
                     "from rent " +
                     "where rid = " + rid;
@@ -1069,12 +1136,19 @@ update vehicle set status = 'available' where vid = ANY (select v.vid from vehic
                     rs.getDouble("odometer"));
 
             rs.close();
-            stmt.close();
+
         } catch (SQLException e) {
             e.printStackTrace();
+        } finally {
+            try {
+                stmt.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
+            return result;
         }
 
-        return result;
+
 
         /*
         select fromDateTime, toDateTime, odometer

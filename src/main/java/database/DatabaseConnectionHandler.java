@@ -1525,7 +1525,7 @@ where rid = 4
         }
 
         for (int i = 0; i < subSuccess.length; i++) {
-            if (subSuccess[i] = false) {
+            if (subSuccess[i] == false) {
                 return false;
 
             }
@@ -1796,7 +1796,7 @@ where rid = 4
             subSuccess[3] = updateTableWithIntegerkey(ridNum, "value", value, tableName, idName, TYPE_DOUBLE);
         }
         for (int i = 0; i < subSuccess.length; i++) {
-            if (subSuccess[i] = false) {
+            if (subSuccess[i] == false) {
                 return false;
             }
         }
@@ -1898,6 +1898,15 @@ where rid = 4
 
     // EFFECTS: update customer
     public boolean updateCustomer(String cellphone, String name, String address, String dlicense) {
+
+        if (cellphone.equals("")) {
+            return false;
+        }
+
+        name = nullStringConverter(name);
+        address = nullStringConverter(address);
+        dlicense = nullStringConverter(dlicense);
+
         String key = cellphone;
         String idName = "cellphone";
         String tableName = "customer";
@@ -1907,17 +1916,17 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (name.length() > 0 || name != null) {
-            updateTableWithStringkey(key, "name", name, tableName, idName, TYPE_STRING);
+        if (name.length() > 0) {
+            subSuccess[0] = updateTableWithStringkey(key, "name", name, tableName, idName, TYPE_STRING);
         }
-        if (address.length() > 0 || address != null) {
-            updateTableWithStringkey(key, "address", address, tableName, idName, TYPE_STRING);
+        if (address.length() > 0) {
+            subSuccess[1] = updateTableWithStringkey(key, "address", address, tableName, idName, TYPE_STRING);
         }
-        if (dlicense.length() > 0 || dlicense != null) {
-            updateTableWithStringkey(key, "dlicense", dlicense, tableName, idName, TYPE_STRING);
+        if (dlicense.length() > 0) {
+            subSuccess[2] = updateTableWithStringkey(key, "dlicense", dlicense, tableName, idName, TYPE_STRING);
         }
         for (int i = 0; i < subSuccess.length; i++) {
-            if (subSuccess[i] = false) {
+            if (subSuccess[i] == false) {
                 return false;
             }
         }
@@ -2029,6 +2038,21 @@ where rid = 4
     // EFFECTS: update vehicle types
     public boolean updateVehicleType(String vtname, String features, String wrate, String drate, String hrate, String wirate,
                                      String dirate, String hirate, String krate) {
+
+        if (vtname.equals("")) {
+            return  false;
+        }
+
+        features = nullStringConverter(features);
+        wrate = nullStringConverter(wrate);
+        drate = nullStringConverter(drate);
+        hrate = nullStringConverter(hrate);
+        wirate = nullStringConverter(wirate);
+        dirate = nullStringConverter(dirate);
+        hirate = nullStringConverter(hirate);
+        krate = nullStringConverter(krate);
+
+
         String key = vtname;
         String idName = "vtname";
         String tableName = "vehicleType";
@@ -2038,33 +2062,33 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (features.length() > 0 || features != null) {
+        if (features.length() > 0) {
             updateTableWithStringkey(key, "features", features, tableName, idName, TYPE_STRING);
         }
-        if (wrate.length() > 0 || wrate != null) {
+        if (wrate.length() > 0) {
             updateTableWithStringkey(key, "wrate", wrate, tableName, idName, TYPE_FLOAT);
         }
-        if (drate.length() > 0 || drate != null) {
+        if (drate.length() > 0) {
             updateTableWithStringkey(key, "drate", drate, tableName, idName, TYPE_FLOAT);
         }
-        if (hrate.length() > 0 || hrate != null) {
+        if (hrate.length() > 0) {
             updateTableWithStringkey(key, "hrate", hrate, tableName, idName, TYPE_FLOAT);
         }
-        if (wirate.length() > 0 || wirate != null) {
+        if (wirate.length() > 0) {
             updateTableWithStringkey(key, "wirate", wirate, tableName, idName, TYPE_FLOAT);
         }
-        if (dirate.length() > 0 || dirate != null) {
+        if (dirate.length() > 0) {
             updateTableWithStringkey(key, "dirate", dirate, tableName, idName, TYPE_FLOAT);
         }
-        if (hirate.length() > 0 || hirate != null) {
+        if (hirate.length() > 0) {
             updateTableWithStringkey(key, "hirate", hirate, tableName, idName, TYPE_FLOAT);
         }
-        if (krate.length() > 0 || krate != null) {
+        if (krate.length() > 0) {
             updateTableWithStringkey(key, "krate", krate, tableName, idName, TYPE_FLOAT);
         }
 
         for (int i = 0; i < subSuccess.length; i++) {
-            if (subSuccess[i] = false) {
+            if (subSuccess[i] == false) {
                 return false;
             }
         }

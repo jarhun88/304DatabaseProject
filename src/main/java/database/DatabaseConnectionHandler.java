@@ -1286,6 +1286,23 @@ where rid = 4
     public boolean updateVehicle(String vid, String vlicense, String make, String model, String year, String color,
                                  String odometer, String status, String vtname, String location, String city) {
 
+        vid = nullStringConverter(vid);
+        if (vid.equals("") || !isInt(vid)) {
+            return false;
+        }
+
+        vlicense = nullStringConverter(vlicense);
+        make = nullStringConverter(make);
+        model = nullStringConverter(model);
+        year = nullStringConverter(year);
+        color = nullStringConverter(color);
+        odometer = nullStringConverter(odometer);
+        status = nullStringConverter(status);
+        vtname = nullStringConverter(vtname);
+        location = nullStringConverter(location);
+        city = nullStringConverter(city);
+
+
         int vidNum = Integer.parseInt(vid);
         String idName = "vid";
         String tableName = "vehicle";
@@ -1294,31 +1311,32 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (vlicense.length() > 0 || vlicense != null) {
+
+        if (vlicense.length() > 0) {
             subSuccess[0] = updateTableWithIntegerkey(vidNum, "vlicense", vlicense, tableName, idName, TYPE_STRING);
         }
-        if (make.length() > 0 || make != null) {
+        if (make.length() > 0) {
             subSuccess[1] = updateTableWithIntegerkey(vidNum, "make", make, tableName, idName, TYPE_STRING);
         }
-        if (model.length() > 0 || model != null) {
+        if (model.length() > 0) {
             subSuccess[2] = updateTableWithIntegerkey(vidNum, "model", model, tableName, idName, TYPE_STRING);
         }
-        if (year.length() > 0 || year != null) {
+        if (year.length() > 0) {
             subSuccess[3] = updateTableWithIntegerkey(vidNum, "year", year, tableName, idName, TYPE_STRING);
         }
-        if (color.length() > 0 || color != null) {
+        if (color.length() > 0) {
             subSuccess[4] = updateTableWithIntegerkey(vidNum, "color", color, tableName, idName, TYPE_STRING);
         }
-        if (odometer.length() > 0 || odometer != null) {
+        if (odometer.length() > 0) {
             subSuccess[5] = updateTableWithIntegerkey(vidNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
-        if (status != null || status.length() > 0) {
+        if (status.length() > 0) {
             subSuccess[6] = updateTableWithIntegerkey(vidNum, "status", status, tableName, idName, TYPE_STRING);
         }
-        if (vtname != null | vtname.length() > 0) {
+        if (vtname.length() > 0) {
             subSuccess[7] = updateTableWithIntegerkey(vidNum, "vtname", vtname, tableName, idName, TYPE_STRING);
         }
-        if (location.length() > 0 || location != null || city.length() > 0 || city != null) {
+        if (location.length() > 0 || city.length() > 0) {
             subSuccess[8] = updateBranchInfoInTableWithIntegerkey(vidNum, location, city, tableName, idName);
         }
 
@@ -1455,6 +1473,21 @@ where rid = 4
                               String fromDateTime, String toDateTime, String odometer, String cardName,
                               String cardNo, String expDate, String confNo) {
 
+        rid = nullStringConverter(rid);
+        if (rid.equals("") || !isInt(rid)) {
+            return false;
+        }
+
+        vid =  nullStringConverter(vid);
+        cellphone = nullStringConverter(cellphone);
+        fromDateTime = nullStringConverter(fromDateTime);
+        toDateTime = nullStringConverter(toDateTime);
+        odometer = nullStringConverter(odometer);
+        cardName = nullStringConverter(cardName);
+        cardNo = nullStringConverter(cardNo);
+        expDate = nullStringConverter(expDate);
+        confNo = nullStringConverter(cardNo);
+
         int ridNum = Integer.parseInt(rid);
         String idName = "rid";
         String tableName = "rent";
@@ -1463,31 +1496,31 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (vid.length() > 0 || vid != null) {
+        if (vid.length() > 0) {
             subSuccess[0] = updateTableWithIntegerkey(ridNum, "vid", vid, tableName, idName, TYPE_INT);
         }
-        if (cellphone.length() > 0 || cellphone != null) {
+        if (cellphone.length() > 0) {
             subSuccess[1] = updateTableWithIntegerkey(ridNum, "cellphone", cellphone, tableName, idName, TYPE_STRING);
         }
-        if (fromDateTime.length() > 0 || fromDateTime != null) {
+        if (fromDateTime.length() > 0) {
             subSuccess[2] = updateTableWithIntegerkey(ridNum, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
-        if (toDateTime.length() > 0 || toDateTime != null) {
+        if (toDateTime.length() > 0) {
             subSuccess[3] = updateTableWithIntegerkey(ridNum, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
-        if (odometer.length() > 0 || odometer != null) {
+        if (odometer.length() > 0) {
             subSuccess[4] = updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
-        if (cardName.length() > 0 || cardName != null) {
+        if (cardName.length() > 0) {
             subSuccess[5] = updateTableWithIntegerkey(ridNum, "cardName", cardName, tableName, idName, TYPE_STRING);
         }
-        if (cardNo.length() > 0 || cardNo != null) {
+        if (cardNo.length() > 0) {
             subSuccess[6] = updateTableWithIntegerkey(ridNum, "cardNo", cardNo, tableName, idName, TYPE_STRING);
         }
-        if (expDate.length() > 0 || expDate != null) {
+        if (expDate.length() > 0) {
             subSuccess[7] = updateTableWithIntegerkey(ridNum, "expDate", expDate, tableName, idName, TYPE_DATE);
         }
-        if (expDate.length() > 0 || expDate != null) {
+        if (expDate.length() > 0) {
             subSuccess[8] = updateTableWithIntegerkey(ridNum, "confNo", confNo, tableName, idName, TYPE_INT);
         }
 
@@ -1594,6 +1627,18 @@ where rid = 4
 
     // EFFECTS: update a record in reservation
     public boolean updateReservation(String confNo, String vid, String cellphone, String fromDateTime, String toDateTime) {
+
+        confNo = nullStringConverter(confNo);
+        if (confNo.equals("") || !isInt(confNo)) {
+            return false;
+        }
+
+        vid = nullStringConverter(vid);
+        cellphone = nullStringConverter(cellphone);
+        fromDateTime = nullStringConverter(fromDateTime);
+        toDateTime = nullStringConverter(toDateTime);
+
+
         int confNoInt = Integer.parseInt(confNo);
         String idName = "confNo";
         String tableName = "reservation";
@@ -1603,16 +1648,16 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (vid.length() > 0 || vid != null) {
+        if (vid.length() > 0) {
             subSuccess[0] = updateTableWithIntegerkey(confNoInt, "vid", vid, tableName, idName, TYPE_INT);
         }
-        if (cellphone.length() > 0 || cellphone != null) {
+        if (cellphone.length() > 0) {
             subSuccess[1] = updateTableWithIntegerkey(confNoInt, "cellphone", cellphone, tableName, idName, TYPE_STRING);
         }
-        if (fromDateTime.length() > 0 || fromDateTime != null) {
+        if (fromDateTime.length() > 0) {
             subSuccess[2] = updateTableWithIntegerkey(confNoInt, "fromDateTime", fromDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
-        if (toDateTime.length() > 0 || toDateTime != null) {
+        if (toDateTime.length() > 0) {
             subSuccess[3] = updateTableWithIntegerkey(confNoInt, "toDateTime", toDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
         for (int i = 0; i < subSuccess.length; i++) {
@@ -1719,6 +1764,16 @@ where rid = 4
 
     //EFFECTS: update return
     public boolean updateReturn(String rid, String returnDateTime, String odometer, String fulltank, String value) {
+        rid = nullStringConverter(rid);
+        if (rid.equals("")|| !isInt(rid)) {
+            return false;
+        }
+
+        returnDateTime = nullStringConverter(returnDateTime);
+        odometer = nullStringConverter(odometer);
+        fulltank = nullStringConverter(fulltank);
+        value = nullStringConverter(value);
+
         int ridNum = Integer.parseInt(rid);
         String idName = "rid";
         String tableName = "return";
@@ -1728,16 +1783,16 @@ where rid = 4
             subSuccess[i] = true;
         }
 
-        if (returnDateTime.length() > 0 || returnDateTime != null) {
+        if (returnDateTime.length() > 0) {
             subSuccess[0] = updateTableWithIntegerkey(ridNum, "returnDateTime", returnDateTime, tableName, idName, TYPE_TIMESTAMP);
         }
-        if (odometer.length() > 0 || odometer != null) {
+        if (odometer.length() > 0) {
             subSuccess[1] = updateTableWithIntegerkey(ridNum, "odometer", odometer, tableName, idName, TYPE_DOUBLE);
         }
-        if (fulltank.length() > 0 || fulltank != null) {
+        if (fulltank.length() > 0) {
             subSuccess[2] = updateTableWithIntegerkey(ridNum, "fulltank", fulltank, tableName, idName, TYPE_STRING);
         }
-        if (value.length() > 0 || value != null) {
+        if (value.length() > 0) {
             subSuccess[3] = updateTableWithIntegerkey(ridNum, "value", value, tableName, idName, TYPE_DOUBLE);
         }
         for (int i = 0; i < subSuccess.length; i++) {
@@ -2045,7 +2100,7 @@ where rid = 4
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+                System.out.println(WARNING_TAG + "Update is not reflected on  " + tableName + " " + id);
             } else {
                 isSuccessful = true;
             }
@@ -2078,7 +2133,7 @@ where rid = 4
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+                System.out.println(WARNING_TAG + " " + tableName + " " + id + " is not updated");
             } else {
                 isSuccessful = true;
             }
@@ -2125,7 +2180,7 @@ where rid = 4
 
             int rowCount = ps.executeUpdate();
             if (rowCount == 0) {
-                System.out.println(WARNING_TAG + " " + tableName + " " + id + " does not exist!");
+                System.out.println(WARNING_TAG + " " + tableName + " " + id + " is not updated!");
             } else {
                 isSuccessful = true;
             }
@@ -2157,6 +2212,26 @@ where rid = 4
 
     public String queryGeneratorDateForUpdate(String tableName, String columnName, String idName) {
         return "UPDATE " + tableName + " SET " + columnName + " = to_date(?, 'YYYY-MM-DD') WHERE " + idName + " = ?";
+    }
+
+    public String nullStringConverter(String input) {
+        if (input == null || input.equals("")) {
+            return "";
+        } else {
+            return input;
+        }
+    }
+
+    public boolean isInt(String input) {
+        int foo = 0;
+        try {
+            foo = Integer.parseInt(input);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+
+        return true;
+
     }
 
 //    // EFFECTS: helper to update Vehicle

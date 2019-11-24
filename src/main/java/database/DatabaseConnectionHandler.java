@@ -2117,6 +2117,65 @@ where rid = 4
 
     }
 
+    public String[][] viewAll() {
+        String[][] allInfo = new String[6][];
+        VehicleModel[] vehicles = getVehicleInfo();
+        VehicleTypeModel[] vehicleTypes = getVehicleTypeInfo();
+        CustomerModel[] customers = getCustomerInfo();
+        ReservationModel[] reservations = getReservationInfo();
+        RentModel[] rentals = getRentInfo();
+        ReturnModel[] retuns = getReturnInfo();
+
+        ArrayList<String> vehicleStrings = new ArrayList<>();
+        ArrayList<String> vehicleTypeStrings = new ArrayList<>();
+        ArrayList<String> customerStrings = new ArrayList<>();
+        ArrayList<String> reservationStrings = new ArrayList<>();
+        ArrayList<String> rentalStrings = new ArrayList<>();
+        ArrayList<String> returnStrings = new ArrayList<>();
+
+        for (VehicleModel vehicle: vehicles) {
+            vehicleStrings.add(vehicle.toString());
+        }
+        String[] vehicleFinal = vehicleStrings.toArray(new String[vehicleStrings.size()]);
+
+        for (VehicleTypeModel vt: vehicleTypes) {
+            vehicleTypeStrings.add(vt.toString());
+        }
+        String[] vehicleTypeFinal = vehicleTypeStrings.toArray(new String[vehicleTypeStrings.size()]);
+
+        for (CustomerModel customer: customers) {
+            customerStrings.add(customer.toString());
+        }
+        String[] customerFinal = customerStrings.toArray(new String[customerStrings.size()]);
+
+        for (ReservationModel reservation: reservations) {
+            reservationStrings.add(reservation.toString());
+        }
+        String[] reservationFinal = reservationStrings.toArray(new String[reservationStrings.size()]);
+
+        for (RentModel rental: rentals) {
+            rentalStrings.add(rental.toString());
+        }
+        String[] rentalFinal = rentalStrings.toArray(new String[rentalStrings.size()]);
+
+        for (ReturnModel returnModel: retuns) {
+            returnStrings.add(returnModel.toString());
+        }
+        String[] returnFinal = returnStrings.toArray(new String[rentalStrings.size()]);
+
+        allInfo[0] = vehicleFinal;
+        allInfo[1] = vehicleTypeFinal;
+        allInfo[2] = customerFinal;
+        allInfo[3] = reservationFinal;
+        allInfo[4] = rentalFinal;
+        allInfo[5] = returnFinal;
+
+        return allInfo;
+
+
+    }
+
+
 
     //
 

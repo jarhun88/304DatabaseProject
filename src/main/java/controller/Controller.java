@@ -34,7 +34,8 @@ public class Controller {
 //        testDailyReportRentWholeCompany();
 //        testCustomerManipulation();
 //        testRentManipulationandReservationandReturn();
-        testVehicleUpdate();
+//        testVehicleUpdate();
+        testViewAll();
 
 
         System.out.printf("here");
@@ -336,6 +337,10 @@ public class Controller {
 
         boolean deleteR = dbHandler.deleteReservation("11");
         ReservationModel[] after2 = dbHandler.getReservationInfo();
+    }
+
+    public static void testViewAll() {
+        String[][] result = dbHandler.viewAll();
     }
 
     public static void testVehicleUpdate() {

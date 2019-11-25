@@ -64,10 +64,8 @@ public class TableManipulationController {
                                       @RequestPart(name="status", required=false) String status,
                                       @RequestPart(name="vtname", required=false) String vtname,
                                       @RequestPart(name="location", required=false) String location,
-                                      @RequestPart(name="city", required=false) String city) { //TODO add make
-
-        String make ="";
-
+                                      @RequestPart(name="city", required=false) String city,
+                                      @RequestPart(name="make", required=false) String make) {
 
         return Controller.vehicleManipulation(mType, vid, vlicense, make, model, year, color, odometer, status, vtname, location, city);
     }

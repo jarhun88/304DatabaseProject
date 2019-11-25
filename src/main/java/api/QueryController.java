@@ -66,7 +66,7 @@ public class QueryController {
                        @RequestPart(name="expDate", required=false) String expDate) {
 
         if(phoneNum==null || name ==null || address==null || license == null || vtname ==null || from==null || to==null
-        || confNum==null || cardName == null || expDate == null){
+         || cardName == null || expDate == null){
             return "Please fill in all fields";
         }
 

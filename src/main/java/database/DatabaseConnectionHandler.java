@@ -2667,7 +2667,7 @@ where rid = 4
         CustomerModel[] customers = getCustomerInfo();
         ReservationModel[] reservations = getReservationInfo();
         RentModel[] rentals = getRentInfo();
-        ReturnModel[] retuns = getReturnInfo();
+        ReturnModel[] returns = getReturnInfo();
         BranchModel[] branches = getBranchInfo();
 
         ArrayList<String> vehicleStrings = new ArrayList<>();
@@ -2703,7 +2703,7 @@ where rid = 4
         }
         String[] rentalFinal = rentalStrings.toArray(new String[rentalStrings.size()]);
 
-        for (ReturnModel returnModel : retuns) {
+        for (ReturnModel returnModel : returns) {
             returnStrings.add(returnModel.toString());
         }
         String[] returnFinal = returnStrings.toArray(new String[rentalStrings.size()]);

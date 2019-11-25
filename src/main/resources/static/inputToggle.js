@@ -721,28 +721,24 @@ function mCustomerBody(mType) {
         let phone = $("#pk-input").val();
         let name = $("#c-name").val();
         let address = $("#c-address").val();
-        let city = $("#c-city").val();
         let driverLicense = $("#c-driver-license").val();
         body.set("phone", phone);
         body.set("name", name);
         body.set("address", address);
-        body.set("city", city);
         body.set("driverLicense", driverLicense);
     }
     if (mType === "remove") {
-        let vtname = $("#pk-input").val();
-        body.set("vtname", vtname);
+        let phone = $("#pk-input").val();
+        body.set("phone", phone);
     }
     else if (mType === "update") {
         let phone = $("#pk-input").val();
         let name = $("#c-name").val();
         let address = $("#c-address").val();
-        let city = $("#c-city").val();
         let driverLicense = $("#c-driver-license").val();
         body.set("phone", phone);
         body.set("name", name);
         body.set("address", address);
-        body.set("city", city);
         body.set("driverLicense", driverLicense);
     }
     // only other option is view
@@ -754,7 +750,7 @@ function mBranchBody(mType) {
     body.set("mType", mType);
     if (mType === "add" || mType === "remove") {
         let city = $("#b-city").val();
-        let location = $("b-location").val();
+        let location = $("#b-location").val();
         body.set("city", city);
         body.set("location", location);
     }

@@ -206,9 +206,9 @@ $( document ).ready(function()
                 })  
                 break;
             case 6: 
-            body = customerHelper(tableFn);
-            console.log("customer body: " + body);
-            axios.post(localURL + "/customer", body, config).then((response) => {
+            body = branchHelper(tableFn);
+            console.log("branch body: " + body);
+            axios.post(localURL + "/branch", body, config).then((response) => {
                 responseText = JSON.stringify(response.data);
                 console.log(responseText)
                 document.getElementById("table-output").innerHTML = responseText;
@@ -343,6 +343,25 @@ function customerHelper(tableFn) {
             break; 
         case 3:
             body = mCustomerBody("view");
+            break;
+    }
+    return body;
+}
+
+function branchHelper(tableFn) {
+    let body;
+    switch(tableFn) {
+        case 0:
+            body = mBranchBody("add");
+            break;
+        case 1:
+            body = mBranchBody("remove");
+            break;   
+        case 2:
+            body = mBranchBody("update");
+            break; 
+        case 3:
+            body = mBranchBody("view");
             break;
     }
     return body;
@@ -725,6 +744,19 @@ function mCustomerBody(mType) {
         body.set("address", address);
         body.set("city", city);
         body.set("driverLicense", driverLicense);
+    }
+    // only other option is view
+    return body;
+}
+
+function mBranchBody(mType) {
+    let body = new FormData();
+    body.set("mType", mType);
+    if (mType === "add" || mType === "remove") {
+        let city = $("#b-city").val();
+        let location = $("b-location").val();
+        body.set("city", city);
+        body.set("location", location);
     }
     // only other option is view
     return body;

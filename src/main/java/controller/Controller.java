@@ -4,7 +4,10 @@ import database.DatabaseConnectionHandler;
 import model.*;
 import org.json.JSONArray;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.Arrays;
+import java.util.Date;
 
 //This is the main controller class that will orchestrate everything.
 public class Controller {
@@ -30,6 +33,7 @@ public class Controller {
             System.out.printf("Could not connect to oracle!\n");
             System.exit(0);
         }
+
 
         // test the methods in DatabaseConnectionHandler class
 //        testMethodsInDCHandler();

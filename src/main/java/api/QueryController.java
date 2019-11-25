@@ -66,7 +66,7 @@ public class QueryController {
                        @RequestPart(name="cardNo", required=false) String cardNo,
                        @RequestPart(name="expDate", required=false) String expDate) {
 
-        if(phoneNum==null || name ==null || address==null || city ==null || license == null || vtname ==null || from==null || to==null
+        if(phoneNum==null || name ==null || address==null  || license == null || vtname ==null || from==null || to==null
         || confNum==null || cardName == null || expDate == null){
             return "Please fill in all fields";
         }
@@ -136,7 +136,7 @@ public class QueryController {
                                      @RequestPart(name = "address", required = false) String address,
                                      @RequestPart(name = "city", required = false) String city) {
 
-        String[][] temp = Controller.generateReportDailyRentalsAllVehicleInfo(date);
+        String[][] temp = Controller.generateReportDailyRentalsAllVehicleInfoOnBranch(date, address, city);
         JSONArray parentJsonArray = new JSONArray();
         // loop through your elements
         for (int i = 0; i < temp.length; i++) {

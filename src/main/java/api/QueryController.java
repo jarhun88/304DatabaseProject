@@ -1,6 +1,7 @@
 package api;
 
 import controller.Controller;
+import model.*;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import org.json.JSONString;
@@ -24,6 +25,7 @@ public class QueryController {
                                @RequestPart(name="to", required=false) String to) {
 
         JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewVehicles(carType, location, city, from, to)));
+
         return mJSONArray.toString();
     }
 
@@ -39,8 +41,12 @@ public class QueryController {
 
 
 
-        JSONObject obj = new JSONObject(Controller.makeReservation(phoneNum, name, address, license, vtname, from, to));
-        return obj.toString();
+        //JSONObject obj = new JSONObject(Controller.makeReservation(phoneNum, name, address, license, vtname, from, to));
+        ReservationModel rm = Controller.makeReservation(phoneNum, name, address, license, vtname, from, to);
+        if(rm==null){
+            return "Could not make reservation!";
+        }
+        return rm.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -58,9 +64,13 @@ public class QueryController {
                        @RequestPart(name="cardNo", required=false) String cardNo,
                        @RequestPart(name="expDate", required=false) String expDate) {
 
-        JSONObject obj = new JSONObject(Controller.rentVehicle(name, address, license, vtname, phoneNum, from,
-                to, confNum, cardName, cardNo, expDate));
-        return obj.toString();
+
+        RentConfirmationMessageModel rm = Controller.rentVehicle(name, address, license, vtname, phoneNum, from,
+                to, confNum, cardName, cardNo, expDate);
+        if(rm == null){
+            return "Could not make rental!";
+        }
+        return rm.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -70,8 +80,12 @@ public class QueryController {
                           @RequestPart(name="odometer", required=false) String odometer,
                           @RequestPart(name="fulltank", required=false) String fulltank) {
 
-        JSONArray retMessage = new JSONArray(Controller.returnVehicle(rid, retDate, odometer, fulltank));
-        return retMessage.toString();
+        ReturnConfirmationMessageModel rcmm = Controller.returnVehicle(rid, retDate, odometer, fulltank);
+        //JSONArray retMessage = new JSONArray(Controller.returnVehicle(rid, retDate, odometer, fulltank));
+        if(rcmm==null){
+            return "Could not process return!";
+        }
+        return rcmm.toString();
 
     }
 

@@ -24,8 +24,8 @@ public class Controller {
         dbHandler = new DatabaseConnectionHandler();
 
         // Log in with given credentials
-        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
-        //  boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
+        //boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
+          boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
         if (!didConnect) {
             System.out.printf("Could not connect to oracle!\n");
             System.exit(0);
@@ -81,7 +81,7 @@ public class Controller {
     // Returns a vehicle
     public static ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
         return dbHandler.returnVehicle(rid, returnDateTime, odometer, fulltank);
-        // String rid, String returnDateTime, String odometer, String fulltank, String confNo
+
     }
 
 
@@ -93,21 +93,16 @@ public class Controller {
 
     public static String[][] generateReportDailyReturnsAllVehicleInfo(String date) {
         return dbHandler.generateReturnReportInACompany(date);
-
     }
 
 
     public static String[][] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         return dbHandler.generateRentalReportInBranch(date, location, city);
-        // use this -> generateRentalReportInBranch(String date, String location, String city)
-
     }
 
 
     public static String[][] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
         return dbHandler.generateReturnReportInBranch(date, location, city);
-        // use this -> generateReturnReportInBranch(String date, String location, String city)
-
     }
 
 

@@ -2908,20 +2908,6 @@ where rid = 4
     }
 
     public boolean isRightTimeStampFormat(String input) {
-        String target = input;
-        if(target.equals("")){
-            return false;
-        }
-        return false;
-    }
-
-    public boolean isDateTimeInOrder(String fromDateTime, String toDateTime) {
-        return false;
-
-    }
-
-    public boolean hasRightStringLength(String input, int maxLength) {
-
         return false;
     }
 

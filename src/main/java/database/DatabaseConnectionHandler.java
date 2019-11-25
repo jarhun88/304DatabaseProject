@@ -2919,7 +2919,7 @@ where rid = 4
     public boolean isTimeInOrder(String fromDateTime, String toDateTime) {
         String format = "yyyy-MM-dd HH:mm";
         if (fromDateTime == null || toDateTime == null) {
-            return false;
+            return true;
         }
 
         String from = convertTimeToRightFormat(fromDateTime);
@@ -2944,26 +2944,32 @@ where rid = 4
 
     public boolean isNotPast(String dateTime) {
         String format = "yyyy-MM-dd HH:mm";
+        if (dateTime == null) {
+            return  true;
+        }
 
         String from = convertTimeToRightFormat(dateTime);
+        String oldDate  = "2018-12-31 23:59";
 
         DateFormat formatter = new SimpleDateFormat(format);
         Date dateOne = null;
+        Date oldOne = null;
         try {
             dateOne = formatter.parse(from);
+            oldOne = formatter.parse(oldDate);
         } catch (ParseException e) {
             e.printStackTrace();
         }
 
         long actualTime = dateOne.getTime();
-        long today = System.currentTimeMillis();
+        long oldDateVal = oldOne.getTime();
 
-        return (actualTime - today) >= 0;
+        return (actualTime - oldDateVal) >= 0;
 
     }
 
     public boolean isNotPastDate(String date) {
-        String format = "yyyy-MM-dd HH:mm";
+        String format = "yyyy-MM-dd";
         DateFormat formatter = new SimpleDateFormat(format);
 
         Date dateNew = null;

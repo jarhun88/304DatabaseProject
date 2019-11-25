@@ -90,6 +90,9 @@ public class Controller {
 
     // Returns a vehicle
     public static ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
+        if (!dbHandler.isNotPast(returnDateTime)) {
+            return null;
+        }
         return dbHandler.returnVehicle(rid, returnDateTime, odometer, fulltank);
 
     }

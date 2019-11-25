@@ -18,6 +18,7 @@ public class TableManipulationController {
                                           @RequestPart(name="from", required=false) String from,
                                           @RequestPart(name="to", required=false) String to) {
 
+
         return Controller.reservationManipulation(mType, confNo, vtname, phoneNum, from, to);
     }
 
@@ -33,7 +34,7 @@ public class TableManipulationController {
                                      @RequestPart(name="cardName", required=false) String cardName,
                                      @RequestPart(name="cardNo", required=false) String cardNo,
                                      @RequestPart(name="expDate", required=false) String expDate,
-                                     @RequestPart(name="confNo", required=false) String confNo) { // todo add rid
+                                     @RequestPart(name="confNo", required=false) String confNo) {
 
 
         return Controller.rentalManipulation(mType, rid, vtname, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo);

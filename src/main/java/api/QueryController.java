@@ -2,6 +2,7 @@ package api;
 
 import controller.Controller;
 import org.json.JSONArray;
+import org.json.JSONObject;
 import org.json.JSONString;
 import org.springframework.boot.jta.atomikos.AtomikosDataSourceBean;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -24,7 +25,7 @@ public class QueryController {
 
         JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewVehicles(carType, location, city, from, to)));
         return mJSONArray.toString();
-        // return "view-vehicles";
+
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -39,9 +40,9 @@ public class QueryController {
                               @RequestPart(name="to", required=false) String to) {
 
 
-        //todo change this assignment so that we can store ReservationModel
-        int confNum = -1; //Controller.makeReservation(phoneNum, name, address, license, vtname, from, to);
-        return String.valueOf(confNum);
+
+        JSONObject obj = new JSONObject(Controller.makeReservation(phoneNum, name, address, license, vtname, from, to));
+        return obj.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -61,9 +62,10 @@ public class QueryController {
         String cardNo="";
         String expDate ="";
 
-        // todo (like makeReservation method,) please change the assignment so that it returns the rentConfMassage
-        int rid = -1;
-        return String.valueOf(rid);
+
+        JSONObject obj = new JSONObject(Controller.rentVehicle(name, address, license, vtname, phoneNum, from,
+                to, confNum, cardName, cardNo, expDate));
+        return obj.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -86,15 +88,32 @@ public class QueryController {
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/daily-returns", consumes = "multipart/form-data", produces = "application/json")
     public String dailyReturns(@RequestPart(name="date", required=false) String date) {
+
+        String [][] temp = Controller.generateReportDailyReturnsAllVehicleInfo(date);
+        JSONArray parentJsonArray = new JSONArray();
+        // loop through your elements
+        for (int i=0; i< temp.length; i++){
+            JSONArray childJsonArray = new JSONArray(temp[i]);
+            parentJsonArray.put(childJsonArray);
+        }
         JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyReturnsAllVehicleInfo(date)));
-        return mJSONArray.toString();
+        return parentJsonArray.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/daily-rentals", consumes = "multipart/form-data", produces = "application/json")
     public String dailyRentals(@RequestPart(name="date", required=false) String date) {
-        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyRentalsAllVehicleInfo(date)));
-        return mJSONArray.toString();
+
+        String [][] temp = Controller.generateReportDailyRentalsAllVehicleInfo(date);
+        JSONArray parentJsonArray = new JSONArray();
+        // loop through your elements
+        for (int i=0; i< temp.length; i++){
+            JSONArray childJsonArray = new JSONArray(temp[i]);
+            parentJsonArray.put(childJsonArray);
+        }
+        
+        //JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyRentalsAllVehicleInfo(date)));
+        return parentJsonArray.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -102,8 +121,17 @@ public class QueryController {
     public String dailyReturnsBranch(@RequestPart(name="date", required=false) String date,
                                      @RequestPart(name="address", required=false) String address,
                                      @RequestPart(name="city", required=false) String city) {
-        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyReturnsAllVehicleInfoOnBranch(date, address, city)));
-        return mJSONArray.toString();
+
+        String [][] temp = Controller.generateReportDailyRentalsAllVehicleInfo(date);
+        JSONArray parentJsonArray = new JSONArray();
+        // loop through your elements
+        for (int i=0; i< temp.length; i++){
+            JSONArray childJsonArray = new JSONArray(temp[i]);
+            parentJsonArray.put(childJsonArray);
+        }
+
+       // JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyReturnsAllVehicleInfoOnBranch(date, address, city)));
+        return parentJsonArray.toString();
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -111,8 +139,16 @@ public class QueryController {
     public String dailyRentalsBranch(@RequestPart(name="date", required=false) String date,
                                      @RequestPart(name="address", required=false) String address,
                                      @RequestPart(name="city", required=false) String city) {
-        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyRentalsAllVehicleInfoOnBranch(date, address, city)));
-        return mJSONArray.toString();
+
+        String [][] temp = Controller.generateReportDailyRentalsAllVehicleInfoOnBranch(date, address, city);
+        JSONArray parentJsonArray = new JSONArray();
+        // loop through your elements
+        for (int i=0; i< temp.length; i++){
+            JSONArray childJsonArray = new JSONArray(temp[i]);
+            parentJsonArray.put(childJsonArray);
+        }
+        //JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.generateReportDailyRentalsAllVehicleInfoOnBranch(date, address, city)));
+        return parentJsonArray.toString();
     }
 }
 

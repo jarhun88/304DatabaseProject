@@ -24,8 +24,12 @@ public class Controller {
         dbHandler = new DatabaseConnectionHandler();
 
         // Log in with given credentials
-//        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
-        boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
+        boolean didConnect = dbHandler.login("ora_jamesens", "a98263510");
+        //  boolean didConnect = dbHandler.login("ora_aktoriam", "a42603381");
+        if (!didConnect) {
+            System.out.printf("Could not connect to oracle!\n");
+            System.exit(0);
+        }
 
         // test the methods in DatabaseConnectionHandler class
 //        testMethodsInDCHandler();
@@ -36,7 +40,8 @@ public class Controller {
 //        testVehicleUpdate();
 //        testViewAll();
 //        testMakeReservationRentReturn();
-//        testReports();
+        //testReports();
+
 
         System.out.printf("here");
     }
@@ -58,16 +63,16 @@ public class Controller {
 
     // Makes a reservation and returns the confirmation number
     public static ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
-                                      String fromDate, String toDate) {
+                                                   String fromDate, String toDate) {
         return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
     }
 
     // Rents a specific vehicle
     public static RentConfirmationMessageModel rentVehicle(String name, String address, String dlicense, String vid, String cellphone, String fromDateTime, String toDateTime,
-                                  String confNo, String cardName, String cardNo, String expDate) {
+                                                           String confNo, String cardName, String cardNo, String expDate) {
         confNo = dbHandler.nullStringConverter(confNo);
         if (confNo.equals("")) {
-            return dbHandler.rentVehicleWithoutReservation(name,address,dlicense, vid, cellphone,fromDateTime,toDateTime,cardName,cardNo,expDate);
+            return dbHandler.rentVehicleWithoutReservation(name, address, dlicense, vid, cellphone, fromDateTime, toDateTime, cardName, cardNo, expDate);
         } else {
             return dbHandler.rentVehicle(cellphone, fromDateTime, toDateTime, confNo, cardName, cardNo, expDate);
         }
@@ -79,33 +84,31 @@ public class Controller {
         // String rid, String returnDateTime, String odometer, String fulltank, String confNo
     }
 
-    // TODO: please change the return type to the right one
-    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
-        return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
+
+    public static String[][] generateReportDailyRentalsAllVehicleInfo(String date) {
+        return dbHandler.generateRentalReportInAConmapany(date);
         // user this -> generateRentalReportInAConmapany(String date)
     }
-//todo change this please with the right return type
-    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
-        return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
-        // use this -> generateReturnReportInACompany(String date)
+
+
+    public static String[][] generateReportDailyReturnsAllVehicleInfo(String date) {
+        return dbHandler.generateReturnReportInACompany(date);
+
     }
 
-    //todo please change in the same way as above
-    public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
-        return dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
+
+    public static String[][] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
+        return dbHandler.generateRentalReportInBranch(date, location, city);
         // use this -> generateRentalReportInBranch(String date, String location, String city)
 
     }
 
-    //todo please change in the same way as above
-    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
-        return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+
+    public static String[][] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
+        return dbHandler.generateReturnReportInBranch(date, location, city);
         // use this -> generateReturnReportInBranch(String date, String location, String city)
 
-
     }
-
-
 
 
     public static String reservationManipulation(String mType, String confNo, String vid, String phoneNum, String from, String to) {
@@ -252,13 +255,13 @@ public class Controller {
         ReservationModel[] initial = dbHandler.getReservationInfo();
         ReservationModel result = dbHandler.makeReservation("1112223333", "asdf", "asdf", "111111111", "10",
                 "2200-01-01:00:00", "2200-02-01:00:00");
-        ReservationModel resultShouldBeNull = dbHandler.makeReservation("1234567890", "","","","1",
+        ReservationModel resultShouldBeNull = dbHandler.makeReservation("1234567890", "", "", "", "1",
                 "2019-01-01:00:00", "2019-01-06:00:00");
-        ReservationModel resultShouldBeNull2 = dbHandler.makeReservation("1234567890", "","","","1",
+        ReservationModel resultShouldBeNull2 = dbHandler.makeReservation("1234567890", "", "", "", "1",
                 "2019-01-01:00:00", "2019-01-30:00:00");
-        ReservationModel resultShouldBeNull3 = dbHandler.makeReservation("1234567890", "","","","1",
+        ReservationModel resultShouldBeNull3 = dbHandler.makeReservation("1234567890", "", "", "", "1",
                 "2019-01-4:00:00", "2019-01-30:00:00");
-        ReservationModel resultExistingcustomer = dbHandler.makeReservation("1234567890", "","","","1",
+        ReservationModel resultExistingcustomer = dbHandler.makeReservation("1234567890", "", "", "", "1",
                 "2030-01-01:00:00", "2030-05-30:00:00");
         ReservationModel reservationModel = dbHandler.getReservationDetail(11);
         ReservationModel[] all = dbHandler.getReservationInfo();
@@ -271,14 +274,12 @@ public class Controller {
         RentModel[] rentModel = dbHandler.getRentInfo();
 
 
-
         ReturnConfirmationMessageModel rcm = dbHandler.returnVehicle("11", "2200-02-01:00:00", "1244.00", "T");
         ReturnModel[] returnModelsafter = dbHandler.getReturnInfo();
 //
 //        RentConfirmationMessageModel rmdd = Controller.dbHandler.getRentConfMessage(2);
 
     }
-
 
 
     public static void testDailyReportRentWholeCompany() {

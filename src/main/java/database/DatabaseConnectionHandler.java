@@ -2661,13 +2661,14 @@ where rid = 4
 
     // EFFECTS: returns all the info in the table except branch
     public String[][] viewAll() {
-        String[][] allInfo = new String[6][];
+        String[][] allInfo = new String[7][];
         VehicleModel[] vehicles = getVehicleInfo();
         VehicleTypeModel[] vehicleTypes = getVehicleTypeInfo();
         CustomerModel[] customers = getCustomerInfo();
         ReservationModel[] reservations = getReservationInfo();
         RentModel[] rentals = getRentInfo();
         ReturnModel[] retuns = getReturnInfo();
+        BranchModel[] branches = getBranchInfo();
 
         ArrayList<String> vehicleStrings = new ArrayList<>();
         ArrayList<String> vehicleTypeStrings = new ArrayList<>();
@@ -2675,6 +2676,7 @@ where rid = 4
         ArrayList<String> reservationStrings = new ArrayList<>();
         ArrayList<String> rentalStrings = new ArrayList<>();
         ArrayList<String> returnStrings = new ArrayList<>();
+        ArrayList<String> branchStrings = new ArrayList<>();
 
         for (VehicleModel vehicle : vehicles) {
             vehicleStrings.add(vehicle.toString());
@@ -2706,12 +2708,18 @@ where rid = 4
         }
         String[] returnFinal = returnStrings.toArray(new String[rentalStrings.size()]);
 
+        for (BranchModel branchModel : branches) {
+            branchStrings.add(branchModel.toString());
+        }
+        String[] branchFinal = branchStrings.toArray(new String[branchStrings.size()]);
+
         allInfo[0] = vehicleFinal;
         allInfo[1] = vehicleTypeFinal;
         allInfo[2] = customerFinal;
         allInfo[3] = reservationFinal;
         allInfo[4] = rentalFinal;
         allInfo[5] = returnFinal;
+        allInfo[6] = branchFinal;
 
         return allInfo;
 

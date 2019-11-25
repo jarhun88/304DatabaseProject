@@ -750,7 +750,7 @@ function mBranchBody(mType) {
     body.set("mType", mType);
     if (mType === "add" || mType === "remove") {
         let city = $("#b-city").val();
-        let location = $("b-location").val();
+        let location = $("#b-location").val();
         body.set("city", city);
         body.set("location", location);
     }

@@ -24,7 +24,11 @@ public class QueryController {
                                @RequestPart(name = "from", required = false) String from,
                                @RequestPart(name = "to", required = false) String to) {
 
-        JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewVehicles(carType, location, city, from, to)));
+        VehicleModel [] vm = Controller.viewVehicles(carType, location, city, from, to);
+        if(vm==null){
+            return "could not find vehicles";
+        }
+        JSONArray mJSONArray = new JSONArray(Arrays.asList(vm));
 
         return mJSONArray.toString();
     }

@@ -4,11 +4,6 @@ $( document ).ready(function()
 
     $("#make-reservation-fields").hide(); 
     $("#make-return-fields").hide();
-    $("#vehicle").hide(); 
-    $("#vehicle-type").hide(); 
-    $("#customers").hide(); 
-    $("#primary-key").hide();
-    $("#update-header").hide();
 
     $("#rs").hide();
     $("#r-rent").hide();
@@ -16,6 +11,10 @@ $( document ).ready(function()
     $("#vehicle").hide(); 
     $("#vehicle-type").hide(); 
     $("#customers").hide(); 
+    $("#branch-box").hide();
+    $("#primary-key").hide();
+    $("#update-header").hide();
+
 
     // hides "reservation" inputs when you click "view-vehicles"
     $("#view-vehicles").click(function() {
@@ -69,13 +68,13 @@ $( document ).ready(function()
         $("#primary-key").show();
         enableInputs()
         disableInputAll()
+        $("#branch-input").prop("disabled", true);
         tableFn = 2;
         switchCustomerInputs(tableFn, tableType);
     })
 
     $("#view").click(function() {
-        $("#primary-key").hide();
-        $("#all").prop("disabled", false);
+        enableInputs()
         tableFn = 3;
         switchCustomerInputs(tableFn, tableType);
     })
@@ -112,8 +111,13 @@ $( document ).ready(function()
         switchCustomerInputs(tableFn, tableType);
     })
 
-    $("#all").click(function() {
+    $("#branch-input").click(function() {
         tableType = 6;
+        switchCustomerInputs(tableFn, tableType);
+    })
+
+    $("#all").click(function() {
+        tableType = 7;
         switchCustomerInputs(tableFn, tableType);
     })
 
@@ -201,7 +205,20 @@ $( document ).ready(function()
                     document.getElementById("table-output").innerHTML = responseText;
                 })  
                 break;
-            case 6:
+            case 6: 
+            body = customerHelper(tableFn);
+            console.log("customer body: " + body);
+            axios.post(localURL + "/customer", body, config).then((response) => {
+                responseText = JSON.stringify(response.data);
+                console.log(responseText)
+                document.getElementById("table-output").innerHTML = responseText;
+            }).catch((error) => {
+                responseText = JSON.stringify(error.data);
+                console.log(responseText)
+                document.getElementById("table-output").innerHTML = responseText;
+            })  
+            break;
+            case 7:
                 console.log("viewall");
                 axios.get(localURL + "/view-all").then((response) => {
                     responseText = JSON.stringify(response.data);
@@ -331,12 +348,6 @@ function customerHelper(tableFn) {
     return body;
 }
 
-function disableInputs() {
-    $("#vehicles").prop("disabled", true);
-    $("#vehicleTypes").prop("disabled", true);
-    $("#customer").prop("disabled", true);
-}
-
 function enableInputs() {
     $("#all").prop("checked", false);
     $("#rentals").prop("disabled", false);
@@ -345,6 +356,8 @@ function enableInputs() {
     $("#vehicleTypes").prop("disabled", false);
     $("#customer").prop("disabled", false);
     $("#returns").prop("disabled", false);
+    $("#branch-input").prop("disabled", false);
+
 }
 
 function disableInputAll() {
@@ -357,8 +370,8 @@ function switchCustomerInputs(tableFn, tableType) {
         case 0:
             console.log(tableType);
             $("#update-header").hide();
+            $("#primary-key").show();
             if (tableType == 3) {
-                console.log("hii")
                 $("#pk-title").text("vid");
                 $("#rs").hide();
                 $("#r-rent").hide();
@@ -366,6 +379,7 @@ function switchCustomerInputs(tableFn, tableType) {
                 $("#vehicle").show(); 
                 $("#vehicle-type").hide(); 
                 $("#customers").hide(); 
+                $("#branch-box").hide(); 
             }
             else if (tableType == 4) {
                 $("#pk-title").text("vtname");
@@ -375,6 +389,7 @@ function switchCustomerInputs(tableFn, tableType) {
                 $("#vehicle").hide(); 
                 $("#vehicle-type").show(); 
                 $("#customers").hide(); 
+                $("#branch-box").hide(); 
             }
             else if (tableType == 5) {
                 $("#pk-title").text("phone number");
@@ -384,6 +399,19 @@ function switchCustomerInputs(tableFn, tableType) {
                 $("#vehicle").hide(); 
                 $("#vehicle-type").hide(); 
                 $("#customers").show(); 
+                $("#branch-box").hide(); 
+            }
+            else if (tableType == 6) {
+                // $("#pk-title").hide();
+                // $("#pk-input").hide();
+                $("#rs").hide();
+                $("#r-rent").hide();
+                $("#r-return").hide();
+                $("#vehicle").hide(); 
+                $("#vehicle-type").hide(); 
+                $("#customers").hide(); 
+                $("#primary-key").hide();
+                $("#branch-box").show(); 
             }
             break;
         // delete
@@ -395,6 +423,8 @@ function switchCustomerInputs(tableFn, tableType) {
             $("#vehicle-type").hide(); 
             $("#customers").hide(); 
             $("#update-header").hide();
+            $("#branch-box").hide(); 
+            $("#primary-key").show();
             switch (tableType) {
                 case 0:
                     $("#pk-title").text("confNo");
@@ -414,6 +444,9 @@ function switchCustomerInputs(tableFn, tableType) {
                 case 5:
                     $("#pk-title").text("phone number");
                     break;
+                case 6: 
+                    $("#primary-key").hide();  
+                    $("#branch-box").show(); 
             }
             console.log(tableType);
             break;
@@ -426,6 +459,7 @@ function switchCustomerInputs(tableFn, tableType) {
             $("#vehicle").hide(); 
             $("#vehicle-type").hide(); 
             $("#customers").hide(); 
+            $("#primary-key").show();
             console.log("update");
             switch (tableType) {
                 case 0:
@@ -451,13 +485,14 @@ function switchCustomerInputs(tableFn, tableType) {
                 case 5:
                     $("#pk-title").text("phone number");
                     $("#customers").show(); 
-                    break;
+                    break;                
                 default:
                     $("#update-header").show();
             }
             break;
         // view
         case 3:
+            $("#primary-key").hide();
             $("#update-header").hide();
             $("#rs").hide();
             $("#r-rent").hide();
@@ -465,26 +500,7 @@ function switchCustomerInputs(tableFn, tableType) {
             $("#vehicle").hide(); 
             $("#vehicle-type").hide(); 
             $("#customers").hide(); 
-            switch (tableType) {
-                case 0:
-                    $("#pk-title").text("confNo");
-                    break;
-                case 1:
-                    $("#pk-title").text("rid");
-                    break;
-                case 2:
-                    $("#pk-title").text("rid");
-                    break;
-                case 3:
-                    $("#pk-title").text("vid");
-                    break;
-                case 4:
-                    $("#pk-title").text("vtname");
-                    break;
-                case 5:
-                    $("#pk-title").text("phone number");
-                    break;
-            }
+            $("#branch-box").hide(); 
             console.log(tableType);
             break;
     }

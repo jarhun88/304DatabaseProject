@@ -102,7 +102,7 @@ public class TableManipulationController {
         return Controller.customerManipulation(mType, phoneNum, address, name, license);
     }
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
-    @PostMapping(path = "/customer", consumes = "multipart/form-data", produces = "application/json")
+    @PostMapping(path = "/branch", consumes = "multipart/form-data", produces = "application/json")
     public String branchManipulation(@RequestPart(name="mType") String mType,
                                        @RequestPart(name="city", required=false) String city,
                                        @RequestPart(name="location", required=false) String location) {

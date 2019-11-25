@@ -53,18 +53,18 @@ public class QueryController {
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/rent", consumes = "multipart/form-data", produces = "application/json")
-    public String rent(@RequestPart(name = "phoneNum", required = false) String phoneNum,
-                       @RequestPart(name = "name", required = false) String name,
-                       @RequestPart(name = "address", required = false) String address,
-                       @RequestPart(name = "city", required = false) String city,
-                       @RequestPart(name = "license", required = false) String license,
-                       @RequestPart(name = "vtname", required = false) String vtname, //vid
-                       @RequestPart(name = "from", required = false) String from,
-                       @RequestPart(name = "to", required = false) String to,
-                       @RequestPart(name = "confNum", required = false) String confNum,
-                       @RequestPart(name = "cardName", required = false) String cardName,
-                       @RequestPart(name = "cardNo", required = false) String cardNo,
-                       @RequestPart(name = "expDate", required = false) String expDate) {
+    public String rent(@RequestPart(name="phoneNum", required=false) String phoneNum,
+                       @RequestPart(name="name", required=false) String name,
+                       @RequestPart(name="address", required=false) String address,
+                       @RequestPart(name="license", required=false) String license,
+                       @RequestPart(name="vtname", required=false) String vtname, // vid
+                       @RequestPart(name="from", required=false) String from,
+                       @RequestPart(name="city", required=false) String city,
+                       @RequestPart(name="to", required=false) String to,
+                       @RequestPart(name="confNum", required=false) String confNum,
+                       @RequestPart(name="cardName", required=false) String cardName,
+                       @RequestPart(name="cardNo", required=false) String cardNo,
+                       @RequestPart(name="expDate", required=false) String expDate) {
 
         if(phoneNum==null || name ==null || address==null || city ==null || license == null || vtname ==null || from==null || to==null
         || confNum==null || cardName == null || expDate == null){

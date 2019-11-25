@@ -129,7 +129,7 @@
       <h2>Table Manipulation</h2>
     </div>
     <form class="radio-form">
-      <input id="add" type="radio" name="input" value="male" /> Add Field
+      <input id="add" type="radio" name="input" /> Add Field
       <input id="delete" type="radio" name="input" /> Remove Field
       <input id="update" type="radio" name="input" /> Update Field
       <input id="view" type="radio" name="input" /> View Fields
@@ -140,7 +140,8 @@
       <input id="returns" type="radio" name="input" /> Returns
       <input id="vehicles" type="radio" name="input" /> Vehicles
       <input id="vehicleTypes" type="radio" name="input" /> Vehicle Types
-      <input id="customer" type="radio" name="input" value="male" /> Customers
+      <input id="customer" type="radio" name="input" /> Customers
+      <input id="branch-input" type="radio" name="input" /> Branch
       <input id="all" type="radio" name="input" /> All
     </form>
 
@@ -206,11 +207,16 @@
           <input type="text" id="vt-krate" placeholder="krate" />
         </div>
 
-        <div class="input-box" id="customers" />
+        <div class="input-box" id="customers" >
         <input type="text" id="c-name" placeholder="name" />
         <input type="text" id="c-address" placeholder="address" />
         <input type="text" id="c-city" placeholder="city" />
         <input type="text" id="c-driver-license" placeholder="driver license" />
+      </div>
+
+      <div class="input-box" id="branch-box">
+          <input type="text" id="b-city" placeholder="city" />
+          <input type="text" id="b-location" placeholder="location" />
       </div>
 
       <button class="button" id="m-button" type="button">Submit</button>

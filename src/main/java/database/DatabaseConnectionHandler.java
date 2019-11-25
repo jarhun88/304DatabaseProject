@@ -1243,7 +1243,7 @@ public class DatabaseConnectionHandler {
         //getTotalRevAndNumRentalsOnBranch(String date, String location, String city)
          */
 
-        String[][] result = null;
+        String[][] result = new String[4][];
         VehicleModel[] allVs = generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
         ReportGroupedByVehilceModel[] returnGBVs = getNumOdVehicleDailyReturnGBVehicleOnBranch(date, location, city);
         RevenueReportGroupedByVehilceModel[] revGBVehicle = getRevenueDailyReturnGBVehicleOnBranch(date, location, city);

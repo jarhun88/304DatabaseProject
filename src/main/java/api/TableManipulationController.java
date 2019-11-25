@@ -34,9 +34,7 @@ public class TableManipulationController {
                                      @RequestPart(name="cardNo", required=false) String cardNo,
                                      @RequestPart(name="expDate", required=false) String expDate,
                                      @RequestPart(name="confNo", required=false) String confNo) { // todo add rid
-        //String rid, String vid, String cellphone,
-        //                              String fromDateTime, String toDateTime, String odometer, String cardName,
-        //                              String cardNo, String expDate, String confNo
+
 
         return Controller.rentalManipulation(mType, rid, vtname, phoneNum, from, to, odometer, cardName, cardNo, expDate, confNo);
     }

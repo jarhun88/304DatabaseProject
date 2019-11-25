@@ -92,14 +92,13 @@ public class TableManipulationController {
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/customer", consumes = "multipart/form-data", produces = "application/json")
     public String customerManipulation(@RequestPart(name="mType") String mType,
-                                       @RequestPart(name="phoneNum", required=false) String phoneNum,
+                                       @RequestPart(name="phone", required=false) String phone,
                                        @RequestPart(name="address", required=false) String address,
                                        @RequestPart(name="name", required=false) String name,
-                                       @RequestPart(name="city", required=false) String city, //TODO not needed
-                                       @RequestPart(name="license", required=false) String license) {
+                                       @RequestPart(name="driverLicense", required=false) String driverLicense) {
 
 
-        return Controller.customerManipulation(mType, phoneNum, address, name, license);
+        return Controller.customerManipulation(mType, phone, address, name, driverLicense);
     }
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/branch", consumes = "multipart/form-data", produces = "application/json")

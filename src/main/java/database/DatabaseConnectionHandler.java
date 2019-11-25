@@ -2625,7 +2625,7 @@ where rid = 4
     }
 
     // EFFECTS: insert branch
-    public boolean insertBrnach(String location, String city) {
+    public boolean insertBranch(String location, String city) {
         boolean isSuccessful = false;
         PreparedStatement ps = null;
         try {

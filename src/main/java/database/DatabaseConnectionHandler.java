@@ -2,7 +2,6 @@ package database;
 
 //import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 
-import com.sun.tools.corba.se.idl.constExpr.Times;
 import model.*;
 
 import java.sql.*;
@@ -168,6 +167,9 @@ public class DatabaseConnectionHandler {
     public ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                             String fromDateTime, String toDateTime) {
         ReservationModel result = null;
+        if (!isInt(vid)) {
+            return null;
+        }
         int confNo = -1;
         if (!isCustomerMember(phoneNumber)) {
             boolean status = insertCustomer(phoneNumber, name, address, dlicense);
@@ -303,7 +305,7 @@ public class DatabaseConnectionHandler {
 
     // EFFECTS: returns vid from the reservation based on confNo
     public int getVidForReservation(int confNo) {
-        int vid = 0;
+        int vid = -1;
         Statement stmt = null;
         try {
             stmt = connection.createStatement();
@@ -334,8 +336,14 @@ public class DatabaseConnectionHandler {
     public RentConfirmationMessageModel rentVehicle(String cellphone, String fromDateTime, String toDateTime,
                                                     String confNo, String cardName, String cardNo, String expDate) {
 
+        if (!isInt(confNo)) {
+            return null;
+        }
         int rid = -1;
         int vid = getVidForReservation(Integer.parseInt(confNo));
+        if (vid == -1) {
+            return null;
+        }
         double curOdometer = getCurrentOdometerOfVehicle(vid);
         boolean isSuccessful = insertRent(""+vid, cellphone, fromDateTime, toDateTime, "" + curOdometer, cardName, cardNo, expDate, confNo);
         if (isSuccessful == false) {
@@ -404,10 +412,22 @@ public class DatabaseConnectionHandler {
     // EFFECTS: returns the confirmation message upon the successful return of vehicle
     public ReturnConfirmationMessageModel returnVehicle(String rid, String returnDateTime, String odometer, String fulltank) {
         ReturnConfirmationMessageModel confMessage = null;
+        if (!isInt(rid)) {
+            return null;
+        }
+        int ridNum = Integer.parseInt(rid);
 
         // calculate the amount
-        VehicleTypeModel rateInfo = getRateInfo(Integer.parseInt(rid));
-        TimeIntervalOdometerModel timeIntOdometer = getTimeIntervalAndOdometer(Integer.parseInt(rid));
+        VehicleTypeModel rateInfo = getRateInfo(ridNum);
+        // if the rent does not exist you cannot return
+        if (rateInfo == null) {
+            return null;
+        }
+        // if the rent does not exist you cannot return (doing the same thing as above)
+        TimeIntervalOdometerModel timeIntOdometer = getTimeIntervalAndOdometer(ridNum);
+        if (timeIntOdometer == null) {
+            return null;
+        }
 
         Timestamp fromDateTime = timeIntOdometer.getFromDateTime();
         Timestamp toDateTime = timeIntOdometer.getToDateTime();
@@ -425,13 +445,13 @@ public class DatabaseConnectionHandler {
         double insuranceCost = weeks * rateInfo.getWirate() + days * rateInfo.getDirate() + hours * rateInfo.getHirate();
         double value = regularCost + insuranceCost;
 
-        String regularCalDetail = "Payment Rate for this Vehicle:" + rateInfo.toString() + "￿￿\n"
+        String regularCalDetail = "Payment Rate for this Vehicle:" + rateInfo.toString() + "\n"
                 + "Regular Cost -> " + weeks + " week(s) * " + rateInfo.getWrate() + " + "
                 + days + " day(s) * " + rateInfo.getDrate() + " + "
-                + hours + " hour(s) * " + rateInfo.getHrate() + " = " + regularCost + "￿￿\n";
+                + hours + " hour(s) * " + rateInfo.getHrate() + " = " + regularCost + "\n";
         String insCalDetail = "Insurance Cost -> " + weeks + " week(s) * " + rateInfo.getWirate() + " + "
                 + days + " day(s) * " + rateInfo.getDirate() + " + "
-                + hours + " hour(s) * " + rateInfo.getHirate() + " = " + insuranceCost + "￿￿\n"
+                + hours + " hour(s) * " + rateInfo.getHirate() + " = " + insuranceCost + "\n"
                 + "Total: " + value;
 
         String calculationDetail = regularCalDetail + insCalDetail;
@@ -2880,6 +2900,20 @@ where rid = 4
     }
 
     public boolean isRightTimeStampFormat(String input) {
+        String target = input;
+        if(target.equals("")){
+            return false;
+        }
+        return false;
+    }
+
+    public boolean isDateTimeInOrder(String fromDateTime, String toDateTime) {
+        return false;
+
+    }
+
+    public boolean hasRightStringLength(String input, int maxLength) {
+
         return false;
     }
 

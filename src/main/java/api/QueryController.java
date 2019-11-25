@@ -25,7 +25,6 @@ public class QueryController {
 
         JSONArray mJSONArray = new JSONArray(Arrays.asList(Controller.viewVehicles(carType, location, city, from, to)));
         return mJSONArray.toString();
-
     }
 
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
@@ -33,9 +32,8 @@ public class QueryController {
     public String reservation(@RequestPart(name="phoneNum", required=false) String phoneNum,
                               @RequestPart(name="name", required=false) String name,
                               @RequestPart(name="address", required=false) String address,
-                              @RequestPart(name="city", required=false) String city, // TODO remove
                               @RequestPart(name="license", required=false) String license,
-                              @RequestPart(name="vtname", required=false) String vtname, //TODO needs to be vid
+                              @RequestPart(name="vtname", required=false) String vtname,
                               @RequestPart(name="from", required=false) String from,
                               @RequestPart(name="to", required=false) String to) {
 
@@ -54,14 +52,11 @@ public class QueryController {
                        @RequestPart(name="license", required=false) String license,
                        @RequestPart(name="vtname", required=false) String vtname, //TODO change to vid
                        @RequestPart(name="from", required=false) String from,
-                       @RequestPart(name="to", required=false) String to) {
-
-        //TODO add these to params
-        String confNum = "";
-        String cardName ="";
-        String cardNo="";
-        String expDate ="";
-
+                       @RequestPart(name="to", required=false) String to,
+                       @RequestPart(name="confNum", required=false) String confNum,
+                       @RequestPart(name="cardName", required=false) String cardName,
+                       @RequestPart(name="cardNo", required=false) String cardNo,
+                       @RequestPart(name="expDate", required=false) String expDate) {
 
         JSONObject obj = new JSONObject(Controller.rentVehicle(name, address, license, vtname, phoneNum, from,
                 to, confNum, cardName, cardNo, expDate));
@@ -71,14 +66,9 @@ public class QueryController {
     @CrossOrigin(origins = {"http://localhost:8081", "http://127.0.0.1:8081", "http://206.87.116.219:8081"})
     @PostMapping(path = "/return", consumes = "multipart/form-data", produces = "application/json")
     public String returns(@RequestPart(name="rid", required=false) String rid,
-                          @RequestPart(name="vtname", required=false) String vtname,
-                          @RequestPart(name="city", required=false) String city,
-                          @RequestPart(name="time", required=false) String time) {
-        //String rid, String returnDateTime, String odometer, String fulltank
-        // TODO add these to params
-        String retDate ="";
-        String odometer ="";
-        String fulltank="";
+                          @RequestPart(name="retDate", required=false) String retDate,
+                          @RequestPart(name="odometer", required=false) String odometer,
+                          @RequestPart(name="fulltank", required=false) String fulltank) {
 
         JSONArray retMessage = new JSONArray(Controller.returnVehicle(rid, retDate, odometer, fulltank));
         return retMessage.toString();

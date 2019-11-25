@@ -152,13 +152,13 @@ function qBranchBody(body) {
 function qReturnBody() {
     let body = new FormData()
     let rid = $("#return-rid").val();
-    let vtname = $("#return-vtname").val();
-    let city = $("#return-city").val();
-    let time = $("#return-time").val();
+    let retDate = $("#return-time").val();
+    let odometer = $("#return-odometer").val();
+    let fulltank = $("#return-fulltank").val();
     body.set("rid", rid);
-    body.set("vtname", vtname);
-    body.set("city", city);
-    body.set("time", time);
+    body.set("retDate", retDate);
+    body.set("odometer", odometer);
+    body.set("fulltank", fulltank);
     return body;
 }
 
@@ -172,6 +172,10 @@ function qRentBody() {
     let city = $("#rent-city").val();
     let from = $("#rent-from").val();
     let to = $("#rent-to").val();
+    let confNum = $("#rent-confNum").val();
+    let cardName = $("#rent-cardName").val();
+    let cardNo = $("#rent-cardNo").val();
+    let expDate = $("#rent-expDate").val();
     body.set("phoneNum", phoneNum);
     body.set("name", name);
     body.set("address", address);
@@ -180,6 +184,10 @@ function qRentBody() {
     body.set("vtname", vtname);
     body.set("from", from);
     body.set("to", to);
+    body.set("confNum", confNum);
+    body.set("cardName", cardName);
+    body.set("cardNo", cardNo);
+    body.set("expDate", expDate);
     return body;
 }
 
@@ -204,7 +212,6 @@ function qReservationBody() {
     let phoneNum = $("#mr-phone-num").val();
     let name = $("#mr-name").val();
     let address = $("#mr-address").val();
-    let city = $("#mr-city").val();
     let license = $("#mr-driver-license").val();
     let vtname = $("#mr-vtname").val();
     let from = $("#mr-from").val();
@@ -212,7 +219,6 @@ function qReservationBody() {
     body.set("phoneNum", phoneNum);
     body.set("name", name);
     body.set("address", address);
-    body.set("city", city);
     body.set("license", license);
     body.set("vtname", vtname);
     body.set("from", from);

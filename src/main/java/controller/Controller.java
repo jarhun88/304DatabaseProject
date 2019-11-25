@@ -58,13 +58,16 @@ public class Controller {
 
     //Return filtered array of vehicles based on specific car type,location,and time interval.
     public static VehicleModel[] viewVehicles(String carType, String location, String city, String startTime, String endTime) {
+        if (!dbHandler.isTimeInOrder(startTime, endTime) || !dbHandler.isNotPast(startTime)) {
+            return null;
+        }
         return dbHandler.getVehicleInfo(carType, location, city, startTime, endTime);
     }
 
     // Makes a reservation and returns the confirmation number
     public static ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                                    String fromDate, String toDate) {
-        if (!dbHandler.isTimeInOrder(fromDate, toDate)) {
+        if (!dbHandler.isTimeInOrder(fromDate, toDate) || !dbHandler.isNotPast(fromDate)) {
             return null;
         }
         return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
@@ -73,6 +76,9 @@ public class Controller {
     // Rents a specific vehicle
     public static RentConfirmationMessageModel rentVehicle(String name, String address, String dlicense, String vid, String cellphone, String fromDateTime, String toDateTime,
                                                            String confNo, String cardName, String cardNo, String expDate) {
+        if (!dbHandler.isTimeInOrder(fromDateTime, toDateTime) || !dbHandler.isNotPast(fromDateTime)) {
+            return null;
+        }
         confNo = dbHandler.nullStringConverter(confNo);
         if (confNo.equals("")) {
             return dbHandler.rentVehicleWithoutReservation(name, address, dlicense, vid, cellphone, fromDateTime, toDateTime, cardName, cardNo, expDate);

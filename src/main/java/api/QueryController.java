@@ -53,7 +53,7 @@ public class QueryController {
                        @RequestPart(name="license", required=false) String license,
                        @RequestPart(name="vtname", required=false) String vtname, //TODO change to vid
                        @RequestPart(name="from", required=false) String from,
-                       @RequestPart(name="to", required=false) String to) { 
+                       @RequestPart(name="to", required=false) String to) {
 
         //TODO add these to params
         String confNum = "";

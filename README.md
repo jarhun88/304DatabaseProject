@@ -2,6 +2,8 @@
 
 Project for 304 Database course
 
+Project is run on http://localhost:8080/
+
 Run ```gradle build``` to build project jar (output in build->libs)
 
 Go to jar directory on terminal.

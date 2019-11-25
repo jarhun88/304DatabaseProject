@@ -8,6 +8,7 @@ import java.sql.*;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -2935,6 +2936,26 @@ where rid = 4
         long toTime = toDateOne.getTime();
 
         return (toTime - fromTime) > 0;
+
+    }
+
+    public boolean isNotPast(String dateTime) {
+        String format = "yyyy-MM-dd HH:mm";
+
+        String from = convertTimeToRightFormat(dateTime);
+
+        DateFormat formatter = new SimpleDateFormat(format);
+        Date dateOne = null;
+        try {
+            dateOne = formatter.parse(from);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long actualTime = dateOne.getTime();
+        long today = System.currentTimeMillis();
+
+        return (actualTime - today) >= 0;
 
     }
 

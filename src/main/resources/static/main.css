@@ -20,7 +20,6 @@ form {
 }
 
 .function-box {
-  /* margin: 50px; */
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -83,4 +82,8 @@ textarea {
 
 .title-box {
   margin: 10px;
+}
+
+.user-type-box {
+  margin: 80px;
 }

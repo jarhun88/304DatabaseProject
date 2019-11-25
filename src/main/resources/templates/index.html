@@ -37,7 +37,7 @@
         </form>
 
         <div class="input-box" id="view-vehicles-fields">
-          <input type="text" id="vv-car-type" placeholder="car type" />
+          <input type="text" id="vv-car-type" placeholder="vtname" />
           <input type="text" id="vv-location" placeholder="location" />
           <input type="text" id="vv-city" placeholder="city" />
           <input type="text" id="vv-from" placeholder="from date" />
@@ -145,73 +145,74 @@
       <div class="function-box">
 
         <div class="input-box" id="primary-key" />
-        <span class="key-input" id="pk-title" />Primary Key</span>
-        <input type="text" id="pk-input" />
+          <span class="key-input" id="pk-title" />Primary Key</span>
+          <input type="text" id="pk-input" />
+        </div>
+
+        <div class="title-box" id="update-header">
+          <span class="key-input" id="pk-title">Select any Fields to Update (minimum one field)</span>
+        </div>
+
+        <div class="input-box" id="rs">
+          <input type="text" id="rs-vtname" placeholder="vtname" />
+          <input type="text" id="rs-phone-num" placeholder="phone number" />
+          <input type="text" id="rs-from" placeholder="from date" />
+          <input type="text" id="rs-to" placeholder="to time" />
+        </div>
+
+        <div class="input-box" id="r-rent">
+          <input type="text" id="r-vid" placeholder="vtname" />
+          <input type="text" id="r-phone-num" placeholder="phone number" />
+          <input type="text" id="r-from" placeholder="from date" />
+          <input type="text" id="r-to" placeholder="to time" />
+          <input type="text" id="r-odometer" placeholder="odometer" />
+          <input type="text" id="r-cardName" placeholder="cardName" />
+          <input type="text" id="r-cardNo" placeholder="cardNo" />
+          <input type="text" id="r-expDate" placeholder="expDate" />
+          <input type="text" id="r-confNo" placeholder="confNo" />
+        </div>
+
+        <div class="input-box" id="r-return">
+          <input type="text" id="return-date" placeholder="return date" />
+          <input type="text" id="return-odometer" placeholder="odometer" />
+          <input type="text" id="return-fulltank" placeholder="fulltank" />
+          <input type="text" id="return-value" placeholder="value" />
+        </div>
+
+        <div class="input-box" id="vehicle">
+          <input type="text" id="v-vlicense" placeholder="vlicense" />
+          <input type="text" id="v-make" placeholder="make" />
+          <input type="text" id="v-model" placeholder="model" />
+          <input type="text" id="v-year" placeholder="year" />
+          <input type="text" id="v-color" placeholder="color" />
+          <input type="text" id="v-odometer" placeholder="odometer" />
+          <input type="text" id="v-status" placeholder="status" />
+          <input type="text" id="v-vtname" placeholder="vtname" />
+          <input type="text" id="v-location" placeholder="location" />
+          <input type="text" id="v-city" placeholder="city" />
+        </div>
+
+        <div class="input-box" id="vehicle-type">
+          <input type="text" id="vt-features" placeholder="features" />
+          <input type="text" id="vt-wrate" placeholder="wrate" />
+          <input type="text" id="vt-drate" placeholder="drate" />
+          <input type="text" id="vt-hrate" placeholder="hrate" />
+          <input type="text" id="vt-wirate" placeholder="wirate" />
+          <input type="text" id="vt-dirate" placeholder="dirate" />
+          <input type="text" id="vt-hirate" placeholder="hirate" />
+          <input type="text" id="vt-krate" placeholder="krate" />
+        </div>
+
+        <div class="input-box" id="customers" />
+        <input type="text" id="c-name" placeholder="name" />
+        <input type="text" id="c-address" placeholder="address" />
+        <input type="text" id="c-city" placeholder="city" />
+        <input type="text" id="c-driver-license" placeholder="driver license" />
       </div>
 
-      <div class="title-box" id="update-header">
-        <span class="key-input" id="pk-title">Select any Fields to Update (minimum one field)</span>
-      </div>
-
-      <div class="input-box" id="rs">
-        <input type="text" id="rs-vtname" placeholder="vtname" />
-        <input type="text" id="rs-phone-num" placeholder="phone number" />
-        <input type="text" id="rs-from" placeholder="from date" />
-        <input type="text" id="rs-to" placeholder="to time" />
-      </div>
-
-      <div class="input-box" id="r-rent">
-        <input type="text" id="r-vid" placeholder="vtname" />
-        <input type="text" id="r-phone-num" placeholder="phone number" />
-        <input type="text" id="r-from" placeholder="from date" />
-        <input type="text" id="r-to" placeholder="to time" />
-        <input type="text" id="r-odometer" placeholder="odometer" />
-        <input type="text" id="r-cardName" placeholder="cardName" />
-        <input type="text" id="r-cardNo" placeholder="cardNo" />
-        <input type="text" id="r-expDate" placeholder="expDate" />
-        <input type="text" id="r-confNo" placeholder="confNo" />
-      </div>
-
-      <div class="input-box" id="r-return">
-        <input type="text" id="return-date" placeholder="return date" />
-        <input type="text" id="return-odometer" placeholder="odometer" />
-        <input type="text" id="return-fulltank" placeholder="fulltank" />
-        <input type="text" id="return-value" placeholder="value" />
-      </div>
-
-      <div class="input-box" id="vehicle">
-        <input type="text" id="v-vlicense" placeholder="vlicense" />
-        <input type="text" id="v-make" placeholder="make" />
-        <input type="text" id="v-model" placeholder="model" />
-        <input type="text" id="v-year" placeholder="year" />
-        <input type="text" id="v-color" placeholder="color" />
-        <input type="text" id="v-odometer" placeholder="odometer" />
-        <input type="text" id="v-status" placeholder="status" />
-        <input type="text" id="v-vtname" placeholder="vtname" />
-        <input type="text" id="v-location" placeholder="location" />
-        <input type="text" id="v-city" placeholder="city" />
-      </div>
-
-      <div class="input-box" id="vehicle-type">
-        <input type="text" id="vt-features" placeholder="features" />
-        <input type="text" id="vt-wrate" placeholder="wrate" />
-        <input type="text" id="vt-drate" placeholder="drate" />
-        <input type="text" id="vt-hrate" placeholder="hrate" />
-        <input type="text" id="vt-wirate" placeholder="wirate" />
-        <input type="text" id="vt-dirate" placeholder="dirate" />
-        <input type="text" id="vt-hirate" placeholder="hirate" />
-        <input type="text" id="vt-krate" placeholder="krate" />
-      </div>
-
-      <div class="input-box" id="customers" />
-      <input type="text" id="c-name" placeholder="name" />
-      <input type="text" id="c-address" placeholder="address" />
-      <input type="text" id="c-city" placeholder="city" />
-      <input type="text" id="c-driver-license" placeholder="driver license" />
+      <button class="button" id="m-button" type="button">Submit</button>
+      <textarea id="table-output" placeholder="Output will display here" rows="4"> </textarea>
     </div>
-
-    <button class="button" id="m-button" type="button">Submit</button>
-    <textarea id="table-output" placeholder="Output will display here" rows="4"> </textarea>
   </div>
   
 </body>

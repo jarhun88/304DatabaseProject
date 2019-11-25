@@ -2,6 +2,7 @@ package database;
 
 //import com.sun.xml.internal.ws.policy.EffectiveAlternativeSelector;
 
+import com.sun.tools.corba.se.idl.constExpr.Times;
 import model.*;
 
 import java.sql.*;
@@ -2847,6 +2848,16 @@ where rid = 4
         }
     }
 
+    public boolean isDouble(String input) {
+        double foo = 0;
+        try {
+            foo = Double.parseDouble(input);
+        } catch (NumberFormatException e) {
+            return false;
+        }
+        return true;
+    }
+
     public boolean isInt(String input) {
         int foo = 0;
         try {
@@ -2858,5 +2869,19 @@ where rid = 4
         return true;
 
     }
+
+    public boolean isFloat(String input) {
+        float foo = 0;
+        try {
+            foo = Float.parseFloat(input);
+        } catch (NumberFormatException e) {
+            return false;
+        } return  true;
+    }
+
+    public boolean isRightTimeStampFormat(String input) {
+        return false;
+    }
+
 
 }

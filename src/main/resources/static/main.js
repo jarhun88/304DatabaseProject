@@ -29,7 +29,7 @@ $( document ).ready(function()
             }).catch((error) => {
                 responseText = JSON.stringify(error.data);
                 console.log(responseText)
-                document.getElementById("customer-output").innerHTML = responseText;
+                document.getElementById("customer-output").value = responseText;
             })
         }
         else {

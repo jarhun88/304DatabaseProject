@@ -24,41 +24,39 @@
   </div>
 
     <div class="user-type-box">
+
       <div class="function-box">
         <div class="function-title">
             <h3>Customer Functions</h3>
         </div>
 
         <form class="radio-form">
-          <input id="view-vehicles" type="radio" name="input" value="male" checked> View Vehicles
-          <input id="make-reservation" type="radio" name="input" value="female"> Make Reservation
+          <input id="view-vehicles" type="radio" name="input" value="male" checked/> View Vehicles
+          <input id="make-reservation" type="radio" name="input" value="female"/> Make Reservation
         </form>
 
         <div class="input-box" id="view-vehicles-fields">
-          <input type="text" id="vv-car-type" placeholder="car type">
-          <input type="text" id="vv-location" placeholder="location">
-          <input type="text" id="vv-city" placeholder="city">
-          <input type="text" id="vv-from" placeholder="from date">
-          <input type="text" id="vv-to" placeholder="from time">
+          <input type="text" id="vv-car-type" placeholder="car type"/>
+          <input type="text" id="vv-location" placeholder="location"/>
+          <input type="text" id="vv-city" placeholder="city"/>
+          <input type="text" id="vv-from" placeholder="from date"/>
+          <input type="text" id="vv-to" placeholder="from time"/>
         </div>
 
         <div class="input-box" id="make-reservation-fields">
-          <div class="customer-info-fields">
-            <input type="text" id="mr-phone-num" placeholder="phone number">
-            <input type="text" id="mr-name" placeholder="name">
-            <input type="text" id="mr-address" placeholder="address">
-            <input type="text" id="mr-city" placeholder="city">
-            <input type="text" id="mr-driver-license" placeholder="driver license">
-          </div>
-
-          <div class="reservation-info-fields">
-            <input type="text" id="mr-vtname" placeholder="vtname">
-            <input type="text" id="mr-from" placeholder="from date">
-            <input type="text" id="mr-to" placeholder="to time">
-          </div>
+          <input type="text" id="mr-phone-num" placeholder="phone number"/>
+          <input type="text" id="mr-name" placeholder="name"/>
+          <input type="text" id="mr-address" placeholder="address"/>
+          <input type="text" id="mr-city" placeholder="city"/>
+          <input type="text" id="mr-driver-license" placeholder="driver license"/>
+          <input type="text" id="mr-vtname" placeholder="vtname"/>
+          <input type="text" id="mr-from" placeholder="from date"/>
+          <input type="text" id="mr-to" placeholder="to time"/>
         </div>  
+        
         <button class="button" id="customer-button" type="button">Submit</button>
-        <p id="customer-output"name="result">Output will display here</p>
+        <textarea id="customer-output" placeholder="Output will display here" rows="4"> </textarea>
+
       </div>
 
       <div class="function-box">
@@ -66,31 +64,31 @@
           <h3>Clerk Rent/Reserve Functions</h3>
         </div>
         <form class="radio-form">
-          <input id="rent"type="radio" name="input" value="male" checked> Renting Vehicle
-          <input id="return" type="radio" name="input" value="female"> Returning Vehicle
+          <input id="rent"type="radio" name="input" value="male" checked/> Renting Vehicle
+          <input id="return" type="radio" name="input" value="female"/> Returning Vehicle
         </form>
         <div class="input-box" id="make-rental-fields">
           <div class="customer-info-fields">
-            <input type="text" id="rent-phone-num" placeholder="phone number">
-            <input type="text" id="rent-name" placeholder="name">
-            <input type="text" id="rent-address" placeholder="address">
-            <input type="text" id="rent-driver-license" placeholder="driver license">
+            <input type="text" id="rent-phone-num" placeholder="phone number"/>
+            <input type="text" id="rent-name" placeholder="name"/>
+            <input type="text" id="rent-address" placeholder="address"/>
+            <input type="text" id="rent-driver-license" placeholder="driver license"/>
           </div>
-            <input type="text" id="rent-vtname" placeholder="vtname">
-            <input type="text" id="rent-city" placeholder="city">
-            <input type="text" id="rent-from" placeholder="from date">
-            <input type="text" id="rent-to" placeholder="to time">
+            <input type="text" id="rent-vtname" placeholder="vtname"/>
+            <input type="text" id="rent-city" placeholder="city"/>
+            <input type="text" id="rent-from" placeholder="from date"/>
+            <input type="text" id="rent-to" placeholder="to time"/>
         </div>
 
         <div class="input-box" id="make-return-fields">
-            <input type="text" id="return-rid" placeholder="rid">
-            <input type="text" id="return-vtname" placeholder="vtname">
-            <input type="text" id="return-city" placeholder="city">
-            <input type="text" id="return-time" placeholder="to time">
+            <input type="text" id="return-rid" placeholder="rid"/>
+            <input type="text" id="return-vtname" placeholder="vtname"/>
+            <input type="text" id="return-city" placeholder="city"/>
+            <input type="text" id="return-time" placeholder="to time"/>
         </div>
 
         <button class="button" id="rent-reserve-button" type="button">Submit</button>
-        <p id="clerk-output" name="result">Output will display here</p>
+        <textarea id="clerk-output" placeholder="Output will display here" rows="4"> </textarea>
       </div>
 
       <div class="function-box">
@@ -99,25 +97,25 @@
         </div>
 
         <form class="radio-form">
-          <input id="daily-returns"type="radio" name="input" value="male" checked> Generate Daily Returns
-          <input id="daily-rentals"type="radio" name="input" value="female"> Generate Daily Rentals
+          <input id="daily-returns"type="radio" name="input" value="male" checked/> Generate Daily Returns
+          <input id="daily-rentals"type="radio" name="input" value="female"/> Generate Daily Rentals
         </form>
 
         <form class="checkbox-form">
-          <input id="branch" type="checkbox" name="input" value="male" checked> For Branch
+          <input id="branch" type="checkbox" name="input" value="male" checked/> For Branch
         </form>
 
         <div class="input-box" id="date-fields">
-            <input type="text" id="g-date" placeholder="date">
+            <input type="text" id="g-date" placeholder="date"/>
         </div>
 
         <div class="input-box" id="branch-fields">
-          <input type="text" id="g-address" placeholder="address">
-          <input type="text" id="g-city" placeholder="city">
+          <input type="text" id="g-address" placeholder="address"/>
+          <input type="text" id="g-city" placeholder="city"/>
         </div>
 
         <button class="button" id="generate-button" type="button">Submit</button>
-        <p id="generate-output" name="result">Output will display here</p>
+        <textarea id="generate-output"placeholder="Output will display here" rows="4"> </textarea>
       </div>
     </div>
 
@@ -127,26 +125,27 @@
         <h2>Table Manipulation</h2>
     </div>
     <form class="radio-form">
-        <input id="add" type="radio" name="input" value="male"> Add Field
-        <input id="delete" type="radio" name="input"> Remove Field
-        <input id="update" type="radio" name="input"> Update Field
-        <input id="view" type="radio" name="input"> View Fields
+        <input id="add" type="radio" name="input" value="male"/> Add Field
+        <input id="delete" type="radio" name="input"/> Remove Field
+        <input id="update" type="radio" name="input"/> Update Field
+        <input id="view" type="radio" name="input"/> View Fields
     </form>
     <form class="radio-form">
-        <input id="reservation" type="radio" name="input"> Reservation
-        <input id="rentals" type="radio" name="input"> Rentals
-        <input id="returns" type="radio" name="input"> Returns
-        <input id="vehicles" type="radio" name="input"> Vehicles
-        <input id="vehicleTypes" type="radio" name="input"> Vehicle Types
-        <input id="customer" type="radio" name="input" value="male" > Customers     
-        <input id="all" type="radio" name="input"> All
+        <input id="reservation" type="radio" name="input"/> Reservation
+        <input id="rentals" type="radio" name="input"/> Rentals
+        <input id="returns" type="radio" name="input"/> Returns
+        <input id="vehicles" type="radio" name="input"/> Vehicles
+        <input id="vehicleTypes" type="radio" name="input"/> Vehicle Types
+        <input id="customer" type="radio" name="input" value="male"/> Customers     
+        <input id="all" type="radio" name="input"/> All
     </form>
 
     <div class="user-type-box">
         <div class="function-box">    
-          <div class="title-box" id="primary-key"> 
-            <span class="key-input" id="pk-title">Primary Key</span>
-            <input type="text" id="pk-input">
+
+          <div class="input-box" id="primary-key"/> 
+            <span class="key-input" id="pk-title"/>Primary Key</span>
+            <input type="text" id="pk-input"/>
           </div>
 
           <div class="title-box" id="update-header">
@@ -154,64 +153,64 @@
           </div>
 
           <div class="input-box" id="rs">
-            <input type="text" id="rs-vtname" placeholder="vtname">
-            <input type="text" id="rs-phone-num" placeholder="phone number">
-            <input type="text" id="rs-from" placeholder="from date">
-            <input type="text" id="rs-to" placeholder="to time">
+            <input type="text" id="rs-vtname" placeholder="vtname"/>
+            <input type="text" id="rs-phone-num" placeholder="phone number"/>
+            <input type="text" id="rs-from" placeholder="from date"/>
+            <input type="text" id="rs-to" placeholder="to time"/>
           </div>
 
           <div class="input-box" id="r-rent">
-            <input type="text" id="r-vid" placeholder="vtname">
-            <input type="text" id="r-phone-num" placeholder="phone number">
-            <input type="text" id="r-from" placeholder="from date">
-            <input type="text" id="r-to" placeholder="to time">
-            <input type="text" id="r-odometer" placeholder="odometer">
-            <input type="text" id="r-cardName" placeholder="cardName">
-            <input type="text" id="r-cardNo" placeholder="cardNo">
-            <input type="text" id="r-expDate" placeholder="expDate">
-            <input type="text" id="r-confNo" placeholder="confNo">
+            <input type="text" id="r-vid" placeholder="vtname"/>
+            <input type="text" id="r-phone-num" placeholder="phone number"/>
+            <input type="text" id="r-from" placeholder="from date"/>
+            <input type="text" id="r-to" placeholder="to time"/>
+            <input type="text" id="r-odometer" placeholder="odometer"/>
+            <input type="text" id="r-cardName" placeholder="cardName"/>
+            <input type="text" id="r-cardNo" placeholder="cardNo"/>
+            <input type="text" id="r-expDate" placeholder="expDate"/>
+            <input type="text" id="r-confNo" placeholder="confNo"/>
           </div>
 
           <div class="input-box" id="r-return">
-            <input type="text" id="return-date" placeholder="return date">
-            <input type="text" id="return-odometer" placeholder="odometer">
-            <input type="text" id="return-fulltank" placeholder="fulltank">
-            <input type="text" id="return-value" placeholder="value">
+            <input type="text" id="return-date" placeholder="return date"/>
+            <input type="text" id="return-odometer" placeholder="odometer"/>
+            <input type="text" id="return-fulltank" placeholder="fulltank"/>
+            <input type="text" id="return-value" placeholder="value"/>
           </div>
 
           <div class="input-box" id="vehicle">
-            <input type="text" id="v-vlicense" placeholder="vlicense">
-            <input type="text" id="v-make" placeholder="make">
-            <input type="text" id="v-model" placeholder="model">
-            <input type="text" id="v-year" placeholder="year">
-            <input type="text" id="v-color" placeholder="color">
-            <input type="text" id="v-odometer" placeholder="odometer">
-            <input type="text" id="v-status" placeholder="status">
-            <input type="text" id="v-vtname" placeholder="vtname">
-            <input type="text" id="v-location" placeholder="location">
-            <input type="text" id="v-city" placeholder="city">
+            <input type="text" id="v-vlicense" placeholder="vlicense"/>
+            <input type="text" id="v-make" placeholder="make"/>
+            <input type="text" id="v-model" placeholder="model"/>
+            <input type="text" id="v-year" placeholder="year"/>
+            <input type="text" id="v-color" placeholder="color"/>
+            <input type="text" id="v-odometer" placeholder="odometer"/>
+            <input type="text" id="v-status" placeholder="status"/>
+            <input type="text" id="v-vtname" placeholder="vtname"/>
+            <input type="text" id="v-location" placeholder="location"/>
+            <input type="text" id="v-city" placeholder="city"/>
           </div>
 
           <div class="input-box" id="vehicle-type">
-            <input type="text" id="vt-features" placeholder="features">
-            <input type="text" id="vt-wrate" placeholder="wrate">
-            <input type="text" id="vt-drate" placeholder="drate">
-            <input type="text" id="vt-hrate" placeholder="hrate">
-            <input type="text" id="vt-wirate" placeholder="wirate">
-            <input type="text" id="vt-dirate" placeholder="dirate">
-            <input type="text" id="vt-hirate" placeholder="hirate">
-            <input type="text" id="vt-krate" placeholder="krate">
+            <input type="text" id="vt-features" placeholder="features"/>
+            <input type="text" id="vt-wrate" placeholder="wrate"/>
+            <input type="text" id="vt-drate" placeholder="drate"/>
+            <input type="text" id="vt-hrate" placeholder="hrate"/>
+            <input type="text" id="vt-wirate" placeholder="wirate"/>
+            <input type="text" id="vt-dirate" placeholder="dirate"/>
+            <input type="text" id="vt-hirate" placeholder="hirate"/>
+            <input type="text" id="vt-krate" placeholder="krate"/>
           </div>
 
-          <div class="input-box" id="customers">
-            <input type="text" id="c-name" placeholder="name">
-            <input type="text" id="c-address" placeholder="address">
-            <input type="text" id="c-city" placeholder="city">
-            <input type="text" id="c-driver-license" placeholder="driver license">
+          <div class="input-box" id="customers"/>
+            <input type="text" id="c-name" placeholder="name"/>
+            <input type="text" id="c-address" placeholder="address"/>
+            <input type="text" id="c-city" placeholder="city"/>
+            <input type="text" id="c-driver-license" placeholder="driver license"/>
           </div>
 
           <button class="button" id="m-button" type="button">Submit</button>
-          <p id="table-output"name="result">Output will display here</p>
+          <textarea id="table-output" placeholder="Output will display here" rows="4"> </textarea>
         </div>
 </body>
 

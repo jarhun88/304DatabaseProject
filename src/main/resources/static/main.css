@@ -9,16 +9,41 @@ html {
   justify-content: center;
 }
 
+form {
+  margin: 10px;
+}
+
 .user-type-box {
   display: flex;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
 }
 
 .function-box {
-  margin: 50px;
+  /* margin: 50px; */
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.button-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 10px;
+}
+
+.response-box {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.input-box {
+  display: flex;
+  justify-content: center;
+  margin: 10px;
 }
 
 .radio-form {
@@ -31,9 +56,15 @@ html {
   justify-content: center;
 }
 
-.button {
+button {
   background-color: beige;
-  text-align: center;
+  width: 100px;
+  margin: 10px;
+}
+
+.response-box {
+  display: flex;
+  justify-content: center;
 }
 
 .primary-key {
@@ -44,4 +75,11 @@ html {
   height: 10px;
 }
 
+textarea {
+  width: 50%;
+  font-size: 16px;
+}
 
+.title-box {
+  margin: 10px;
+}

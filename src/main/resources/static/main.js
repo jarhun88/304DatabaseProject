@@ -169,7 +169,6 @@ function qRentBody() {
     let address = $("#rent-address").val();
     let license = $("#rent-driver-license").val();
     let vtname = $("#rent-vtname").val();
-    let city = $("#rent-city").val();
     let from = $("#rent-from").val();
     let to = $("#rent-to").val();
     let confNum = $("#rent-confNum").val();
@@ -179,7 +178,6 @@ function qRentBody() {
     body.set("phoneNum", phoneNum);
     body.set("name", name);
     body.set("address", address);
-    body.set("city", city);
     body.set("license", license);
     body.set("vtname", vtname);
     body.set("from", from);

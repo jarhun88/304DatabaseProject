@@ -79,34 +79,33 @@ public class Controller {
         // String rid, String returnDateTime, String odometer, String fulltank, String confNo
     }
 
-    // TODO: need to use other methods as well see the details in google docs
+    // TODO: please change the return type to the right one
     public static VehicleModel[] generateReportDailyRentalsAllVehicleInfo(String date) {
         return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
-        //getNumOfVehicleDailyRentalGBVehicle(String date)
-        //getNumOfVehicleDailyRentalGBBranch(String date)
-        //getNumofVehicleNewlyDailyRental(date))
+        // user this -> generateRentalReportInAConmapany(String date)
     }
-
+//todo change this please with the right return type
     public static VehicleModel[] generateReportDailyReturnsAllVehicleInfo(String date) {
         return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
-        // getNumOdVehicleDailyReturnGBVehicle(String date)
-        //getRevenueDailyReturnGBVehicle(String date)
-        //getTotalNumAndRevenueGBBranch(String date)
+        // use this -> generateReturnReportInACompany(String date)
     }
 
-    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
-        return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
-        //getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city)
-        //getNumOfVehicleDailyRentalOnBranch(String date, String location, String city)
-        //getNumOfVehicleNewlyDailyRentalOnBranch(String date, String location, String city)
-    }
-
+    //todo please change in the same way as above
     public static VehicleModel[] generateReportDailyRentalsAllVehicleInfoOnBranch(String date, String location, String city) {
         return dbHandler.generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
-        //getNumOdVehicleDailyReturnGBVehicleOnBranch(String date, String location, String city)
-        //getRevenueDailyReturnGBVehicleOnBranch(String date, String location, String city)
-        //getTotalRevAndNumRentalsOnBranch(String date, String location, String city)
+        // use this -> generateRentalReportInBranch(String date, String location, String city)
+
     }
+
+    //todo please change in the same way as above
+    public static VehicleModel[] generateReportDailyReturnsAllVehicleInfoOnBranch(String date, String location, String city) {
+        return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+        // use this -> generateReturnReportInBranch(String date, String location, String city)
+
+
+    }
+
+
 
 
     public static String reservationManipulation(String mType, String confNo, String vid, String phoneNum, String from, String to) {

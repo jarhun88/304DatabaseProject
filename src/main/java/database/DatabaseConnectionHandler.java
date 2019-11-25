@@ -1107,6 +1107,184 @@ public class DatabaseConnectionHandler {
     }
 
 
+    // EFFECTS: returns string array of reports for rental in a company
+    public String[][] generateRentalReportInAConmapany(String date) {
+        /*
+        return dbHandler.generateReportDailyRentalsAllVehicleInfo(date);
+        //getNumOfVehicleDailyRentalGBVehicle(String date)
+        //getNumOfVehicleDailyRentalGBBranch(String date)
+        //getNumofVehicleNewlyDailyRental(date))
+         */
+        String[][] result = new String[4][];
+        VehicleModel[] allVehicles = generateReportDailyRentalsAllVehicleInfo(date);
+        ReportGroupedByVehilceModel[] dailyNumVehiclePerVehicle = getNumOfVehicleDailyRentalGBVehicle(date);
+        ReportGroupByBranchModel[] dailyNumVehiclePerBranch = getNumOfVehicleDailyRentalGBBranch(date);
+        ArrayList<String> allVs = new ArrayList<>();
+        ArrayList<String> groupByVehicle = new ArrayList<>();
+        ArrayList<String>  groupByBranch = new ArrayList<>();
+        for (VehicleModel vehicleModel: allVehicles) {
+            allVs.add(vehicleModel.toString());
+        }
+        String[] allfinal = allVs.toArray(new String[allVs.size()]);
+        for (ReportGroupedByVehilceModel reportGroupedByVehilceModel: dailyNumVehiclePerVehicle) {
+            groupByVehicle.add(reportGroupedByVehilceModel.toString());
+        }
+        String[] gbVehicleFinal = groupByVehicle.toArray(new String[groupByVehicle.size()]);
+        for (ReportGroupByBranchModel reportGroupByBranchModel: dailyNumVehiclePerBranch) {
+            groupByBranch.add(reportGroupByBranchModel.toString());
+        }
+        String[] gbBranchFinal = groupByBranch.toArray(new String[groupByBranch.size()]);
+
+        String[] totalNumArray = new String[1];
+        String totalNum = "Total number of vehicles newly rented on the day : " + getNumOfVehicleNewlyDailyRental(date);
+        totalNumArray[0] = totalNum;
+
+        result[0] = allfinal;
+        result[1] = gbVehicleFinal;
+        result[2] = gbBranchFinal;
+        result[3] = totalNumArray;
+
+        return result;
+
+    }
+
+    // EFFECTS: returns string array of reprots for rental in a branch
+    public String[][] generateRentalReportInBranch(String date, String location, String city) {
+        /*
+         return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+        //getNumOfVehicleDailyRentalGBVehicleOnBranch(String date, String location, String city)
+        //getNumOfVehicleDailyRentalOnBranch(String date, String location, String city)
+        //getNumOfVehicleNewlyDailyRentalOnBranch(String date, String location, String city)
+         */
+        String[][] result = new String[4][];
+        VehicleModel[] allVehicles = generateReportDailyRentalsAllVehicleInfoOnBranch(date, location, city);
+        ReportGroupedByVehilceModel[] dailyNumVehiclePerVehicle = getNumOfVehicleDailyRentalGBVehicleOnBranch(date,location,city);
+        ArrayList<String> allVs = new ArrayList<>();
+        ArrayList<String> groupByVehicle = new ArrayList<>();
+        for (VehicleModel vehicleModel: allVehicles) {
+            allVs.add(vehicleModel.toString());
+        }
+        String[] allfinal = allVs.toArray(new String[allVs.size()]);
+        for (ReportGroupedByVehilceModel reportGroupedByVehilceModel: dailyNumVehiclePerVehicle) {
+            groupByVehicle.add(reportGroupedByVehilceModel.toString());
+        }
+        String[] gbVehicleFinal = groupByVehicle.toArray(new String[groupByVehicle.size()]);
+
+        String[] totalNewArray = new String[1];
+        String dailyNumRentedOut = "Total number of vehicles currently rented on the day in branch "+location +", " +city+": " + getNumOfVehicleDailyRentalOnBranch(date,location,city);
+        totalNewArray[0] = dailyNumRentedOut;
+
+        String[] totalNumArray = new String[1];
+        String totalNum = "Total number of vehicles newly rented on the day in branch "+location +", " +city+": " + getNumOfVehicleNewlyDailyRentalOnBranch(date,location,city);
+        totalNumArray[0] = totalNum;
+
+        result[0] = allfinal;
+        result[1] = gbVehicleFinal;
+        result[2] = totalNewArray;
+        result[3] = totalNumArray;
+
+        return result;
+    }
+
+    // EFFECTS: returns string array of reports for returning in a company
+    public String[][] generateReturnReportInACompany(String date) {
+        /*
+        return dbHandler.generateReportDailyReturnsAllVehicleInfo(date);
+        // getNumOdVehicleDailyReturnGBVehicle(String date)
+        //getRevenueDailyReturnGBVehicle(String date)
+        //getTotalNumAndRevenueGBBranch(String date)
+         */
+
+        String[][] result = new String[4][];
+        VehicleModel[] allVehicles = generateReportDailyReturnsAllVehicleInfo(date);
+        ReportGroupedByVehilceModel[] dailyNumVehiclePerVehicle = getNumOdVehicleDailyReturnGBVehicle(date);
+        RevenueReportGroupedByVehilceModel[] revenuePerVehicle = getRevenueDailyReturnGBVehicle(date);
+        ReportTotalNumAndRevenueGBBranchModel[] totalNumAndRev = getTotalNumAndRevenueGBBranch(date);
+
+        ArrayList<String> allVs = new ArrayList<>();
+        ArrayList<String> dailyNum = new ArrayList<>();
+        ArrayList<String> revPerVehicle = new ArrayList<>();
+        ArrayList<String> totalNumRevB = new ArrayList<>();
+
+
+        for (VehicleModel vehicleModel: allVehicles) {
+            allVs.add(vehicleModel.toString());
+        }
+        String[] allfinal = allVs.toArray(new String[allVs.size()]);
+        for (ReportGroupedByVehilceModel reportGroupedByVehilceModel: dailyNumVehiclePerVehicle) {
+            dailyNum.add(reportGroupedByVehilceModel.toString());
+        }
+        String[] dailyNumFinal = dailyNum.toArray(new String[dailyNum.size()]);
+        for (RevenueReportGroupedByVehilceModel rv: revenuePerVehicle) {
+            revPerVehicle.add(rv.toString());
+        }
+        String[] revPerVehicleFinal = revPerVehicle.toArray(new String[revPerVehicle.size()]);
+        for (ReportTotalNumAndRevenueGBBranchModel rb: totalNumAndRev) {
+            totalNumRevB.add(rb.toString());
+        }
+        String[] totalNumRevFinal = totalNumRevB.toArray(new String[totalNumRevB.size()]);
+
+
+        result[0] = allfinal;
+        result[1] = dailyNumFinal;
+        result[2] = revPerVehicleFinal;
+        result[3] = totalNumRevFinal;
+
+        return result;
+
+    }
+
+    //EFFECTS; returns string array of reports for returning in a branch
+    public String[][] generateReturnReportInBranch(String date, String location, String city) {
+        /*
+                return dbHandler.generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+        //getNumOdVehicleDailyReturnGBVehicleOnBranch(String date, String location, String city)
+        //getRevenueDailyReturnGBVehicleOnBranch(String date, String location, String city)
+        //getTotalRevAndNumRentalsOnBranch(String date, String location, String city)
+         */
+
+        String[][] result = null;
+        VehicleModel[] allVs = generateReportDailyReturnsAllVehicleInfoOnBranch(date, location, city);
+        ReportGroupedByVehilceModel[] returnGBVs = getNumOdVehicleDailyReturnGBVehicleOnBranch(date, location, city);
+        RevenueReportGroupedByVehilceModel[] revGBVehicle = getRevenueDailyReturnGBVehicleOnBranch(date, location, city);
+        ReportTotalNumAndRevenueOnBranchModel totalNumRev = getTotalRevAndNumRentalsOnBranch( date,  location,  city);
+
+        ArrayList<String> stringAllVs = new ArrayList<>();
+        ArrayList<String> stringReturnGBVs = new ArrayList<>();
+        ArrayList<String> stringRevGBVs = new ArrayList<>();
+
+        for (VehicleModel vehicleModel: allVs) {
+            stringAllVs.add(vehicleModel.toString());
+        }
+        String[] allVsFinal  = stringAllVs.toArray(new String[stringAllVs.size()]);
+
+        for (ReportGroupedByVehilceModel gbVs: returnGBVs) {
+            stringReturnGBVs.add(gbVs.toString());
+        }
+        String[] returnGBVsFinal  = stringReturnGBVs.toArray(new String[stringReturnGBVs.size()]);
+        for (RevenueReportGroupedByVehilceModel revGBvs: revGBVehicle) {
+            stringRevGBVs.add(revGBvs.toString());
+        }
+        String[] revGBVsFinal  = stringRevGBVs.toArray(new String[stringRevGBVs.size()]);
+
+        String[] totalNumRevFinal = new String[1];
+        totalNumRevFinal[1] = "Total num of returns and revenue on the branch " + location + ", " + city + ": " + totalNumRev.toString();
+
+        result[0] = allVsFinal;
+        result[1] = returnGBVsFinal;
+        result[2] = revGBVsFinal;
+        result[3] = totalNumRevFinal;
+
+        return result;
+
+
+
+
+    }
+
+
+
+
     //tested
     // REQUIRES: cellphone has to be in a valid format, and cannot be empty
     // EFFECTS: returns true if the customer is already a member

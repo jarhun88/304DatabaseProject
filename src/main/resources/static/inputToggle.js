@@ -10,6 +10,13 @@ $( document ).ready(function()
     $("#primary-key").hide();
     $("#update-header").hide();
 
+    $("#rs").hide();
+    $("#r-rent").hide();
+    $("#r-return").hide();
+    $("#vehicle").hide(); 
+    $("#vehicle-type").hide(); 
+    $("#customers").hide(); 
+
     // hides "reservation" inputs when you click "view-vehicles"
     $("#view-vehicles").click(function() {
         $("#make-reservation-fields").hide(); 

@@ -4,10 +4,7 @@ import database.DatabaseConnectionHandler;
 import model.*;
 import org.json.JSONArray;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.util.Arrays;
-import java.util.Date;
 
 //This is the main controller class that will orchestrate everything.
 public class Controller {
@@ -80,7 +77,7 @@ public class Controller {
     // Rents a specific vehicle
     public static RentConfirmationMessageModel rentVehicle(String name, String address, String dlicense, String vid, String cellphone, String fromDateTime, String toDateTime,
                                                            String confNo, String cardName, String cardNo, String expDate) {
-        if (!dbHandler.isTimeInOrder(fromDateTime, toDateTime) || !dbHandler.isNotPast(fromDateTime)) {
+        if (!dbHandler.isTimeInOrder(fromDateTime, toDateTime) || !dbHandler.isNotPast(fromDateTime) || !dbHandler.isNotPastDate(expDate)) {
             return null;
         }
         confNo = dbHandler.nullStringConverter(confNo);

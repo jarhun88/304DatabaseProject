@@ -227,6 +227,24 @@ public class Controller {
         }
         return ret;
     }
+    public static String branchManipulation(String mType, String city, String location) {
+        String ret = "";
+        switch (mType) {
+            case "update":
+                ret = "Cannot update primary keys";
+                break;
+            case "add":
+                ret = String.valueOf(dbHandler.insertBranch(city, location));
+                break;
+            case "remove":
+                ret = String.valueOf(dbHandler.deleteBranch(city, location));
+                break;
+            case "view":
+                JSONArray mJSONArray = new JSONArray(Arrays.asList(dbHandler.getBranchInfo()));
+                return mJSONArray.toString();
+        }
+        return ret;
+    }
 
     public static String[][] viewAll() {
 

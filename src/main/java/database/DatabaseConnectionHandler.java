@@ -2959,6 +2959,24 @@ where rid = 4
 
     }
 
+    public boolean isNotPastDate(String date) {
+        String format = "yyyy-MM-dd HH:mm";
+        DateFormat formatter = new SimpleDateFormat(format);
+
+        Date dateNew = null;
+        try {
+            dateNew = formatter.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        Date today = new Date();
+       return  dateNew.after(today);
+
+
+    }
+
+
     public String convertTimeToRightFormat(String dateTime) {
         int firstColon = dateTime.indexOf(":");
         return dateTime.substring(0,firstColon) + " " + dateTime.substring(firstColon+1);

@@ -135,7 +135,7 @@ public class QueryController {
                                      @RequestPart(name = "address", required = false) String address,
                                      @RequestPart(name = "city", required = false) String city) {
 
-        String[][] temp = Controller.generateReportDailyRentalsAllVehicleInfo(date);
+        String[][] temp = Controller.generateReportDailyRentalsAllVehicleInfoOnBranch(date, address, city);
         JSONArray parentJsonArray = new JSONArray();
         // loop through your elements
         for (int i = 0; i < temp.length; i++) {

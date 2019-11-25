@@ -35,8 +35,8 @@ public class Controller {
 //        testRentManipulationandReservationandReturn();
 //        testVehicleUpdate();
 //        testViewAll();
-        testMakeReservationRentReturn();
-
+//        testMakeReservationRentReturn();
+        testReports();
 
         System.out.printf("here");
     }
@@ -344,6 +344,13 @@ public class Controller {
 
     }
 
+    public static void testReports() {
+        String[][] dailyReturn = dbHandler.generateReturnReportInACompany("2019-01-01");
+        String[][] dailyRental = dbHandler.generateRentalReportInAConmapany("2019-01-01");
+        String[][] dailyReturnOnBranch = dbHandler.generateReturnReportInBranch("2019-01-01", "UBC", "Vancouver");
+        String[][] dailyRentalOnBranch = dbHandler.generateRentalReportInBranch("2019-01-01", "UBC", "Vancouver");
+
+    }
 
     public static void testRentManipulationandReservationandReturn() {
         ReservationModel[] reservationModels = dbHandler.getReservationInfo();

@@ -1268,7 +1268,7 @@ public class DatabaseConnectionHandler {
         String[] revGBVsFinal  = stringRevGBVs.toArray(new String[stringRevGBVs.size()]);
 
         String[] totalNumRevFinal = new String[1];
-        totalNumRevFinal[1] = "Total num of returns and revenue on the branch " + location + ", " + city + ": " + totalNumRev.toString();
+        totalNumRevFinal[0] = "Total num of returns and revenue on the branch " + location + ", " + city + ": " + totalNumRev.toString();
 
         result[0] = allVsFinal;
         result[1] = returnGBVsFinal;

@@ -186,7 +186,7 @@ public class Controller {
                 ret = String.valueOf(dbHandler.updateVehicle(vid, vlicense, make, model, year, color, odometer, status, vtname, location, city));
                 break;
             case "add":
-                ret = String.valueOf(dbHandler.insertVehicle(vid, vlicense, make, model, year, color, odometer, status, vtname, location, city));
+                ret = String.valueOf(dbHandler.insertVehicle(vlicense, make, model, year, color, odometer, status, vtname, location, city));
                 break;
             case "remove":
                 ret = String.valueOf(dbHandler.deleteVehicle(vid));

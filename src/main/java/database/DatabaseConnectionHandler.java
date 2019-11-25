@@ -1617,7 +1617,7 @@ where rid = 4
     }
 
     // EFFECTS: insert a record to vehicle table
-    public boolean insertVehicle(String vid, String vlicense, String make, String model, String year, String color,
+    public boolean insertVehicle(String vlicense, String make, String model, String year, String color,
                                  String odometer, String status, String vtname, String location, String city) {
 
         boolean isSuccessful = false;
@@ -1626,17 +1626,16 @@ where rid = 4
             ps = connection.prepareStatement("INSERT INTO vehicle (vlicense, " +
                     "make, model, year, color, odometer, status, vtname, location, city" +
                     ") VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-            ps.setString(1, vid);
-            ps.setString(2, vlicense);
-            ps.setString(3, make);
-            ps.setString(4, model);
-            ps.setString(5, year);
-            ps.setString(6, color);
-            ps.setDouble(7, Double.parseDouble(odometer));
-            ps.setString(8, status);
-            ps.setString(9, vtname);
-            ps.setString(10, location);
-            ps.setString(11, city);
+            ps.setString(1, vlicense);
+            ps.setString(2, make);
+            ps.setString(3, model);
+            ps.setString(4, year);
+            ps.setString(5, color);
+            ps.setDouble(6, Double.parseDouble(odometer));
+            ps.setString(7, status);
+            ps.setString(8, vtname);
+            ps.setString(9, location);
+            ps.setString(10, city);
 
             int rowCount = ps.executeUpdate();
             if (rowCount != 0) {

@@ -392,6 +392,7 @@ function switchCustomerInputs(tableFn, tableType) {
             $("#primary-key").show();
             if (tableType == 3) {
                 $("#pk-title").text("vid");
+                $("#primary-key").hide();
                 $("#rs").hide();
                 $("#r-rent").hide();
                 $("#r-return").hide();
@@ -408,7 +409,7 @@ function switchCustomerInputs(tableFn, tableType) {
                 $("#vehicle").hide(); 
                 $("#vehicle-type").show(); 
                 $("#customers").hide(); 
-                $("#branch-box").hide(); 
+                $("#branch-box").hide();
             }
             else if (tableType == 5) {
                 $("#pk-title").text("phone number");
@@ -421,8 +422,6 @@ function switchCustomerInputs(tableFn, tableType) {
                 $("#branch-box").hide(); 
             }
             else if (tableType == 6) {
-                // $("#pk-title").hide();
-                // $("#pk-input").hide();
                 $("#rs").hide();
                 $("#r-rent").hide();
                 $("#r-return").hide();

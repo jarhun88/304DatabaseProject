@@ -5,7 +5,11 @@ package database;
 import model.*;
 
 import java.sql.*;
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 
 /**
@@ -173,6 +177,9 @@ public class DatabaseConnectionHandler {
         int confNo = -1;
         if (!isCustomerMember(phoneNumber)) {
             boolean status = insertCustomer(phoneNumber, name, address, dlicense);
+            if (!status) {
+                return null;
+            }
         }
 
         if (isOverBooked(vid, fromDateTime, toDateTime)) {
@@ -2907,9 +2914,33 @@ where rid = 4
         } return  true;
     }
 
-    public boolean isRightTimeStampFormat(String input) {
-        return false;
+
+    public boolean isTimeInOrder(String fromDateTime, String toDateTime) {
+        String format = "yyyy-MM-dd HH:mm";
+
+        String from = convertTimeToRightFormat(fromDateTime);
+        String to = convertTimeToRightFormat(toDateTime);
+
+        DateFormat formatter = new SimpleDateFormat(format);
+        Date fromDateOne = null;
+        Date toDateOne = null;
+        try {
+            fromDateOne = formatter.parse(from);
+            toDateOne = formatter.parse(to);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+        long fromTime = fromDateOne.getTime();
+        long toTime = toDateOne.getTime();
+
+        return (toTime - fromTime) > 0;
+
     }
 
+    public String convertTimeToRightFormat(String dateTime) {
+        int firstColon = dateTime.indexOf(":");
+        return dateTime.substring(0,firstColon) + " " + dateTime.substring(firstColon+1);
+    }
 
 }

@@ -75,6 +75,7 @@ $( document ).ready(function()
 
     $("#view").click(function() {
         enableInputs()
+        $("#all").prop("disabled", false)
         tableFn = 3;
         switchCustomerInputs(tableFn, tableType);
     })

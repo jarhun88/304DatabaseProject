@@ -2918,6 +2918,9 @@ where rid = 4
 
     public boolean isTimeInOrder(String fromDateTime, String toDateTime) {
         String format = "yyyy-MM-dd HH:mm";
+        if (fromDateTime == null || toDateTime == null) {
+            return false;
+        }
 
         String from = convertTimeToRightFormat(fromDateTime);
         String to = convertTimeToRightFormat(toDateTime);

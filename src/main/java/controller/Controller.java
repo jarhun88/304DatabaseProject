@@ -64,6 +64,9 @@ public class Controller {
     // Makes a reservation and returns the confirmation number
     public static ReservationModel makeReservation(String phoneNumber, String name, String address, String dlicense, String vid,
                                                    String fromDate, String toDate) {
+        if (!dbHandler.isTimeInOrder(fromDate, toDate)) {
+            return null;
+        }
         return dbHandler.makeReservation(phoneNumber, name, address, dlicense, vid, fromDate, toDate);
     }
 
